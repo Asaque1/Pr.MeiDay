@@ -21,4 +21,5 @@ public class GameConfig : ScriptableObject
     public int complaintsPerDay = 3;  // 하루에 처리하는 민원 수
     public int maxWrongTries = 3;     // 해석 몇 번 틀리면 민원인이 떠나는지
     public int wrongAnswerFine = 20;  // 민원인 떠날 때 내는 벌금
+    public int perfectDayBonus = 30;  // 하루 다 맞췄을 때 주는 보너스
 }
