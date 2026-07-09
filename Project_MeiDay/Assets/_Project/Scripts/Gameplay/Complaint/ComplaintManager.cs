@@ -15,6 +15,8 @@ public class ComplaintManager : MonoBehaviour
     public int failCount = 0;    // 틀린 민원 수
     public int earnedToday = 0;  // 오늘 민원으로 번 크레딧
 
+    public ComplaintStage stage = ComplaintStage.Translate; // 지금 민원이 해석 단계인지 처리 단계인지
+
     // 하루 시작 - 오늘 처리할 민원 뽑기
     public void StartDay()
     {
@@ -46,12 +48,52 @@ public class ComplaintManager : MonoBehaviour
             return;
         }
 
+        stage = ComplaintStage.Translate;
         translation.StartComplaint(todayComplaints[currentIndex]);
+    }
+
+    // 해석 "확인" 눌렀을 때
+    public void ConfirmTranslation()
+    {
+        if (stage != ComplaintStage.Translate)
+        {
+            return;
+        }
+
+        // 다 맞으면 처리 단계로
+        if (translation.CheckAnswer() == true)
+        {
+            stage = ComplaintStage.Resolve;
+            return;
+        }
+
+        // 틀리면 의심도 오르고 횟수 셈
+        translation.AddWrong();
+
+        // 의심도 초과로 게임오버 됐으면 여기서 끝 (벌금/집계 중복 방지)
+        if (GameManager.instance.phase == GamePhase.GameOver)
+        {
+            return;
+        }
+
+        // 너무 많이 틀리면 민원인 나감 (벌금 + 실패로 치고 다음 민원)
+        if (translation.IsOverLimit() == true)
+        {
+            GameManager.instance.economy.credits -= GameManager.instance.config.wrongAnswerFine;
+            failCount++;
+            NextComplaint();
+        }
     }
 
     // 플레이어가 처리 방법 골랐을 때
     public void SelectResolution(ComplaintResolution choice)
     {
+        // 처리 단계일 때만
+        if (stage != ComplaintStage.Resolve)
+        {
+            return;
+        }
+
         ComplaintDefinition c = todayComplaints[currentIndex];
 
         if (choice == c.correctResolution)

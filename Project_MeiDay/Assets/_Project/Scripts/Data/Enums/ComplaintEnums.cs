@@ -13,3 +13,10 @@ public enum DirectHandleType
     DocumentPrint, // 문서 출력
     Minigame,      // 미니게임
 }
+
+// 민원 한 건이 지금 어느 단계인지
+public enum ComplaintStage
+{
+    Translate, // 외계어 해석 중
+    Resolve,   // 처리 방법 고르는 중
+}

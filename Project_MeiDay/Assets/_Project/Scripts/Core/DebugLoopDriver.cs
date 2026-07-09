@@ -4,6 +4,8 @@ using UnityEngine;
 // TODO: 진짜 UI 생기면 이거 지우기
 public class DebugLoopDriver : MonoBehaviour
 {
+    int _selectedCard = 0; // 지금 고른 카드 번호
+
     void OnGUI()
     {
         GameManager gm = GameManager.instance;
@@ -12,7 +14,7 @@ public class DebugLoopDriver : MonoBehaviour
             return;
         }
 
-        GUILayout.BeginArea(new Rect(20, 20, 320, 540), GUI.skin.box);
+        GUILayout.BeginArea(new Rect(20, 20, 340, 700), GUI.skin.box);
 
         // 지금 상태 보여주기
         GUILayout.Label("페이즈: " + gm.phase);
@@ -37,13 +39,14 @@ public class DebugLoopDriver : MonoBehaviour
                 ComplaintDefinition c = cm.todayComplaints[cm.currentIndex];
                 GUILayout.Label("민원 " + (cm.currentIndex + 1) + " / " + cm.todayComplaints.Count);
 
-                if (GUILayout.Button("민원 정답 처리"))
+                // 해석 단계면 카드 맞추기, 처리 단계면 처리 고르기
+                if (cm.stage == ComplaintStage.Translate)
                 {
-                    cm.SelectResolution(c.correctResolution);
+                    DrawTranslate(cm.translation, cm);
                 }
-                if (GUILayout.Button("민원 오답 처리"))
+                else
                 {
-                    cm.SelectResolution(WrongOf(c.correctResolution));
+                    DrawResolve(cm, c);
                 }
             }
         }
@@ -80,6 +83,81 @@ public class DebugLoopDriver : MonoBehaviour
         }
 
         GUILayout.EndArea();
+    }
+
+    // 해석 단계 디버그 UI (상자 + 카드)
+    void DrawTranslate(TranslationController tc, ComplaintManager cm)
+    {
+        GUILayout.Label("[해석 단계]  틀린 횟수: " + tc.wrongCount);
+
+        // 상자들
+        for (int i = 0; i < tc.slots.Count; i++)
+        {
+            WordSlot s = tc.slots[i];
+            string placed = "( 빈칸 )";
+            if (s.placedWord != null)
+            {
+                placed = s.placedWord.meaning;
+            }
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(i + "번 [" + s.category + "] : " + placed);
+            if (GUILayout.Button("비우기", GUILayout.Width(55)))
+            {
+                tc.ClearSlot(i);
+            }
+            GUILayout.EndHorizontal();
+        }
+
+        GUILayout.Space(4);
+        GUILayout.Label("고른 카드: " + _selectedCard);
+
+        // 카드들 (누르면 고름)
+        for (int i = 0; i < tc.cards.Count; i++)
+        {
+            WordCard card = tc.cards[i];
+            string mark = "";
+            if (card.isUsed == true)
+            {
+                mark = " (놓음)";
+            }
+            if (GUILayout.Button(i + " : " + card.word.meaning + mark))
+            {
+                _selectedCard = i;
+            }
+        }
+
+        // 고른 카드를 몇 번 상자에 넣을지
+        GUILayout.Label("아래 눌러서 상자에 넣기:");
+        GUILayout.BeginHorizontal();
+        for (int i = 0; i < tc.slots.Count; i++)
+        {
+            if (GUILayout.Button("-> " + i, GUILayout.Width(45)))
+            {
+                tc.PlaceCard(_selectedCard, i);
+            }
+        }
+        GUILayout.EndHorizontal();
+
+        GUILayout.Space(4);
+        if (GUILayout.Button("확인 (해석 제출)"))
+        {
+            cm.ConfirmTranslation();
+        }
+    }
+
+    // 처리 단계 디버그 UI
+    void DrawResolve(ComplaintManager cm, ComplaintDefinition c)
+    {
+        GUILayout.Label("[처리 단계]");
+        if (GUILayout.Button("정답 처리"))
+        {
+            cm.SelectResolution(c.correctResolution);
+        }
+        if (GUILayout.Button("오답 처리"))
+        {
+            cm.SelectResolution(WrongOf(c.correctResolution));
+        }
     }
 
     // 정답 아닌 처리 하나 골라줌 (오답 흉내내기)
