@@ -8,21 +8,35 @@ public class CalendarManager : MonoBehaviour
     // 다음 날로 넘어가기
     public void NextDay()
     {
+        GameManager gm = GameManager.instance;
         day++;
 
-        // 다음 날 되면 밥값 나감
-        GameManager.instance.economy.PayFood();
+        // 다음 날 되면 밥값 먼저 나감
+        gm.economy.PayFood();
 
-        // 정해진 날마다 월세 내는 날 (기본 6일)
-        if (day % GameManager.instance.config.rentEveryDays == 0)
+        // 월세 청구일이면 월세 처리 (독촉 포함)
+        if (day >= gm.economy.nextRentDay)
         {
-            GameManager.instance.economy.PayRent();
+            gm.economy.PayRent();
         }
 
-        // 마지막 날이면 엔딩
-        if (day >= GameManager.instance.config.totalDays)
+        // 월세 못 내서 게임오버 됐으면 여기서 끝
+        if (gm.phase == GamePhase.GameOver)
         {
-            GameManager.instance.Ending(EndingType.NoShip);
+            return;
+        }
+
+        // 하드모드면 하드모드 하루 진행 (탈출 엔딩 체크 포함)
+        if (gm.hardMode == true)
+        {
+            gm.AdvanceHardMode();
+            return;
+        }
+
+        // 우주선 없이 마지막 날까지 가면 무한플레이 엔딩(임시 종료)
+        if (day >= gm.config.totalDays)
+        {
+            gm.Ending(EndingType.NoShip);
         }
     }
 }

@@ -23,6 +23,25 @@ public class DebugLoopDriver : MonoBehaviour
         GUILayout.Label("의심도: " + gm.suspicion.current + " / " + gm.config.maxSuspicion);
         GUILayout.Space(10);
 
+        // 하드모드면 진행 상황 + 아직 선택 안 했으면 선택창 먼저
+        if (gm.hardMode == true)
+        {
+            GUILayout.Label("[하드모드] " + gm.hardModeDay + " / " + gm.config.hardModeDays + "일");
+            if (gm.hardChoice == HardModeChoice.None)
+            {
+                GUILayout.Label("브로커: 매일 치를 대가를 골라라");
+                if (GUILayout.Button("매일 의심도 증가"))
+                {
+                    gm.hardChoice = HardModeChoice.Suspicion;
+                }
+                if (GUILayout.Button("매일 크레딧 소모"))
+                {
+                    gm.hardChoice = HardModeChoice.CreditDrain;
+                }
+            }
+            GUILayout.Space(10);
+        }
+
         // 페이즈마다 버튼 다르게 보여줌
         if (gm.phase == GamePhase.Intro)
         {
@@ -68,6 +87,19 @@ public class DebugLoopDriver : MonoBehaviour
         }
         else if (gm.phase == GamePhase.NightShop)
         {
+            GUILayout.Label("우주선 가격: " + gm.config.spaceshipPrice);
+            if (gm.hasSpaceship == false)
+            {
+                if (GUILayout.Button("우주선 구매"))
+                {
+                    gm.TryBuySpaceship();
+                }
+            }
+            else
+            {
+                GUILayout.Label("우주선 보유중 (자면 하드모드 시작)");
+            }
+
             if (GUILayout.Button("자기 -> 다음날"))
             {
                 gm.SleepAndAdvance();

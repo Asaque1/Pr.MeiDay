@@ -24,6 +24,11 @@ public class GameManager : MonoBehaviour
     public GamePhase phase = GamePhase.Intro; // 지금 어느 단계인지
     public bool hasSpaceship = false;         // 우주선 샀는지
 
+    // 하드모드 (우주선 산 뒤)
+    public bool hardMode = false;                           // 하드모드 중인지
+    public int hardModeDay = 0;                             // 하드모드 며칠째인지
+    public HardModeChoice hardChoice = HardModeChoice.None; // 브로커가 준 선택
+
     // 단계 바뀌면 알려줌 (나중에 UI 가 이거 듣고 화면 바꿈)
     public event Action<GamePhase> OnPhaseChanged;
 
@@ -49,6 +54,7 @@ public class GameManager : MonoBehaviour
     public void GameStart()
     {
         // TODO: 나중에 여기서 인트로 슬라이드쇼 재생
+        economy.nextRentDay = config.rentEveryDays; // 첫 월세 날 맞춰주기
         StartNewDay();
     }
 
@@ -89,7 +95,60 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        // 우주선 샀는데 아직 하드모드 아니면 지금부터 하드모드 시작 (브로커 만남)
+        if (hasSpaceship == true && hardMode == false)
+        {
+            hardMode = true;
+            hardModeDay = 0;
+            hardChoice = HardModeChoice.None;
+            // TODO: 여기서 브로커 만나는 연출 넣기
+        }
+
         StartNewDay();
+    }
+
+    // 우주선 사기 (돈 되면 사고 true)
+    public bool TryBuySpaceship()
+    {
+        if (hasSpaceship == true)
+        {
+            return false;
+        }
+        if (economy.SpendCredits(config.spaceshipPrice) == false)
+        {
+            return false; // 돈 부족
+        }
+
+        hasSpaceship = true;
+        return true;
+    }
+
+    // 하드모드 하루 진행 (calendar 가 다음날마다 부름)
+    public void AdvanceHardMode()
+    {
+        hardModeDay++;
+
+        // 선택에 따라 매일 대가 치름
+        if (hardChoice == HardModeChoice.Suspicion)
+        {
+            suspicion.AddSuspicion(config.hardModeSuspicionPerDay);
+        }
+        else if (hardChoice == HardModeChoice.CreditDrain)
+        {
+            economy.credits -= config.hardModeCreditDrainPerDay;
+        }
+
+        // 의심도 초과로 게임오버 됐으면 끝
+        if (phase == GamePhase.GameOver)
+        {
+            return;
+        }
+
+        // 며칠 버티면 탈출 엔딩
+        if (hardModeDay >= config.hardModeDays)
+        {
+            Ending(EndingType.Escape);
+        }
     }
 
     // 게임 오버

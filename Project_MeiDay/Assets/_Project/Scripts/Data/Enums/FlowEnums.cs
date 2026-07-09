@@ -16,6 +16,7 @@ public enum EndingType
     DatabaseAccess, // 브로커를 DB에 접근시킴
     ReportBroker,   // 브로커를 신고함
     NoShip,         // 우주선 안 삼 (무한 플레이)
+    Escape,         // 우주선 타고 탈출 성공
 }
 
 // 게임 오버 이유
@@ -23,4 +24,12 @@ public enum GameOverReason
 {
     SuspicionExceeded, // 의심도가 꽉 참 (들킴)
     RentDefault,       // 월세 3번 밀림 (쫓겨남)
+}
+
+// 하드모드에서 브로커가 주는 선택
+public enum HardModeChoice
+{
+    None,
+    Suspicion,   // 매일 의심도 증가
+    CreditDrain, // 매일 크레딧 대량 소모
 }

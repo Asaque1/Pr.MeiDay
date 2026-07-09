@@ -10,7 +10,13 @@ public class GameConfig : ScriptableObject
     public int rentCost = 120;        // 월세
     public int rentEveryDays = 6;     // 며칠마다 월세 내는지
     public int rentMissLimit = 3;     // 월세 몇 번 밀리면 게임오버
-    public int spaceshipPrice = 3000; // 우주선 값
+    public int spaceshipPrice = 3000; // 우주선 값 (탈출 목표 금액)
+    public int rentDunEveryDays = 3;  // 월세 밀렸을 때 며칠 간격으로 독촉하는지
+
+    [Header("하드모드")]
+    public int hardModeDays = 7;                // 우주선 산 뒤 며칠 버티면 탈출 엔딩
+    public int hardModeSuspicionPerDay = 8;     // 의심도 택했을 때 매일 오르는 양
+    public int hardModeCreditDrainPerDay = 200; // 크레딧 택했을 때 매일 나가는 돈
 
     [Header("의심도")]
     public float maxSuspicion = 100;            // 의심도 최대치 (넘으면 게임오버)
