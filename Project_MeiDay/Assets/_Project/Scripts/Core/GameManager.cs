@@ -29,6 +29,10 @@ public class GameManager : MonoBehaviour
     public int hardModeDay = 0;                             // 하드모드 며칠째인지
     public HardModeChoice hardChoice = HardModeChoice.None; // 브로커가 준 선택
 
+    // 어떻게 끝났는지 기록 (엔딩 화면에서 보여줄 때 씀)
+    public GameOverReason lastGameOverReason;
+    public EndingType lastEnding = EndingType.None;
+
     // 단계 바뀌면 알려줌 (나중에 UI 가 이거 듣고 화면 바꿈)
     public event Action<GamePhase> OnPhaseChanged;
 
@@ -155,6 +159,7 @@ public class GameManager : MonoBehaviour
     public void GameOver(GameOverReason reason)
     {
         phase = GamePhase.GameOver;
+        lastGameOverReason = reason;
         Debug.Log("게임 오버! 이유: " + reason);
 
         if (OnPhaseChanged != null)
@@ -167,6 +172,7 @@ public class GameManager : MonoBehaviour
     public void Ending(EndingType type)
     {
         phase = GamePhase.Ending;
+        lastEnding = type;
         Debug.Log("엔딩! " + type);
 
         if (OnPhaseChanged != null)
