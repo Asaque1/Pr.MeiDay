@@ -7,6 +7,7 @@ public class CharacterDefinition : ScriptableObject
 {
     public string id;            // 구분용 이름 (예: char_helen)
     public string displayName;   // 화면에 보이는 이름 (예: 헬렌 머핀 2세)
+    public string nickname;      // 짧은 호칭 (대사에서 부를 때, 예: 헬렌)
     public CharacterRole role;   // 무슨 역할인지
 
     public string gender;        // 성별
