@@ -13,4 +13,6 @@ public class ItemDefinition : ScriptableObject
 
     public int price = 100;     // 가격
     public bool isSpaceshipTicket = false; // 이게 우주선표인지 (사면 탈출 가능)
+
+    public float suspicionReduce = 0; // 사면 바로 내려가는 의심도 (변장 용품 같은 1회성 효과)
 }
