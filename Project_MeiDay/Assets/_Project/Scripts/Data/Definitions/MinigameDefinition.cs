@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// 미니게임 한 개 정보 (직접 처리할 때 나옴)
+// 미니게임 한 개 정보 (밤에 하는 아르바이트용)
 [CreateAssetMenu(fileName = "Minigame_", menuName = "MeiDay/Minigame")]
 public class MinigameDefinition : ScriptableObject
 {

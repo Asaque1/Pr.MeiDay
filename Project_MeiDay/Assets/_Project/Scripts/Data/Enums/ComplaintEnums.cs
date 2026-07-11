@@ -3,15 +3,7 @@ public enum ComplaintResolution
 {
     DepartmentTransfer, // 관련 부서로 연결
     CallSecurity,       // 경호원 부르기
-    DirectHandle,       // 직접 처리
-}
-
-// 직접 처리일 때 뭘로 처리하는지
-public enum DirectHandleType
-{
-    None,
-    DocumentPrint, // 문서 출력
-    Minigame,      // 미니게임
+    DocumentPrint,      // 문서 출력
 }
 
 // 민원 한 건이 지금 어느 단계인지

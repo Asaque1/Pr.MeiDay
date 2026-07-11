@@ -54,7 +54,7 @@ public class SaveManager : MonoBehaviour
         gm.calendar.day = PlayerPrefs.GetInt("day", 1);
         gm.economy.credits = PlayerPrefs.GetInt("credits", 100);
         gm.economy.rentMissCount = PlayerPrefs.GetInt("rentMiss", 0);
-        gm.economy.nextRentDay = PlayerPrefs.GetInt("nextRentDay", gm.config.rentEveryDays);
+        gm.economy.nextRentDay = PlayerPrefs.GetInt("nextRentDay", gm.config.firstRentDay);
         gm.suspicion.current = PlayerPrefs.GetFloat("suspicion", 0);
 
         // 하드모드 상태

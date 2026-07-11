@@ -30,8 +30,14 @@ public class ComplaintManager : MonoBehaviour
         failCount = 0;
         earnedToday = 0;
 
-        // config 에 정한 개수만큼 앞에서부터 가져옴
-        int count = GameManager.instance.config.complaintsPerDay;
+        // 할당량 계산 (일차가 지날수록 늘어나고 상한이 있음)
+        GameConfig config = GameManager.instance.config;
+        int count = config.complaintsPerDay + (GameManager.instance.calendar.day - 1) / config.complaintsGrowEvery;
+        if (count > config.complaintsMax)
+        {
+            count = config.complaintsMax;
+        }
+
         List<ComplaintDefinition> all = GameManager.instance.content.complaints;
 
         for (int i = 0; i < count && i < all.Count; i++)
@@ -91,10 +97,9 @@ public class ComplaintManager : MonoBehaviour
             return;
         }
 
-        // 너무 많이 틀리면 민원인 나감 (벌금 + 실패로 치고 다음 민원)
+        // 너무 많이 틀리면 민원인 나감 (실패로 치고 다음 민원. 그 민원 보수를 못 받으니 성과금이 깎이는 셈)
         if (translation.IsOverLimit() == true)
         {
-            GameManager.instance.economy.credits -= GameManager.instance.config.wrongAnswerFine;
             failCount++;
             NextComplaint();
             return;
@@ -120,6 +125,12 @@ public class ComplaintManager : MonoBehaviour
             GameManager.instance.economy.AddCredits(c.reward);
             successCount++;
             earnedToday += c.reward;
+
+            // 해석까지 한 번도 안 틀렸으면 의심도 조금 내려감
+            if (translation.wrongCount == 0)
+            {
+                GameManager.instance.suspicion.ReduceSuspicion(GameManager.instance.config.suspicionPerfectClear);
+            }
         }
         else
         {

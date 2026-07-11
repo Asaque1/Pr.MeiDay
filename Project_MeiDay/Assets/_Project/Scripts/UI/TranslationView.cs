@@ -129,9 +129,9 @@ public class TranslationView : MonoBehaviour
         GameManager.instance.complaint.SelectResolution(ComplaintResolution.CallSecurity);
     }
 
-    // 처리: 직접 처리
-    public void OnClickDirect()
+    // 처리: 문서 출력
+    public void OnClickPrint()
     {
-        GameManager.instance.complaint.SelectResolution(ComplaintResolution.DirectHandle);
+        GameManager.instance.complaint.SelectResolution(ComplaintResolution.DocumentPrint);
     }
 }

@@ -26,7 +26,6 @@ public class ComplaintDefinition : ScriptableObject
 
     // 2단계: 처리
     public ComplaintResolution correctResolution; // 올바른 처리 방법
-    public DirectHandleType directHandleType;     // 직접 처리면 뭘로 할지
 
     public int reward = 50; // 잘 처리하면 주는 돈
 }

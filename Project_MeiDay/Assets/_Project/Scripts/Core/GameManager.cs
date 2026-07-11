@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
     {
         // TODO: 나중에 여기서 인트로 슬라이드쇼 재생
         // TODO: 이어하기 버튼 만들면 여기서 save.Load() 분기
-        economy.nextRentDay = config.rentEveryDays; // 첫 월세 날 맞춰주기
+        economy.nextRentDay = config.firstRentDay; // 첫 월세 날 맞춰주기 (3일차부터)
         StartNewDay();
     }
 

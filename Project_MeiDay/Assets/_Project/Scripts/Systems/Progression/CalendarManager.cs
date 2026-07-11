@@ -27,16 +27,10 @@ public class CalendarManager : MonoBehaviour
         }
 
         // 하드모드면 하드모드 하루 진행 (탈출 엔딩 체크 포함)
+        // 우주선 안 샀으면 정해진 끝 없이 계속 진행 (무한 모드)
         if (gm.hardMode == true)
         {
             gm.AdvanceHardMode();
-            return;
-        }
-
-        // 우주선 없이 마지막 날까지 가면 무한플레이 엔딩(임시 종료)
-        if (day >= gm.config.totalDays)
-        {
-            gm.Ending(EndingType.NoShip);
         }
     }
 }

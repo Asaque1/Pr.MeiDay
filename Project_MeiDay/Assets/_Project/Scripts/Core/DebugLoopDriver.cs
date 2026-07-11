@@ -197,7 +197,7 @@ public class DebugLoopDriver : MonoBehaviour
     {
         if (correct == ComplaintResolution.CallSecurity)
         {
-            return ComplaintResolution.DirectHandle;
+            return ComplaintResolution.DocumentPrint;
         }
 
         return ComplaintResolution.CallSecurity;

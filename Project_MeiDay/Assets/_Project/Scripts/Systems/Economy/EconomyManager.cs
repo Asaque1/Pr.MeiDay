@@ -5,7 +5,7 @@ public class EconomyManager : MonoBehaviour
 {
     public int credits = 100;     // 지금 가진 돈
     public int rentMissCount = 0; // 월세 몇 번 밀렸는지
-    public int nextRentDay = 6;   // 다음 월세 내는 날 (게임 시작 때 맞춰줌)
+    public int nextRentDay = 3;   // 다음 월세 내는 날 (게임 시작 때 맞춰줌)
 
     // 돈 더하기
     public void AddCredits(int amount)
