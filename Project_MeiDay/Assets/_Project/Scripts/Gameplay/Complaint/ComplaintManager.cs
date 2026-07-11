@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,9 @@ public class ComplaintManager : MonoBehaviour
     public int earnedToday = 0;  // 오늘 민원으로 번 크레딧
 
     public ComplaintStage stage = ComplaintStage.Translate; // 지금 민원이 해석 단계인지 처리 단계인지
+
+    // 민원 상태 바뀌면 알려줌 (UI 가 듣고 다시 그림)
+    public event Action OnComplaintUpdated;
 
     // 하루 시작 - 오늘 처리할 민원 뽑기
     public void StartDay()
@@ -50,6 +54,16 @@ public class ComplaintManager : MonoBehaviour
 
         stage = ComplaintStage.Translate;
         translation.StartComplaint(todayComplaints[currentIndex]);
+        NotifyUpdated();
+    }
+
+    // 구독한 UI 한테 알려주기
+    void NotifyUpdated()
+    {
+        if (OnComplaintUpdated != null)
+        {
+            OnComplaintUpdated();
+        }
     }
 
     // 해석 "확인" 눌렀을 때
@@ -64,6 +78,7 @@ public class ComplaintManager : MonoBehaviour
         if (translation.CheckAnswer() == true)
         {
             stage = ComplaintStage.Resolve;
+            NotifyUpdated();
             return;
         }
 
@@ -82,7 +97,10 @@ public class ComplaintManager : MonoBehaviour
             GameManager.instance.economy.credits -= GameManager.instance.config.wrongAnswerFine;
             failCount++;
             NextComplaint();
+            return;
         }
+
+        NotifyUpdated(); // 틀린 횟수 바뀐 거 알려줌
     }
 
     // 플레이어가 처리 방법 골랐을 때
