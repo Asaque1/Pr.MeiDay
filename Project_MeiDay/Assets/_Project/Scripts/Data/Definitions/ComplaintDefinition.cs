@@ -19,9 +19,10 @@ public class ComplaintDefinition : ScriptableObject
     [TextArea(2, 4)]
     public string complaintLine;            // 민원 대사
 
-    // 1단계: 외계어 해석 (맞춰야 하는 상자들 + 밑에 나오는 카드들)
+    // 1단계: 외계어 해석
+    // 정답은 slots 에 들어있고, 오답 후보만 따로 적음 (카드 깔기는 로직이 랜덤으로 함)
     public List<ComplaintSlot> slots = new List<ComplaintSlot>();
-    public List<WordDefinition> cardPool = new List<WordDefinition>();
+    public List<WordDefinition> wrongWords = new List<WordDefinition>();
 
     // 2단계: 처리
     public ComplaintResolution correctResolution; // 올바른 처리 방법

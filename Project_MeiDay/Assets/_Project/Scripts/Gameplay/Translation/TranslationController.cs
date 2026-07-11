@@ -30,13 +30,100 @@ public class TranslationController : MonoBehaviour
             _slotCardIndex.Add(-1);
         }
 
-        // 카드 만들기 (정답 + 오답 섞인 cardPool 로)
-        for (int i = 0; i < complaint.cardPool.Count; i++)
+        // 카드 만들기: 정답 + 오답 모아서 랜덤 순서로 깔아줌
+        List<WordDefinition> cardWords = new List<WordDefinition>();
+
+        // 정답 단어들 (상자마다 하나씩)
+        for (int i = 0; i < slots.Count; i++)
+        {
+            cardWords.Add(slots[i].correctWord);
+        }
+
+        // 오답 단어들 (상자 종류별로 정해진 개수만큼 랜덤으로 뽑음)
+        PickWrongWords(complaint, cardWords);
+
+        // 순서 섞기
+        Shuffle(cardWords);
+
+        for (int i = 0; i < cardWords.Count; i++)
         {
             WordCard card = new WordCard();
-            card.word = complaint.cardPool[i];
+            card.word = cardWords[i];
             card.isUsed = false;
             cards.Add(card);
+        }
+    }
+
+    // 오답 후보에서 상자 종류에 맞는 걸 랜덤으로 뽑아서 결과에 넣어줌
+    void PickWrongWords(ComplaintDefinition complaint, List<WordDefinition> result)
+    {
+        // 후보 정리 (데이터 실수 대비: 빈 칸, 정답이랑 같은 단어, 두 번 적힌 단어는 걸러냄)
+        List<WordDefinition> pool = new List<WordDefinition>();
+        for (int i = 0; i < complaint.wrongWords.Count; i++)
+        {
+            WordDefinition w = complaint.wrongWords[i];
+            if (w == null)
+            {
+                continue; // 인스펙터에서 빈 칸으로 남은 것
+            }
+            if (result.Contains(w) == true)
+            {
+                continue; // 정답이랑 같은 단어는 오답이 될 수 없음
+            }
+            if (pool.Contains(w) == true)
+            {
+                continue; // 같은 단어 두 번 적힌 것
+            }
+            pool.Add(w);
+        }
+
+        int perSlot = GameManager.instance.config.wrongCardsPerSlot;
+
+        for (int s = 0; s < slots.Count; s++)
+        {
+            for (int n = 0; n < perSlot; n++)
+            {
+                int found = FindRandomByCategory(pool, slots[s].category);
+                if (found < 0)
+                {
+                    break; // 이 종류 오답이 더 없음
+                }
+
+                result.Add(pool[found]);
+                pool.RemoveAt(found);
+            }
+        }
+    }
+
+    // 풀에서 그 종류인 것 중 하나를 랜덤으로 골라 번호 돌려줌 (없으면 -1)
+    int FindRandomByCategory(List<WordDefinition> pool, WordCategory category)
+    {
+        List<int> matches = new List<int>();
+        for (int i = 0; i < pool.Count; i++)
+        {
+            if (pool[i].category == category)
+            {
+                matches.Add(i);
+            }
+        }
+
+        if (matches.Count == 0)
+        {
+            return -1;
+        }
+
+        return matches[Random.Range(0, matches.Count)];
+    }
+
+    // 리스트 순서 섞기
+    void Shuffle(List<WordDefinition> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            WordDefinition temp = list[i];
+            list[i] = list[j];
+            list[j] = temp;
         }
     }
 
