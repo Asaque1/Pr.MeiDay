@@ -13,7 +13,18 @@ public class SaveManager : MonoBehaviour
         PlayerPrefs.SetInt("day", gm.calendar.day);
         PlayerPrefs.SetInt("credits", gm.economy.credits);
         PlayerPrefs.SetInt("rentMiss", gm.economy.rentMissCount);
+        PlayerPrefs.SetInt("nextRentDay", gm.economy.nextRentDay);
         PlayerPrefs.SetFloat("suspicion", gm.suspicion.current);
+
+        // 하드모드 상태
+        int hardValue = 0;
+        if (gm.hardMode == true)
+        {
+            hardValue = 1;
+        }
+        PlayerPrefs.SetInt("hardMode", hardValue);
+        PlayerPrefs.SetInt("hardModeDay", gm.hardModeDay);
+        PlayerPrefs.SetInt("hardChoice", (int)gm.hardChoice);
 
         // 우주선 샀는지 (bool 은 못 넣으니까 1이나 0으로 바꿔서 저장)
         int shipValue = 0;
@@ -43,7 +54,13 @@ public class SaveManager : MonoBehaviour
         gm.calendar.day = PlayerPrefs.GetInt("day", 1);
         gm.economy.credits = PlayerPrefs.GetInt("credits", 100);
         gm.economy.rentMissCount = PlayerPrefs.GetInt("rentMiss", 0);
+        gm.economy.nextRentDay = PlayerPrefs.GetInt("nextRentDay", gm.config.rentEveryDays);
         gm.suspicion.current = PlayerPrefs.GetFloat("suspicion", 0);
+
+        // 하드모드 상태
+        gm.hardMode = (PlayerPrefs.GetInt("hardMode", 0) == 1);
+        gm.hardModeDay = PlayerPrefs.GetInt("hardModeDay", 0);
+        gm.hardChoice = (HardModeChoice)PlayerPrefs.GetInt("hardChoice", 0);
 
         // 우주선 (1이면 샀던 거)
         gm.hasSpaceship = (PlayerPrefs.GetInt("hasSpaceship", 0) == 1);
