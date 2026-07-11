@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fdc6e1ed5fc07e46a81efa09773bef0, type: 3}
+  m_Name: ContentDatabase
+  m_EditorClassIdentifier: 
+  characters:
+  - {fileID: 11400000, guid: 7f164cb9fef956b8ab21bcec962c9944, type: 2}
+  - {fileID: 11400000, guid: b98877978bd9531fb786e87c609db0f6, type: 2}
+  - {fileID: 11400000, guid: dcc52281f9175b0eafc7a2f104e3f241, type: 2}
+  - {fileID: 11400000, guid: acefd99d39615b67aa93ac617128a7e7, type: 2}
+  - {fileID: 11400000, guid: 26170f65a8935ff39009a32dedf27a98, type: 2}
+  - {fileID: 11400000, guid: b7fc291b309d54f89407331af8f4a891, type: 2}
+  - {fileID: 11400000, guid: 7c6da6e1398d564b85034474dca7c181, type: 2}
+  - {fileID: 11400000, guid: 1c4a5d717af25584ae9dc0420171115a, type: 2}
+  - {fileID: 11400000, guid: ba32b299989758f3873d5e1bcdf7b243, type: 2}
+  - {fileID: 11400000, guid: 2854418d7ea45790b719b0866ef835a4, type: 2}
+  - {fileID: 11400000, guid: 5be2d07abd1f550ba718a2c3063ff5ad, type: 2}
+  - {fileID: 11400000, guid: 07dd1f5f486654c9aeddc76349e9e891, type: 2}
+  - {fileID: 11400000, guid: b27c7ad5509253d3b7b6f70e7f0da3ef, type: 2}
+  - {fileID: 11400000, guid: ecefe2a865a0516197d06b3a6f5a7d31, type: 2}
+  - {fileID: 11400000, guid: 09fd3a51a63b5dafb3c4e55c4598b70d, type: 2}
+  words:
+  - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+  - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}
+  - {fileID: 11400000, guid: 583f5c2609745e2a97e33e68b37b926c, type: 2}
+  - {fileID: 11400000, guid: 5682116dd5605478b7cd29b6d44ba7cb, type: 2}
+  - {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
+  - {fileID: 11400000, guid: 42dbc74d132452149496fd2d812f320f, type: 2}
+  - {fileID: 11400000, guid: 0917cc5718bb5209a05a9eb550db5c6c, type: 2}
+  - {fileID: 11400000, guid: e58be570442b5b8ea539aeb2e4ed34d8, type: 2}
+  - {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
+  - {fileID: 11400000, guid: 3bd23550d41257ac88480337e68913fe, type: 2}
+  complaints: []
+  items: []
+  minigames: []
