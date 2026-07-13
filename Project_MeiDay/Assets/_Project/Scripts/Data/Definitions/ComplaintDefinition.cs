@@ -15,6 +15,7 @@ public class ComplaintDefinition : ScriptableObject
 {
     public string id;
     public CharacterDefinition complainant; // 민원 넣은 외계인
+    public bool eventOnly = false;          // 이벤트로만 나오는 민원 (아침 랜덤 뽑기에서 제외)
 
     [TextArea(2, 4)]
     public string complaintLine;            // 민원 대사

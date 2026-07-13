@@ -44,15 +44,27 @@ public class ComplaintManager : MonoBehaviour
             todayComplaints.Add(eventComplaint);
         }
 
+        // 나머지는 민원 풀에서 랜덤으로 뽑음 (오늘 안에서는 안 겹치게)
+        List<ComplaintDefinition> pool = new List<ComplaintDefinition>();
         List<ComplaintDefinition> all = GameManager.instance.content.complaints;
-
-        for (int i = 0; i < all.Count && todayComplaints.Count < count; i++)
+        for (int i = 0; i < all.Count; i++)
         {
             if (all[i] == eventComplaint)
             {
                 continue; // 이벤트 민원이랑 겹치면 패스
             }
-            todayComplaints.Add(all[i]);
+            if (all[i].eventOnly == true)
+            {
+                continue; // 이벤트 전용 민원은 랜덤으로 안 나옴
+            }
+            pool.Add(all[i]);
+        }
+
+        while (todayComplaints.Count < count && pool.Count > 0)
+        {
+            int pick = UnityEngine.Random.Range(0, pool.Count);
+            todayComplaints.Add(pool[pick]);
+            pool.RemoveAt(pick);
         }
 
         StartCurrent();
