@@ -15,6 +15,10 @@ public class ComplaintManager : MonoBehaviour
     public int successCount = 0; // 잘 처리한 민원 수
     public int failCount = 0;    // 틀린 민원 수
     public int earnedToday = 0;  // 오늘 민원으로 번 크레딧
+    public int mistakeCount = 0; // 오늘 해석이나 처리를 틀린 횟수
+
+    // 지금 민원의 처리 방법을 틀린 횟수
+    public int resolutionWrongCount = 0;
 
     public ComplaintStage stage = ComplaintStage.Translate; // 지금 민원이 해석 단계인지 처리 단계인지
 
@@ -29,6 +33,7 @@ public class ComplaintManager : MonoBehaviour
         successCount = 0;
         failCount = 0;
         earnedToday = 0;
+        mistakeCount = 0;
 
         // 할당량 계산 (일차가 지날수록 늘어나고 상한이 있음)
         GameConfig config = GameManager.instance.config;
@@ -81,6 +86,7 @@ public class ComplaintManager : MonoBehaviour
         }
 
         stage = ComplaintStage.Translate;
+        resolutionWrongCount = 0;
         translation.StartComplaint(todayComplaints[currentIndex]);
         NotifyUpdated();
     }
@@ -112,6 +118,7 @@ public class ComplaintManager : MonoBehaviour
 
         // 틀리면 의심도 오르고 횟수 셈
         translation.AddWrong();
+        mistakeCount++;
 
         // 의심도 초과로 게임오버 됐으면 여기서 끝 (벌금/집계 중복 방지)
         if (GameManager.instance.phase == GamePhase.GameOver)
@@ -148,17 +155,34 @@ public class ComplaintManager : MonoBehaviour
             successCount++;
             earnedToday += c.reward;
 
-            // 해석까지 한 번도 안 틀렸으면 의심도 조금 내려감
-            if (translation.wrongCount == 0)
+            // 이 민원을 한 번도 안 틀렸으면 의심도 조금 내려감
+            if (translation.wrongCount == 0 && resolutionWrongCount == 0)
             {
                 GameManager.instance.suspicion.ReduceSuspicion(GameManager.instance.config.suspicionPerfectClear);
             }
         }
         else
         {
-            // 틀리게 처리 -> 의심받음
+            // 틀리게 처리 -> 의심받고 같은 민원을 다시 처리함
+            resolutionWrongCount++;
+            mistakeCount++;
             GameManager.instance.suspicion.AddSuspicion(GameManager.instance.config.suspicionWrongResolution);
-            failCount++;
+
+            if (GameManager.instance.phase == GamePhase.GameOver)
+            {
+                return;
+            }
+
+            // 처리도 너무 많이 틀리면 민원인이 나감
+            if (resolutionWrongCount >= GameManager.instance.config.maxWrongTries)
+            {
+                failCount++;
+                NextComplaint();
+                return;
+            }
+
+            NotifyUpdated();
+            return;
         }
 
         NextComplaint();
