@@ -88,6 +88,20 @@ public class DebugLoopDriver : MonoBehaviour
                 GUILayout.Label("무실수 보너스!");
             }
 
+            GUILayout.Label("식비: -" + gm.economy.foodPaidToday);
+            if (gm.economy.rentWasDueToday == true)
+            {
+                if (gm.economy.rentMissedToday == true)
+                {
+                    GUILayout.Label("월세 미납: " + gm.economy.rentMissCount + " / " + gm.config.rentMissLimit);
+                }
+                else
+                {
+                    GUILayout.Label("월세: -" + gm.economy.rentPaidToday);
+                }
+            }
+            GUILayout.Label("남은 크레딧: " + gm.economy.credits);
+
             if (GUILayout.Button("결산 확인 -> 밤으로"))
             {
                 gm.ConfirmDayResult();
@@ -222,6 +236,7 @@ public class DebugLoopDriver : MonoBehaviour
     void DrawResolve(ComplaintManager cm, ComplaintDefinition c)
     {
         GUILayout.Label("[처리 단계]");
+        GUILayout.Label("틀린 횟수: " + cm.resolutionWrongCount + " / " + GameManager.instance.config.maxWrongTries);
         if (GUILayout.Button("정답 처리"))
         {
             cm.SelectResolution(c.correctResolution);
