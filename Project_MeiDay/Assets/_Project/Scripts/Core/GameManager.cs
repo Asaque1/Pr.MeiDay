@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public ShopManager shop;
     public SaveManager save;
     public ComplaintManager complaint;
+    public EventManager events;
 
     // 게임 상태
     public GamePhase phase = GamePhase.Intro; // 지금 어느 단계인지
@@ -67,7 +68,29 @@ public class GameManager : MonoBehaviour
     void StartNewDay()
     {
         ChangePhase(GamePhase.DayWork);
-        complaint.StartDay();
+
+        // 아침 이벤트 있으면 대사부터 (끝나면 EventManager 가 OnMorningEventDone 불러줌)
+        EventDefinition todayEvent = events.PickTodayEvent();
+        if (todayEvent != null)
+        {
+            events.StartEvent(todayEvent);
+            return;
+        }
+
+        complaint.StartDay(null);
+    }
+
+    // 아침 이벤트 대사 다 봤을 때 (EventManager 가 불러줌)
+    public void OnMorningEventDone(EventDefinition ev)
+    {
+        // 이벤트에서 의심도 올라 게임오버 났으면 민원 시작 안 함
+        if (phase == GamePhase.GameOver)
+        {
+            return;
+        }
+
+        // 이벤트에 민원 붙어있으면 그 민원이 오늘 첫 손님
+        complaint.StartDay(ev.linkedComplaint);
     }
 
     // 낮 일 다 끝남 (민원 다 처리) -> 결산 화면으로

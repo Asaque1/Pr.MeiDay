@@ -41,6 +41,13 @@ public class SaveManager : MonoBehaviour
             PlayerPrefs.SetString("item" + i, gm.inventory.ownedItems[i]);
         }
 
+        // 이미 본 이벤트들 (아이템이랑 같은 방식)
+        PlayerPrefs.SetInt("seenEventCount", gm.events.seenEventIds.Count);
+        for (int i = 0; i < gm.events.seenEventIds.Count; i++)
+        {
+            PlayerPrefs.SetString("seenEvent" + i, gm.events.seenEventIds[i]);
+        }
+
         PlayerPrefs.Save();
         Debug.Log("저장 완료");
     }
@@ -72,6 +79,14 @@ public class SaveManager : MonoBehaviour
         {
             string itemId = PlayerPrefs.GetString("item" + i, "");
             gm.inventory.ownedItems.Add(itemId);
+        }
+
+        // 이미 본 이벤트들
+        gm.events.seenEventIds.Clear();
+        int seenCount = PlayerPrefs.GetInt("seenEventCount", 0);
+        for (int i = 0; i < seenCount; i++)
+        {
+            gm.events.seenEventIds.Add(PlayerPrefs.GetString("seenEvent" + i, ""));
         }
 
         Debug.Log("불러오기 완료");

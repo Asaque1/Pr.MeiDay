@@ -52,20 +52,28 @@ public class DebugLoopDriver : MonoBehaviour
         }
         else if (gm.phase == GamePhase.DayWork)
         {
-            ComplaintManager cm = gm.complaint;
-            if (cm.currentIndex < cm.todayComplaints.Count)
+            // 아침 이벤트 대사 나오는 중이면 그것부터
+            if (gm.events.currentEvent != null)
             {
-                ComplaintDefinition c = cm.todayComplaints[cm.currentIndex];
-                GUILayout.Label("민원 " + (cm.currentIndex + 1) + " / " + cm.todayComplaints.Count);
+                DrawDialogue(gm.events);
+            }
+            else
+            {
+                ComplaintManager cm = gm.complaint;
+                if (cm.currentIndex < cm.todayComplaints.Count)
+                {
+                    ComplaintDefinition c = cm.todayComplaints[cm.currentIndex];
+                    GUILayout.Label("민원 " + (cm.currentIndex + 1) + " / " + cm.todayComplaints.Count);
 
-                // 해석 단계면 카드 맞추기, 처리 단계면 처리 고르기
-                if (cm.stage == ComplaintStage.Translate)
-                {
-                    DrawTranslate(cm.translation, cm);
-                }
-                else
-                {
-                    DrawResolve(cm, c);
+                    // 해석 단계면 카드 맞추기, 처리 단계면 처리 고르기
+                    if (cm.stage == ComplaintStage.Translate)
+                    {
+                        DrawTranslate(cm.translation, cm);
+                    }
+                    else
+                    {
+                        DrawResolve(cm, c);
+                    }
                 }
             }
         }
@@ -115,6 +123,30 @@ public class DebugLoopDriver : MonoBehaviour
         }
 
         GUILayout.EndArea();
+    }
+
+    // 아침 이벤트 대사 디버그 UI
+    void DrawDialogue(EventManager em)
+    {
+        EventLine line = em.CurrentLine();
+        if (line == null)
+        {
+            return;
+        }
+
+        string who = "???";
+        if (line.speaker != null)
+        {
+            who = line.speaker.displayName;
+        }
+
+        GUILayout.Label("[이벤트] " + em.currentEvent.id + " (" + (em.lineIndex + 1) + " / " + em.currentEvent.lines.Count + ")");
+        GUILayout.Label(who + ": " + line.text);
+
+        if (GUILayout.Button("다음 대사"))
+        {
+            em.AdvanceLine();
+        }
     }
 
     // 해석 단계 디버그 UI (상자 + 카드)

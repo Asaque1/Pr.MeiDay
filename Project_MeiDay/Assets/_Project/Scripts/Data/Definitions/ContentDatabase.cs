@@ -11,4 +11,5 @@ public class ContentDatabase : ScriptableObject
     public List<ComplaintDefinition> complaints = new List<ComplaintDefinition>();
     public List<ItemDefinition> items = new List<ItemDefinition>();
     public List<MinigameDefinition> minigames = new List<MinigameDefinition>();
+    public List<EventDefinition> events = new List<EventDefinition>();
 }

@@ -21,8 +21,8 @@ public class ComplaintManager : MonoBehaviour
     // 민원 상태 바뀌면 알려줌 (UI 가 듣고 다시 그림)
     public event Action OnComplaintUpdated;
 
-    // 하루 시작 - 오늘 처리할 민원 뽑기
-    public void StartDay()
+    // 하루 시작 - 오늘 처리할 민원 뽑기 (이벤트에서 넘어온 민원 있으면 맨 앞에)
+    public void StartDay(ComplaintDefinition eventComplaint)
     {
         currentIndex = 0;
         todayComplaints.Clear();
@@ -38,10 +38,20 @@ public class ComplaintManager : MonoBehaviour
             count = config.complaintsMax;
         }
 
+        // 이벤트 민원이 오늘 첫 손님
+        if (eventComplaint != null)
+        {
+            todayComplaints.Add(eventComplaint);
+        }
+
         List<ComplaintDefinition> all = GameManager.instance.content.complaints;
 
-        for (int i = 0; i < count && i < all.Count; i++)
+        for (int i = 0; i < all.Count && todayComplaints.Count < count; i++)
         {
+            if (all[i] == eventComplaint)
+            {
+                continue; // 이벤트 민원이랑 겹치면 패스
+            }
             todayComplaints.Add(all[i]);
         }
 
