@@ -51,7 +51,14 @@ public class TranslationView : MonoBehaviour
         ComplaintDefinition c = cm.todayComplaints[cm.currentIndex];
         complaintLineText.text = c.complaintLine;
         quotaText.text = (cm.currentIndex + 1) + " / " + cm.todayComplaints.Count;
-        wrongText.text = "틀린 횟수: " + cm.translation.wrongCount + " / " + GameManager.instance.config.maxWrongTries;
+        if (cm.stage == ComplaintStage.Translate)
+        {
+            wrongText.text = "해석 실수: " + cm.translation.wrongCount + " / " + GameManager.instance.config.maxWrongTries;
+        }
+        else
+        {
+            wrongText.text = "처리 실수: " + cm.resolutionWrongCount + " / " + GameManager.instance.config.maxWrongTries;
+        }
 
         // 단계에 맞는 쪽만 보여줌
         translatePart.SetActive(cm.stage == ComplaintStage.Translate);
