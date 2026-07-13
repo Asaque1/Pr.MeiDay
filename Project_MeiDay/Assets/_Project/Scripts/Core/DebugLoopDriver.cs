@@ -83,7 +83,7 @@ public class DebugLoopDriver : MonoBehaviour
             GUILayout.Label("- 오늘 결산 -");
             GUILayout.Label("성공: " + cm.successCount + "  실패: " + cm.failCount);
             GUILayout.Label("오늘 수입: " + cm.earnedToday);
-            if (cm.failCount == 0 && cm.successCount > 0)
+            if (cm.mistakeCount == 0 && cm.successCount > 0)
             {
                 GUILayout.Label("무실수 보너스!");
             }

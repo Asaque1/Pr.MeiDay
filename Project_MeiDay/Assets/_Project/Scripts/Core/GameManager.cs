@@ -97,7 +97,7 @@ public class GameManager : MonoBehaviour
     public void OnDayWorkDone()
     {
         // 하루 다 맞췄으면 무실수 보너스
-        if (complaint.failCount == 0 && complaint.successCount > 0)
+        if (complaint.mistakeCount == 0 && complaint.successCount > 0)
         {
             economy.AddCredits(config.perfectDayBonus);
             complaint.earnedToday += config.perfectDayBonus;

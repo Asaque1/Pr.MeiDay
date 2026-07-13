@@ -19,7 +19,7 @@ public class ResultView : MonoBehaviour
         string text = "성공: " + cm.successCount + "   실패: " + cm.failCount;
         text += "\n오늘 수입: " + cm.earnedToday + " cr";
 
-        if (cm.failCount == 0 && cm.successCount > 0)
+        if (cm.mistakeCount == 0 && cm.successCount > 0)
         {
             text += "\n무실수 보너스!";
         }
