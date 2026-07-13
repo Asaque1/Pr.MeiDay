@@ -34,11 +34,11 @@ public class UiRoot : MonoBehaviour
         nightPanel.SetActive(phase == GamePhase.NightShop);
         endingPanel.SetActive(phase == GamePhase.Ending || phase == GamePhase.GameOver);
 
-        // 하드모드 시작한 아침엔 브로커 선택창부터 (아직 선택 안 했을 때만)
+        // 하드모드 시작한 아침엔 브로커 선택창부터 (아직 답 안 했을 때만)
         GameManager gm = GameManager.instance;
         hardChoicePanel.SetActive(phase == GamePhase.DayWork
             && gm.hardMode == true
-            && gm.hardChoice == HardModeChoice.None);
+            && gm.brokerChoice == BrokerChoice.None);
     }
 
     // ---- 아래는 버튼 OnClick 에 연결해서 씀 ----
@@ -61,17 +61,17 @@ public class UiRoot : MonoBehaviour
         GameManager.instance.SleepAndAdvance();
     }
 
-    // 하드모드 선택: 매일 의심도 증가
-    public void OnClickHardSuspicion()
+    // 브로커 선택: DB 접근시키기 (돈 뜯기고 편한 엔딩 루트)
+    public void OnClickBrokerDatabase()
     {
-        GameManager.instance.hardChoice = HardModeChoice.Suspicion;
+        GameManager.instance.ChooseBroker(BrokerChoice.DatabaseAccess);
         hardChoicePanel.SetActive(false);
     }
 
-    // 하드모드 선택: 매일 크레딧 소모
-    public void OnClickHardCredit()
+    // 브로커 선택: 신고하기 (매일 의심받는 엔딩 루트)
+    public void OnClickBrokerReport()
     {
-        GameManager.instance.hardChoice = HardModeChoice.CreditDrain;
+        GameManager.instance.ChooseBroker(BrokerChoice.ReportBroker);
         hardChoicePanel.SetActive(false);
     }
 

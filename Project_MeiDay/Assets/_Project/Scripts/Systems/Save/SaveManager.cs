@@ -24,7 +24,7 @@ public class SaveManager : MonoBehaviour
         }
         PlayerPrefs.SetInt("hardMode", hardValue);
         PlayerPrefs.SetInt("hardModeDay", gm.hardModeDay);
-        PlayerPrefs.SetInt("hardChoice", (int)gm.hardChoice);
+        PlayerPrefs.SetInt("brokerChoice", (int)gm.brokerChoice);
 
         // 우주선 샀는지 (bool 은 못 넣으니까 1이나 0으로 바꿔서 저장)
         int shipValue = 0;
@@ -67,7 +67,7 @@ public class SaveManager : MonoBehaviour
         // 하드모드 상태
         gm.hardMode = (PlayerPrefs.GetInt("hardMode", 0) == 1);
         gm.hardModeDay = PlayerPrefs.GetInt("hardModeDay", 0);
-        gm.hardChoice = (HardModeChoice)PlayerPrefs.GetInt("hardChoice", 0);
+        gm.brokerChoice = (BrokerChoice)PlayerPrefs.GetInt("brokerChoice", 0);
 
         // 우주선 (1이면 샀던 거)
         gm.hasSpaceship = (PlayerPrefs.GetInt("hasSpaceship", 0) == 1);

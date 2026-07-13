@@ -14,9 +14,10 @@ public class GameConfig : ScriptableObject
     public int rentDunEveryDays = 3;  // 월세 밀렸을 때 며칠 간격으로 독촉하는지
 
     [Header("하드모드")]
-    public int hardModeDays = 7;                // 우주선 산 뒤 며칠 버티면 탈출 엔딩
-    public int hardModeSuspicionPerDay = 8;     // 의심도 택했을 때 매일 오르는 양
-    public int hardModeCreditDrainPerDay = 200; // 크레딧 택했을 때 매일 나가는 돈
+    public int hardModeDays = 7;             // 브로커 선택 뒤 며칠째 아침에 엔딩인지
+    public int hardModeExtraCost = 30;       // 하드모드 동안 매일 나가는 추가 지출
+    public float brokerTakeRate = 0.3f;      // DB 접근 골랐을 때 브로커가 떼가는 돈 비율
+    public float reportSuspicionPerDay = 8;  // 신고 골랐을 때 소문 때문에 매일 오르는 의심도
 
     [Header("의심도")]
     public float maxSuspicion = 100;            // 의심도 최대치 (넘으면 게임오버)

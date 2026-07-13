@@ -23,20 +23,20 @@ public class DebugLoopDriver : MonoBehaviour
         GUILayout.Label("의심도: " + gm.suspicion.current + " / " + gm.config.maxSuspicion);
         GUILayout.Space(10);
 
-        // 하드모드면 진행 상황 + 아직 선택 안 했으면 선택창 먼저
+        // 하드모드면 진행 상황 + 아직 답 안 했으면 브로커 선택창 먼저
         if (gm.hardMode == true)
         {
             GUILayout.Label("[하드모드] " + gm.hardModeDay + " / " + gm.config.hardModeDays + "일");
-            if (gm.hardChoice == HardModeChoice.None)
+            if (gm.brokerChoice == BrokerChoice.None)
             {
-                GUILayout.Label("브로커: 매일 치를 대가를 골라라");
-                if (GUILayout.Button("매일 의심도 증가"))
+                GUILayout.Label("브로커: 자, 이제 어떻게 할 거야?");
+                if (GUILayout.Button("DB 접근시키기 (돈 뜯김)"))
                 {
-                    gm.hardChoice = HardModeChoice.Suspicion;
+                    gm.ChooseBroker(BrokerChoice.DatabaseAccess);
                 }
-                if (GUILayout.Button("매일 크레딧 소모"))
+                if (GUILayout.Button("신고하기 (매일 의심도 증가)"))
                 {
-                    gm.hardChoice = HardModeChoice.CreditDrain;
+                    gm.ChooseBroker(BrokerChoice.ReportBroker);
                 }
             }
             GUILayout.Space(10);
@@ -116,6 +116,14 @@ public class DebugLoopDriver : MonoBehaviour
         else if (gm.phase == GamePhase.Ending || gm.phase == GamePhase.GameOver)
         {
             GUILayout.Label(">>> " + gm.phase + " <<<");
+            if (gm.phase == GamePhase.Ending)
+            {
+                GUILayout.Label("엔딩: " + gm.lastEnding);
+            }
+            else
+            {
+                GUILayout.Label("이유: " + gm.lastGameOverReason);
+            }
             if (GUILayout.Button("타이틀로"))
             {
                 gm.RestartToTitle();

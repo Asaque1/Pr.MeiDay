@@ -33,13 +33,13 @@ public class EndingView : MonoBehaviour
         {
             titleText.text = "엔딩";
 
-            if (gm.lastEnding == EndingType.Escape)
+            if (gm.lastEnding == EndingType.DatabaseAccess)
             {
-                descText.text = "우주선을 타고 탈출했다!";
+                descText.text = "브로커에게 DB를 열어줬다. 찜찜하지만... 지구로 돌아간다!";
             }
             else
             {
-                descText.text = "우주선 없이 끝까지 버텼다...";
+                descText.text = "브로커를 신고하고도 끝까지 버텼다. 지구로 돌아간다!";
             }
         }
     }

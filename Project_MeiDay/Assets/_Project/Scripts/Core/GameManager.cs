@@ -26,9 +26,9 @@ public class GameManager : MonoBehaviour
     public bool hasSpaceship = false;         // 우주선 샀는지
 
     // 하드모드 (우주선 산 뒤)
-    public bool hardMode = false;                           // 하드모드 중인지
-    public int hardModeDay = 0;                             // 하드모드 며칠째인지
-    public HardModeChoice hardChoice = HardModeChoice.None; // 브로커가 준 선택
+    public bool hardMode = false;                             // 하드모드 중인지
+    public int hardModeDay = 0;                               // 하드모드 며칠째인지
+    public BrokerChoice brokerChoice = BrokerChoice.None;     // 브로커한테 뭐라고 답했는지 (엔딩 분기)
 
     // 어떻게 끝났는지 기록 (엔딩 화면에서 보여줄 때 씀)
     public GameOverReason lastGameOverReason;
@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
         {
             hardMode = true;
             hardModeDay = 0;
-            hardChoice = HardModeChoice.None;
+            brokerChoice = BrokerChoice.None;
             // TODO: 여기서 브로커 만나는 연출 넣기
         }
 
@@ -153,19 +153,37 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
+    // 브로커한테 답하기 (하드모드 첫 아침에 UI 가 불러줌)
+    public void ChooseBroker(BrokerChoice choice)
+    {
+        brokerChoice = choice;
+
+        // DB 접근을 골랐으면 브로커가 자금이 부족하다며 돈을 떼감
+        if (choice == BrokerChoice.DatabaseAccess && economy.credits > 0)
+        {
+            int taken = Mathf.RoundToInt(economy.credits * config.brokerTakeRate);
+            economy.credits -= taken;
+        }
+    }
+
     // 하드모드 하루 진행 (calendar 가 다음날마다 부름)
     public void AdvanceHardMode()
     {
+        // 아직 브로커한테 답 안 했으면 카운트 안 함 (답하고 나서부터 7일)
+        if (brokerChoice == BrokerChoice.None)
+        {
+            return;
+        }
+
         hardModeDay++;
 
-        // 선택에 따라 매일 대가 치름
-        if (hardChoice == HardModeChoice.Suspicion)
+        // 하드모드엔 고정 지출이 늘어남
+        economy.credits -= config.hardModeExtraCost;
+
+        // 신고 루트면 브로커가 퍼뜨린 소문 때문에 매일 의심받음
+        if (brokerChoice == BrokerChoice.ReportBroker)
         {
-            suspicion.AddSuspicion(config.hardModeSuspicionPerDay);
-        }
-        else if (hardChoice == HardModeChoice.CreditDrain)
-        {
-            economy.credits -= config.hardModeCreditDrainPerDay;
+            suspicion.AddSuspicion(config.reportSuspicionPerDay);
         }
 
         // 의심도 초과로 게임오버 됐으면 끝
@@ -174,10 +192,17 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // 며칠 버티면 탈출 엔딩
+        // 엔딩일까지 버티면 고른 쪽 엔딩
         if (hardModeDay >= config.hardModeDays)
         {
-            Ending(EndingType.Escape);
+            if (brokerChoice == BrokerChoice.DatabaseAccess)
+            {
+                Ending(EndingType.DatabaseAccess);
+            }
+            else
+            {
+                Ending(EndingType.ReportBroker);
+            }
         }
     }
 
