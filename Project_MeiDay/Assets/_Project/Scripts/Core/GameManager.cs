@@ -103,6 +103,15 @@ public class GameManager : MonoBehaviour
             complaint.earnedToday += config.perfectDayBonus;
         }
 
+        // 업무가 끝났으니 식비와 월세를 차례대로 정산
+        economy.PayDailyBills(calendar.day);
+
+        // 월세가 세 번 밀려 게임오버 됐으면 결산 화면으로 넘어가지 않음
+        if (phase == GamePhase.GameOver)
+        {
+            return;
+        }
+
         ChangePhase(GamePhase.DayResult);
     }
 

@@ -7,6 +7,12 @@ public class EconomyManager : MonoBehaviour
     public int rentMissCount = 0; // 월세 몇 번 밀렸는지
     public int nextRentDay = 3;   // 다음 월세 내는 날 (게임 시작 때 맞춰줌)
 
+    // 오늘 결산에 보여줄 지출 내역
+    public int foodPaidToday = 0;
+    public int rentPaidToday = 0;
+    public bool rentWasDueToday = false;
+    public bool rentMissedToday = false;
+
     // 돈 더하기
     public void AddCredits(int amount)
     {
@@ -24,10 +30,28 @@ public class EconomyManager : MonoBehaviour
         return true;
     }
 
+    // 하루 업무가 끝났을 때 식비부터 내고, 월세 날이면 월세도 냄
+    public void PayDailyBills(int day)
+    {
+        foodPaidToday = 0;
+        rentPaidToday = 0;
+        rentWasDueToday = false;
+        rentMissedToday = false;
+
+        PayFood();
+
+        if (day >= nextRentDay)
+        {
+            rentWasDueToday = true;
+            PayRent();
+        }
+    }
+
     // 매일 밥값 내기
     public void PayFood()
     {
-        credits -= GameManager.instance.config.foodCost;
+        foodPaidToday = GameManager.instance.config.foodCost;
+        credits -= foodPaidToday;
     }
 
     // 월세 내기 (독촉 방식)
@@ -39,11 +63,13 @@ public class EconomyManager : MonoBehaviour
         if (credits >= rent)
         {
             credits -= rent;
+            rentPaidToday = rent;
             rentMissCount = 0;                   // 잘 냈으니 초기화
             nextRentDay += config.rentEveryDays; // 다음 정기 청구일로
         }
         else
         {
+            rentMissedToday = true;
             rentMissCount++; // 월세 밀림
             if (rentMissCount >= config.rentMissLimit)
             {
