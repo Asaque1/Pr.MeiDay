@@ -45,7 +45,15 @@ public class DebugLoopDriver : MonoBehaviour
         // 페이즈마다 버튼 다르게 보여줌
         if (gm.phase == GamePhase.Intro)
         {
-            if (GUILayout.Button("게임 시작"))
+            if (gm.save.HasSave() == true)
+            {
+                if (GUILayout.Button("이어하기"))
+                {
+                    gm.ContinueGame();
+                }
+            }
+
+            if (GUILayout.Button("새 게임"))
             {
                 gm.GameStart();
             }
