@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 // 화면(패널) 전환을 담당하는 UI 대장
 // 페이즈가 바뀌면 그 페이즈에 맞는 패널만 켜줌
@@ -10,11 +11,22 @@ public class UiRoot : MonoBehaviour
     [SerializeField] GameObject nightPanel;  // 밤 (상점)
     [SerializeField] GameObject endingPanel; // 엔딩 / 게임오버
     [SerializeField] GameObject hardChoicePanel; // 하드모드 첫 아침에 뜨는 브로커 선택창
+    [SerializeField] Button continueButton; // 저장 없으면 못 누르는 이어하기 버튼
 
     void Start()
     {
         GameManager.instance.OnPhaseChanged += ShowPanelFor;
         ShowPanelFor(GameManager.instance.phase); // 시작할 때 한 번 맞춰줌
+        RefreshContinueButton();
+    }
+
+    // 저장 데이터가 있을 때만 이어하기를 누를 수 있게 함
+    void RefreshContinueButton()
+    {
+        if (continueButton != null)
+        {
+            continueButton.interactable = GameManager.instance.save.HasSave();
+        }
     }
 
     void OnDestroy()
@@ -43,10 +55,16 @@ public class UiRoot : MonoBehaviour
 
     // ---- 아래는 버튼 OnClick 에 연결해서 씀 ----
 
-    // 타이틀: 시작
+    // 타이틀: 새 게임
     public void OnClickStart()
     {
         GameManager.instance.GameStart();
+    }
+
+    // 타이틀: 이어하기
+    public void OnClickContinue()
+    {
+        GameManager.instance.ContinueGame();
     }
 
     // 결산: 확인 -> 밤으로
