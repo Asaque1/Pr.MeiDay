@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameConfig : ScriptableObject
 {
     [Header("기간 / 돈")]
+    public int startingCredits = 100; // 새 게임 시작 크레딧
     public int foodCost = 10;         // 매일 나가는 밥값
     public int rentCost = 120;        // 월세
     public int firstRentDay = 3;      // 첫 월세 내는 날

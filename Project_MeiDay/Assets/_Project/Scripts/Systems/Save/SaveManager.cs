@@ -4,6 +4,18 @@ using UnityEngine;
 // PlayerPrefs 라는 유니티 기본 저장 기능을 씀 (간단함)
 public class SaveManager : MonoBehaviour
 {
+    // 이어할 저장 데이터가 있는지
+    public bool HasSave()
+    {
+        if (PlayerPrefs.GetInt("saveExists", 0) == 1)
+        {
+            return true;
+        }
+
+        // saveExists 를 넣기 전 버전에서 저장한 데이터도 이어할 수 있게 함
+        return PlayerPrefs.HasKey("day");
+    }
+
     // 저장하기
     public void Save()
     {
@@ -48,18 +60,25 @@ public class SaveManager : MonoBehaviour
             PlayerPrefs.SetString("seenEvent" + i, gm.events.seenEventIds[i]);
         }
 
+        // 모든 값을 다 넣은 뒤 마지막에 저장 있음 표시
+        PlayerPrefs.SetInt("saveExists", 1);
         PlayerPrefs.Save();
         Debug.Log("저장 완료");
     }
 
-    // 불러오기 (저장한 적 없으면 기본값 들어감)
-    public void Load()
+    // 불러오기. 저장 데이터가 없으면 false
+    public bool Load()
     {
+        if (HasSave() == false)
+        {
+            return false;
+        }
+
         GameManager gm = GameManager.instance;
 
         // 기본 숫자들
         gm.calendar.day = PlayerPrefs.GetInt("day", 1);
-        gm.economy.credits = PlayerPrefs.GetInt("credits", 100);
+        gm.economy.credits = PlayerPrefs.GetInt("credits", gm.config.startingCredits);
         gm.economy.rentMissCount = PlayerPrefs.GetInt("rentMiss", 0);
         gm.economy.nextRentDay = PlayerPrefs.GetInt("nextRentDay", gm.config.firstRentDay);
         gm.suspicion.current = PlayerPrefs.GetFloat("suspicion", 0);
@@ -90,5 +109,6 @@ public class SaveManager : MonoBehaviour
         }
 
         Debug.Log("불러오기 완료");
+        return true;
     }
 }
