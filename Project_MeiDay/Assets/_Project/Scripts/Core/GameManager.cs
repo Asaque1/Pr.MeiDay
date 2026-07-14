@@ -55,13 +55,51 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 게임 시작 (타이틀에서 부름)
+    // 새 게임 시작 (타이틀에서 부름)
     public void GameStart()
     {
         // TODO: 나중에 여기서 인트로 슬라이드쇼 재생
-        // TODO: 이어하기 버튼 만들면 여기서 save.Load() 분기
-        economy.nextRentDay = config.firstRentDay; // 첫 월세 날 맞춰주기 (3일차부터)
+        ResetForNewGame();
+        save.Save(); // 첫날 아침도 이어할 수 있게 저장
         StartNewDay();
+    }
+
+    // 저장한 아침부터 이어하기
+    public bool ContinueGame()
+    {
+        if (save.Load() == false)
+        {
+            return false;
+        }
+
+        StartNewDay();
+        return true;
+    }
+
+    // 새 게임에 필요한 값들을 처음 상태로 돌림
+    void ResetForNewGame()
+    {
+        phase = GamePhase.Intro;
+        hasSpaceship = false;
+        hardMode = false;
+        hardModeDay = 0;
+        brokerChoice = BrokerChoice.None;
+        lastEnding = EndingType.None;
+
+        calendar.day = 1;
+        economy.credits = config.startingCredits;
+        economy.rentMissCount = 0;
+        economy.nextRentDay = config.firstRentDay;
+        economy.foodPaidToday = 0;
+        economy.rentPaidToday = 0;
+        economy.rentWasDueToday = false;
+        economy.rentMissedToday = false;
+        suspicion.current = 0;
+
+        inventory.ownedItems.Clear();
+        events.seenEventIds.Clear();
+        events.currentEvent = null;
+        events.lineIndex = 0;
     }
 
     // 하루 시작 (낮 - 민원 처리)
