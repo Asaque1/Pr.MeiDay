@@ -20,17 +20,31 @@ public class EventManager : MonoBehaviour
         int day = GameManager.instance.calendar.day;
         List<EventDefinition> all = GameManager.instance.content.events;
 
-        // 1순위: 오늘 날짜에 고정된 이벤트
+        // 1순위: 날짜 고정 이벤트 (같은 날 겹치거나 밀린 게 있으면 이른 날짜 것부터 하나씩)
+        EventDefinition fixedPick = null;
         for (int i = 0; i < all.Count; i++)
         {
             EventDefinition ev = all[i];
-            if (ev.timing == EventTiming.FixedDay && ev.fixedDay == day && HasSeen(ev.id) == false)
+            if (ev.timing != EventTiming.FixedDay || HasSeen(ev.id) == true)
             {
-                return ev;
+                continue;
+            }
+            if (ev.fixedDay > day)
+            {
+                continue; // 아직 날짜 안 됨
+            }
+            if (fixedPick == null || ev.fixedDay < fixedPick.fixedDay)
+            {
+                fixedPick = ev;
             }
         }
 
-        // 2순위: 랜덤 이벤트 (안 본 것들 중 하나 골라서 확률 굴림)
+        if (fixedPick != null)
+        {
+            return fixedPick;
+        }
+
+        // 2순위: 랜덤 이벤트 (안 본 것들을 섞어서 하나씩 확률 굴림)
         List<EventDefinition> candidates = new List<EventDefinition>();
         for (int i = 0; i < all.Count; i++)
         {
@@ -41,15 +55,21 @@ public class EventManager : MonoBehaviour
             }
         }
 
-        if (candidates.Count == 0)
+        // 순서 섞기 (앞에 적힌 이벤트만 유리하지 않게)
+        for (int i = candidates.Count - 1; i > 0; i--)
         {
-            return null;
+            int j = UnityEngine.Random.Range(0, i + 1);
+            EventDefinition temp = candidates[i];
+            candidates[i] = candidates[j];
+            candidates[j] = temp;
         }
 
-        EventDefinition picked = candidates[UnityEngine.Random.Range(0, candidates.Count)];
-        if (UnityEngine.Random.value < picked.randomChance)
+        for (int i = 0; i < candidates.Count; i++)
         {
-            return picked;
+            if (UnityEngine.Random.value < candidates[i].randomChance)
+            {
+                return candidates[i];
+            }
         }
 
         return null; // 오늘은 이벤트 없는 아침
@@ -142,6 +162,7 @@ public class EventManager : MonoBehaviour
         return false;
     }
 
+    // 구독한 UI 한테 알려주기
     void NotifyUpdated()
     {
         if (OnDialogueUpdated != null)

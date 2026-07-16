@@ -6,7 +6,7 @@ using UnityEngine.UI;
 // 아침 이벤트 대사창 - 타이핑 효과로 대사를 한 글자씩 보여줌
 public class DialogueView : MonoBehaviour
 {
-    [SerializeField] GameObject dialogueBox;   // 대사창 전체 (이벤트 중일 때만 켜짐)
+    [SerializeField] GameObject dialogueBox;   // 대사창 전체 (이벤트 중일 때만 켜짐. 이 스크립트가 붙은 오브젝트 말고 자식을 넣을 것)
     [SerializeField] TMP_Text speakerText;     // 말하는 사람 이름
     [SerializeField] TMP_Text lineText;        // 대사 내용
     [SerializeField] GameObject nextIndicator; // 출력 다 되면 나오는 넘김 표시
