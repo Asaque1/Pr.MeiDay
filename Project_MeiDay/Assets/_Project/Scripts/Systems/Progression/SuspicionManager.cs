@@ -9,6 +9,14 @@ public class SuspicionManager : MonoBehaviour
     // 의심도 올리기 (민원 틀렸을 때 등)
     public void AddSuspicion(float amount)
     {
+        // 연극단 영구템: 의심도 오르는 양을 줄여줌 (최대 절반까지만)
+        float resist = GameManager.instance.inventory.GetEffectPower(ItemEffect.SuspicionResist);
+        if (resist > 50)
+        {
+            resist = 50;
+        }
+        amount -= amount * resist / 100f;
+
         current += amount;
 
         float max = GameManager.instance.config.maxSuspicion;

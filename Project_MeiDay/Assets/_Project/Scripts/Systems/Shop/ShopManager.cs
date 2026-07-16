@@ -1,9 +1,9 @@
 using UnityEngine;
 
-// 브로커 상점 매니저 (아이템 사기)
+// 상점 매니저 (아이템 사기 + 해금 확인)
 public class ShopManager : MonoBehaviour
 {
-    // 아이템 사기. 성공하면 true, 돈 없으면 false
+    // 아이템 사기. 성공하면 true, 돈 없거나 못 사는 물건이면 false
     public bool Buy(ItemDefinition item)
     {
         if (item == null)
@@ -11,10 +11,9 @@ public class ShopManager : MonoBehaviour
             return false;
         }
 
-        // 우주선표는 한 번만 살 수 있음 (또 사면 돈만 날림)
-        if (item.isSpaceshipTicket == true && GameManager.instance.hasSpaceship == true)
+        if (CanBuy(item) == false)
         {
-            return false;
+            return false; // 품절이거나 아직 해금 안 됨
         }
 
         // 돈 내보기
@@ -24,13 +23,16 @@ public class ShopManager : MonoBehaviour
             return false; // 돈 부족해서 못 삼
         }
 
-        // 샀으니까 인벤토리에 넣기
-        GameManager.instance.inventory.AddItem(item.id);
-
-        // 1회성 효과 - 의심도 바로 내려감 (변장 용품 같은 거)
-        if (item.suspicionReduce > 0)
+        if (item.kind == ItemKind.Permanent)
         {
-            GameManager.instance.suspicion.ReduceSuspicion(item.suspicionReduce);
+            // 영구템은 살 때마다 레벨이 오름
+            GameManager.instance.inventory.LevelUpItem(item.id);
+        }
+        else
+        {
+            // 1회성이랑 랜덤박스는 사자마자 효과
+            GameManager.instance.inventory.AddItem(item.id);
+            ApplyInstantEffect(item);
         }
 
         // 우주선표면 탈출 가능 표시
@@ -40,5 +42,63 @@ public class ShopManager : MonoBehaviour
         }
 
         return true;
+    }
+
+    // 지금 이 물건을 살 수 있는 상태인지 (돈은 여기서 안 봄)
+    public bool CanBuy(ItemDefinition item)
+    {
+        // 우주선표는 한 번만
+        if (item.isSpaceshipTicket == true && GameManager.instance.hasSpaceship == true)
+        {
+            return false;
+        }
+
+        // 영구템은 레벨 다 차면 품절
+        if (item.kind == ItemKind.Permanent
+            && GameManager.instance.inventory.GetItemLevel(item.id) >= item.maxLevel)
+        {
+            return false;
+        }
+
+        return IsUnlocked(item);
+    }
+
+    // 해금됐는지 (요구하는 영구템을 끝까지 샀는지)
+    public bool IsUnlocked(ItemDefinition item)
+    {
+        if (item.requiresMaxed == null)
+        {
+            return true; // 조건 없는 물건
+        }
+
+        int level = GameManager.instance.inventory.GetItemLevel(item.requiresMaxed.id);
+        return level >= item.requiresMaxed.maxLevel;
+    }
+
+    // 1회성/랜덤박스 효과 바로 적용
+    void ApplyInstantEffect(ItemDefinition item)
+    {
+        GameManager gm = GameManager.instance;
+
+        if (item.kind == ItemKind.RandomBox)
+        {
+            // 범위 내 랜덤 크레딧 (본전일 수도, 대박일 수도)
+            int reward = Random.Range(item.boxRewardMin, item.boxRewardMax + 1);
+            gm.economy.AddCredits(reward);
+            return;
+        }
+
+        if (item.effect == ItemEffect.ReduceSuspicion)
+        {
+            gm.suspicion.ReduceSuspicion(item.power);
+        }
+        else if (item.effect == ItemEffect.PayoutBuff)
+        {
+            gm.pendingPayoutBuff += (int)item.power; // 내일 성과금 +%
+        }
+        else if (item.effect == ItemEffect.ExtraComplaints)
+        {
+            gm.pendingExtraComplaints += (int)item.power; // 내일 민원인 추가
+        }
     }
 }

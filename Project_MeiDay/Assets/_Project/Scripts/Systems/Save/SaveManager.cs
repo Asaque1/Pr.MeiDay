@@ -60,6 +60,18 @@ public class SaveManager : MonoBehaviour
             PlayerPrefs.SetString("seenEvent" + i, gm.events.seenEventIds[i]);
         }
 
+        // 영구템 레벨들 (id 랑 레벨 나란히)
+        PlayerPrefs.SetInt("permCount", gm.inventory.permItemIds.Count);
+        for (int i = 0; i < gm.inventory.permItemIds.Count; i++)
+        {
+            PlayerPrefs.SetString("permId" + i, gm.inventory.permItemIds[i]);
+            PlayerPrefs.SetInt("permLv" + i, gm.inventory.permItemLevels[i]);
+        }
+
+        // 내일 적용될 파티 버프
+        PlayerPrefs.SetInt("pendingPayoutBuff", gm.pendingPayoutBuff);
+        PlayerPrefs.SetInt("pendingExtraComplaints", gm.pendingExtraComplaints);
+
         // 모든 값을 다 넣은 뒤 마지막에 저장 있음 표시
         PlayerPrefs.SetInt("saveExists", 1);
         PlayerPrefs.Save();
@@ -107,6 +119,20 @@ public class SaveManager : MonoBehaviour
         {
             gm.events.seenEventIds.Add(PlayerPrefs.GetString("seenEvent" + i, ""));
         }
+
+        // 영구템 레벨들
+        gm.inventory.permItemIds.Clear();
+        gm.inventory.permItemLevels.Clear();
+        int permCount = PlayerPrefs.GetInt("permCount", 0);
+        for (int i = 0; i < permCount; i++)
+        {
+            gm.inventory.permItemIds.Add(PlayerPrefs.GetString("permId" + i, ""));
+            gm.inventory.permItemLevels.Add(PlayerPrefs.GetInt("permLv" + i, 0));
+        }
+
+        // 내일 적용될 파티 버프
+        gm.pendingPayoutBuff = PlayerPrefs.GetInt("pendingPayoutBuff", 0);
+        gm.pendingExtraComplaints = PlayerPrefs.GetInt("pendingExtraComplaints", 0);
 
         Debug.Log("불러오기 완료");
         return true;

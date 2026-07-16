@@ -47,6 +47,9 @@ public class ComplaintManager : MonoBehaviour
             count = config.complaintsMax;
         }
 
+        // 파티 버프: 오늘은 민원인이 더 옴 (상한이랑 별개로 얹음)
+        count += GameManager.instance.extraComplaintsToday;
+
         // 이벤트 민원이 오늘 첫 손님
         if (eventComplaint != null)
         {
@@ -166,10 +169,16 @@ public class ComplaintManager : MonoBehaviour
 
         if (choice == c.correctResolution)
         {
-            // 맞게 처리 -> 돈 받음
-            GameManager.instance.economy.AddCredits(c.reward);
+            // 맞게 처리 -> 돈 받음 (파티 버프 있으면 % 만큼 더)
+            int pay = c.reward;
+            if (GameManager.instance.payoutBuffToday > 0)
+            {
+                pay += pay * GameManager.instance.payoutBuffToday / 100;
+            }
+
+            GameManager.instance.economy.AddCredits(pay);
             successCount++;
-            earnedToday += c.reward;
+            earnedToday += pay;
 
             // 이 민원을 한 번도 안 틀렸으면 의심도 조금 내려감
             if (translation.wrongCount == 0 && resolutionWrongCount == 0)

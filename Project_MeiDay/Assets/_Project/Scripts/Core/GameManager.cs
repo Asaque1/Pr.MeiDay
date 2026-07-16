@@ -30,6 +30,12 @@ public class GameManager : MonoBehaviour
     public int hardModeDay = 0;                               // 하드모드 며칠째인지
     public BrokerChoice brokerChoice = BrokerChoice.None;     // 브로커한테 뭐라고 답했는지 (엔딩 분기)
 
+    // 파티용품점 버프 (밤에 사면 다음 날 하루 적용)
+    public int pendingPayoutBuff = 0;      // 내일 성과금 몇 % 더 받을지
+    public int pendingExtraComplaints = 0; // 내일 민원인 몇 명 더 올지
+    public int payoutBuffToday = 0;        // 오늘 적용 중인 성과금 버프
+    public int extraComplaintsToday = 0;   // 오늘 적용 중인 민원인 추가
+
     // 어떻게 끝났는지 기록 (엔딩 화면에서 보여줄 때 씀)
     public GameOverReason lastGameOverReason;
     public EndingType lastEnding = EndingType.None;
@@ -97,6 +103,13 @@ public class GameManager : MonoBehaviour
         suspicion.current = 0;
 
         inventory.ownedItems.Clear();
+        inventory.permItemIds.Clear();
+        inventory.permItemLevels.Clear();
+        pendingPayoutBuff = 0;
+        pendingExtraComplaints = 0;
+        payoutBuffToday = 0;
+        extraComplaintsToday = 0;
+
         events.seenEventIds.Clear();
         events.currentEvent = null;
         events.lineIndex = 0;
@@ -105,6 +118,12 @@ public class GameManager : MonoBehaviour
     // 하루 시작 (낮 - 민원 처리)
     void StartNewDay()
     {
+        // 어젯밤 산 버프가 오늘부터 적용됨
+        payoutBuffToday = pendingPayoutBuff;
+        extraComplaintsToday = pendingExtraComplaints;
+        pendingPayoutBuff = 0;
+        pendingExtraComplaints = 0;
+
         ChangePhase(GamePhase.DayWork);
 
         // 아침 이벤트 있으면 대사부터 (끝나면 EventManager 가 OnMorningEventDone 불러줌)

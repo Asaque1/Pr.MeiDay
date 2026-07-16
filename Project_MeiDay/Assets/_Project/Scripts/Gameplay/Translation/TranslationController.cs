@@ -77,7 +77,13 @@ public class TranslationController : MonoBehaviour
             pool.Add(w);
         }
 
-        int perSlot = GameManager.instance.config.wrongCardsPerSlot;
+        // 서점 영구템 레벨만큼 오답 카드가 줄어듬 (사전이 좋아질수록 헷갈릴 게 없음)
+        int perSlot = GameManager.instance.config.wrongCardsPerSlot
+            - (int)GameManager.instance.inventory.GetEffectPower(ItemEffect.FewerWrongCards);
+        if (perSlot < 0)
+        {
+            perSlot = 0;
+        }
 
         for (int s = 0; s < slots.Count; s++)
         {
