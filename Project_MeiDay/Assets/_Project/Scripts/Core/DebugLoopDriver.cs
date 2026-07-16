@@ -117,6 +117,9 @@ public class DebugLoopDriver : MonoBehaviour
         }
         else if (gm.phase == GamePhase.NightShop)
         {
+            DrawShop(gm);
+
+            GUILayout.Space(6);
             GUILayout.Label("우주선 가격: " + gm.config.spaceshipPrice);
             if (gm.hasSpaceship == false)
             {
@@ -153,6 +156,63 @@ public class DebugLoopDriver : MonoBehaviour
         }
 
         GUILayout.EndArea();
+    }
+
+    // 밤 상점 디버그 UI (아이템 사기)
+    void DrawShop(GameManager gm)
+    {
+        if (gm.content.items.Count == 0)
+        {
+            GUILayout.Label("(파는 물건 없음 - 아이템 데이터 비었음)");
+            return;
+        }
+
+        for (int i = 0; i < gm.content.items.Count; i++)
+        {
+            ItemDefinition item = gm.content.items[i];
+
+            // 해금 안 된 물건은 뭔지 안 보여줌
+            if (gm.shop.IsUnlocked(item) == false)
+            {
+                GUILayout.Label(ShopTag(item.shopType) + " ??? (잠김)");
+                continue;
+            }
+
+            string label = ShopTag(item.shopType) + " " + item.itemName;
+            if (item.kind == ItemKind.Permanent)
+            {
+                label += " lv" + gm.inventory.GetItemLevel(item.id) + "/" + item.maxLevel;
+            }
+
+            if (gm.shop.CanBuy(item) == false)
+            {
+                GUILayout.Label(label + " (품절)");
+                continue;
+            }
+
+            if (GUILayout.Button(label + " - " + item.price + "cr"))
+            {
+                gm.shop.Buy(item);
+            }
+        }
+    }
+
+    // 상점 이름 짧은 태그
+    string ShopTag(ShopType type)
+    {
+        if (type == ShopType.Bookstore)
+        {
+            return "[서점]";
+        }
+        if (type == ShopType.Theater)
+        {
+            return "[연극단]";
+        }
+        if (type == ShopType.PartyShop)
+        {
+            return "[파티]";
+        }
+        return "[브로커]";
     }
 
     // 아침 이벤트 대사 디버그 UI
