@@ -224,22 +224,7 @@ public class GameManager : MonoBehaviour
 
         hardModeDay++;
 
-        // 하드모드엔 고정 지출이 늘어남
-        economy.credits -= config.hardModeExtraCost;
-
-        // 신고 루트면 브로커가 퍼뜨린 소문 때문에 매일 의심받음
-        if (brokerChoice == BrokerChoice.ReportBroker)
-        {
-            suspicion.AddSuspicion(config.reportSuspicionPerDay);
-        }
-
-        // 의심도 초과로 게임오버 됐으면 끝
-        if (phase == GamePhase.GameOver)
-        {
-            return;
-        }
-
-        // 엔딩일까지 버티면 고른 쪽 엔딩
+        // 엔딩날 아침이면 지출이나 소문 없이 바로 엔딩 (마지막 날은 엔딩 구간)
         if (hardModeDay >= config.hardModeDays)
         {
             if (brokerChoice == BrokerChoice.DatabaseAccess)
@@ -250,6 +235,16 @@ public class GameManager : MonoBehaviour
             {
                 Ending(EndingType.ReportBroker);
             }
+            return;
+        }
+
+        // 하드모드엔 고정 지출이 늘어남
+        economy.credits -= config.hardModeExtraCost;
+
+        // 신고 루트면 브로커가 퍼뜨린 소문 때문에 매일 의심받음
+        if (brokerChoice == BrokerChoice.ReportBroker)
+        {
+            suspicion.AddSuspicion(config.reportSuspicionPerDay);
         }
     }
 
