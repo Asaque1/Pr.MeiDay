@@ -150,6 +150,10 @@ public class TranslationController : MonoBehaviour
         {
             return; // 이미 쓴 카드
         }
+        if (card.isRemoved == true)
+        {
+            return; // 떨어져 사라진 카드
+        }
 
         // 그 상자에 이미 카드가 있으면 먼저 꺼내줌
         ClearSlot(slotIndex);
@@ -192,11 +196,52 @@ public class TranslationController : MonoBehaviour
         return true;
     }
 
-    // 틀렸을 때 - 의심도 오르고 틀린 횟수 셈
+    // 틀렸을 때 - 의심도 오르고 틀린 횟수 세고 틀린 카드는 떨어짐
     public void AddWrong()
     {
         wrongCount++;
         GameManager.instance.suspicion.AddSuspicion(GameManager.instance.config.suspicionWrongTranslation);
+        DropWrongCards();
+    }
+
+    // 틀리게 놓은 오답 카드들이 떨어져 사라짐 (다시 풀 때는 좀 쉬워짐)
+    void DropWrongCards()
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            WordSlot slot = slots[i];
+            if (slot.placedWord == null || slot.IsCorrect() == true)
+            {
+                continue; // 빈 상자거나 맞게 놓은 건 그대로
+            }
+
+            // 다른 상자의 정답 단어면 없애면 안 됨 (그거 없으면 못 푸니까)
+            if (IsAnswerWord(slot.placedWord) == true)
+            {
+                continue;
+            }
+
+            int cardIndex = _slotCardIndex[i];
+            if (cardIndex >= 0)
+            {
+                cards[cardIndex].isRemoved = true; // 카드가 떨어져 사라짐
+            }
+            slot.placedWord = null;
+            _slotCardIndex[i] = -1;
+        }
+    }
+
+    // 이 단어가 어느 상자든 정답인지
+    bool IsAnswerWord(WordDefinition word)
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (slots[i].correctWord == word)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     // 너무 많이 틀렸는지 (민원인 나가는 기준)

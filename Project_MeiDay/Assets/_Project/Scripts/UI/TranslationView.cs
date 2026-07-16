@@ -96,6 +96,11 @@ public class TranslationView : MonoBehaviour
 
         for (int i = 0; i < tc.cards.Count; i++)
         {
+            if (tc.cards[i].isRemoved == true)
+            {
+                continue; // 떨어져 사라진 카드는 안 보여줌
+            }
+
             WordCardUI cardUi = Instantiate(cardPrefab, cardParent);
             cardUi.Set(i, tc.cards[i]);
             _cardUis.Add(cardUi);

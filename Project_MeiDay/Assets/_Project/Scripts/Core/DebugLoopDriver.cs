@@ -270,6 +270,11 @@ public class DebugLoopDriver : MonoBehaviour
         for (int i = 0; i < tc.cards.Count; i++)
         {
             WordCard card = tc.cards[i];
+            if (card.isRemoved == true)
+            {
+                continue; // 떨어져 사라진 카드
+            }
+
             string mark = "";
             if (card.isUsed == true)
             {
