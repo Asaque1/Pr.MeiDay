@@ -100,5 +100,10 @@ public class ShopManager : MonoBehaviour
         {
             gm.pendingExtraComplaints += (int)item.power; // 내일 민원인 추가
         }
+        else
+        {
+            // 1회성인데 즉시 효과가 아닌 게 적혀있으면 데이터 실수 (돈만 나감)
+            Debug.LogWarning("1회성 아이템에 안 맞는 효과가 붙어있음: " + item.id);
+        }
     }
 }
