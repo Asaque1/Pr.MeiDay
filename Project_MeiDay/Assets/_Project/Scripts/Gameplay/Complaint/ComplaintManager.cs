@@ -37,7 +37,11 @@ public class ComplaintManager : MonoBehaviour
 
         // 할당량 계산 (일차가 지날수록 늘어나고 상한이 있음)
         GameConfig config = GameManager.instance.config;
-        int count = config.complaintsPerDay + (GameManager.instance.calendar.day - 1) / config.complaintsGrowEvery;
+        int count = config.complaintsPerDay;
+        if (config.complaintsGrowEvery > 0)
+        {
+            count += (GameManager.instance.calendar.day - 1) / config.complaintsGrowEvery;
+        }
         if (count > config.complaintsMax)
         {
             count = config.complaintsMax;
@@ -108,6 +112,12 @@ public class ComplaintManager : MonoBehaviour
             return;
         }
 
+        // 지금 받는 민원이 없으면 무시 (아침 대사 중에 눌리는 것 방지)
+        if (currentIndex >= todayComplaints.Count)
+        {
+            return;
+        }
+
         // 다 맞으면 처리 단계로
         if (translation.CheckAnswer() == true)
         {
@@ -120,7 +130,7 @@ public class ComplaintManager : MonoBehaviour
         translation.AddWrong();
         mistakeCount++;
 
-        // 의심도 초과로 게임오버 됐으면 여기서 끝 (벌금/집계 중복 방지)
+        // 의심도 초과로 게임오버 됐으면 여기서 끝 (집계 중복 방지)
         if (GameManager.instance.phase == GamePhase.GameOver)
         {
             return;
@@ -142,6 +152,12 @@ public class ComplaintManager : MonoBehaviour
     {
         // 처리 단계일 때만
         if (stage != ComplaintStage.Resolve)
+        {
+            return;
+        }
+
+        // 지금 받는 민원이 없으면 무시 (아침 대사 중에 눌리는 것 방지)
+        if (currentIndex >= todayComplaints.Count)
         {
             return;
         }
