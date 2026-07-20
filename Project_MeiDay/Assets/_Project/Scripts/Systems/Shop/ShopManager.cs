@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 // 상점 매니저 (아이템 사기 + 해금 확인)
 public class ShopManager : MonoBehaviour
@@ -59,6 +60,17 @@ public class ShopManager : MonoBehaviour
         {
             return false;
         }
+        if(item.isSpaceshipTicket == true)
+        {
+            int total = GetShopLevel(ShopType.Bookstore)
+                + GetShopLevel(ShopType.Theater)
+                + GetShopLevel(ShopType.PartyShop);
+
+            if(total < GameManager.instance.config.spaceshipShopLevel)
+            {
+                return false;
+            }
+        }
 
         return IsUnlocked(item);
     }
@@ -66,6 +78,10 @@ public class ShopManager : MonoBehaviour
     // 해금됐는지 (요구하는 영구템을 끝까지 샀는지)
     public bool IsUnlocked(ItemDefinition item)
     {
+        if (item.shopType != ShopType.Broker && GetShopLevel(item.shopType) < item.requiredShopLevel)
+        {
+            return false;
+        }
         if (item.requiresMaxed == null)
         {
             return true; // 조건 없는 물건
@@ -73,6 +89,20 @@ public class ShopManager : MonoBehaviour
 
         int level = GameManager.instance.inventory.GetItemLevel(item.requiresMaxed.id);
         return level >= item.requiresMaxed.maxLevel;
+    }
+    public int GetShopLevel(ShopType type)
+    {
+        int level = GameManager.instance.arbeit.arbeitDoneCounts[(int)type];
+
+        List<ItemDefinition> items = GameManager.instance.content.items;
+        for (int i = 0; i < items.Count; i++)
+        {
+            if (items[i].shopType == type && items[i].kind == ItemKind.Permanent)
+            {
+                level += GameManager.instance.inventory.GetItemLevel(items[i].id);
+            }
+        }
+        return level;
     }
 
     // 1회성/랜덤박스 효과 바로 적용

@@ -37,7 +37,7 @@ public class ShopView : MonoBehaviour
 
         if (shopNameText != null)
         {
-            shopNameText.text = ShopName(currentShop);
+            shopNameText.text = ShopName(currentShop)+ " Lv. " + GameManager.instance.shop.GetShopLevel(currentShop);
         }
 
         List<ItemDefinition> items = GameManager.instance.content.items;

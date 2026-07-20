@@ -25,4 +25,5 @@ public class ItemDefinition : ScriptableObject
 
     // 이 영구템을 끝까지 사야 풀리는 물건 (브로커 해금용. 없으면 비워둠)
     public ItemDefinition requiresMaxed;
+    public int requiredShopLevel = 0;
 }

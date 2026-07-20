@@ -72,6 +72,12 @@ public class SaveManager : MonoBehaviour
         PlayerPrefs.SetInt("pendingPayoutBuff", gm.pendingPayoutBuff);
         PlayerPrefs.SetInt("pendingExtraComplaints", gm.pendingExtraComplaints);
 
+        // 상점별 알바 누적 횟수
+        for (int i = 0; i < gm.arbeit.arbeitDoneCounts.Count; i++)
+        {
+            PlayerPrefs.SetInt("arbeitDone" + i, gm.arbeit.arbeitDoneCounts[i]);
+        }
+
         // 모든 값을 다 넣은 뒤 마지막에 저장 있음 표시
         PlayerPrefs.SetInt("saveExists", 1);
         PlayerPrefs.Save();
@@ -133,6 +139,10 @@ public class SaveManager : MonoBehaviour
         // 내일 적용될 파티 버프
         gm.pendingPayoutBuff = PlayerPrefs.GetInt("pendingPayoutBuff", 0);
         gm.pendingExtraComplaints = PlayerPrefs.GetInt("pendingExtraComplaints", 0);
+        for(int i = 0; i < gm.arbeit.arbeitDoneCounts.Count; i++)
+        {
+            gm.arbeit.arbeitDoneCounts[i] = PlayerPrefs.GetInt("arbeitDone" + i, 0);
+        }
 
         Debug.Log("불러오기 완료");
         return true;

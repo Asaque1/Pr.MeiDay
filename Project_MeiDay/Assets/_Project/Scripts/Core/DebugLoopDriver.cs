@@ -197,6 +197,9 @@ public class DebugLoopDriver : MonoBehaviour
     // 밤 상점 디버그 UI (아이템 사기)
     void DrawShop(GameManager gm)
     {
+        GUILayout.Label("상점 레벨 - 서점 " + gm.shop.GetShopLevel(ShopType.Bookstore)
+            + " / 연극단 " + gm.shop.GetShopLevel(ShopType.Theater)
+            + " / 파티 " + gm.shop.GetShopLevel(ShopType.PartyShop));
         if (gm.content.items.Count == 0)
         {
             GUILayout.Label("(파는 물건 없음 - 아이템 데이터 비었음)");
