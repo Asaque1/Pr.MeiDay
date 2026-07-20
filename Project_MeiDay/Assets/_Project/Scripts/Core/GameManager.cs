@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public SaveManager save;
     public ComplaintManager complaint;
     public EventManager events;
+    public ArbeitManager arbeit;
 
     // 게임 상태
     public GamePhase phase = GamePhase.Intro; // 지금 어느 단계인지
@@ -109,6 +110,12 @@ public class GameManager : MonoBehaviour
         pendingExtraComplaints = 0;
         payoutBuffToday = 0;
         extraComplaintsToday = 0;
+        arbeit.currentArbeit = null;
+
+        for(int i = 0; i < arbeit.arbeitDoneCounts.Count; i++)
+        {
+            arbeit.arbeitDoneCounts[i] = 0;
+        }
 
         events.seenEventIds.Clear();
         events.currentEvent = null;
@@ -123,6 +130,7 @@ public class GameManager : MonoBehaviour
         extraComplaintsToday = pendingExtraComplaints;
         pendingPayoutBuff = 0;
         pendingExtraComplaints = 0;
+        arbeit.ResetDaily();   // 알바 횟수 충전
 
         ChangePhase(GamePhase.DayWork);
 

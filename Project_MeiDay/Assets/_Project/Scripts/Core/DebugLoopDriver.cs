@@ -118,6 +118,8 @@ public class DebugLoopDriver : MonoBehaviour
         else if (gm.phase == GamePhase.NightShop)
         {
             DrawShop(gm);
+            GUILayout.Space(6);
+            DrawArbeit(gm);
 
             GUILayout.Space(6);
             GUILayout.Label("우주선 가격: " + gm.config.spaceshipPrice);
@@ -157,7 +159,41 @@ public class DebugLoopDriver : MonoBehaviour
 
         GUILayout.EndArea();
     }
-
+    void DrawArbeit(GameManager gm)
+    {
+        GUILayout.Label("남은 알바 횟수: " + gm.arbeit.arbeitLeftToday);
+        if (gm.arbeit.currentArbeit != null)
+        {
+            GUILayout.Label("알바 중: " + gm.arbeit.currentArbeit.minigameName);
+            if (GUILayout.Button("잘 끝냄(수행률 100%"))
+            {
+                gm.arbeit.FinishArbeit(1f);
+            }
+            if(GUILayout.Button("대충 끝냄 수행률 50%"))
+            {
+                gm.arbeit.FinishArbeit(0.5f);
+            }
+            return;
+        }
+        if (gm.arbeit.arbeitLeftToday <= 0)
+        {
+            GUILayout.Label("오늘 알바 끝");
+            return;
+        }
+        if (gm.content.minigames.Count == 0)
+        {
+            GUILayout.Label("(알바 없음 - 미니게임 데이터 비었음)");
+            return;
+        }
+        for(int i = 0; i < gm.content.minigames.Count; i++)
+        {
+            MinigameDefinition arbeit = gm.content.minigames[i];
+            if(GUILayout.Button(ShopTag(arbeit.shopType) + " " + arbeit.minigameName + " ( " + arbeit.basePay + "cr)"))
+            {
+                gm.arbeit.StartArbeit(arbeit);
+            }
+        }
+    }
     // 밤 상점 디버그 UI (아이템 사기)
     void DrawShop(GameManager gm)
     {

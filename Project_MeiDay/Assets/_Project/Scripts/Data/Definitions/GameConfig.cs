@@ -33,4 +33,11 @@ public class GameConfig : ScriptableObject
     public int maxWrongTries = 3;       // 해석 몇 번 틀리면 민원인이 떠나는지
     public int perfectDayBonus = 30;    // 하루 다 맞췄을 때 주는 보너스
     public int wrongCardsPerSlot = 2;   // 상자 하나당 깔리는 오답 카드 수 (정답 1 + 오답 2 = 3장)
+
+    [Header("아르바이트")]
+    public int arbeitStart = 1;     // 1일차 알바 가능 횟수
+    public int arbeitGrowEvery = 5; // 며칠마다 횟수가 1씩 늘어나는지
+    public int arbeitMax = 3;       // 하루 알바 횟수 상한
+
+
 }

@@ -11,4 +11,9 @@ public class MinigameDefinition : ScriptableObject
     public string description;  // 설명
 
     public string sceneName;    // 불러올 씬 이름
+
+    public ShopType shopType;   // 어느 상점 알바인지.
+    public int basePay = 40;    // 수행률 100% 기준 보수
+    public float bonusChance = 0.1f;    // 보너스 터질 확률
+    public float bonusMultiplier = 2f;  // 보너스 배수
 }
