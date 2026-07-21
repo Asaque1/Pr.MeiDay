@@ -52,6 +52,33 @@ public class TranslationController : MonoBehaviour
             card.isUsed = false;
             cards.Add(card);
         }
+
+        // 번역서: 상자 하나를 미리 풀어줌 (한 단어 정답 공개)
+        if (GameManager.instance.inventory.GetEffectPower(ItemEffect.FreeAnswerWord) > 0)
+        {
+            RevealOneAnswer();
+        }
+    }
+
+    // 랜덤 상자 하나에 정답 카드를 미리 꽂아줌
+    void RevealOneAnswer()
+    {
+        if (slots.Count == 0)
+        {
+            return;
+        }
+
+        int slotIndex = Random.Range(0, slots.Count);
+        WordDefinition answer = slots[slotIndex].correctWord;
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            if (cards[i].word == answer && cards[i].isUsed == false)
+            {
+                PlaceCard(i, slotIndex);
+                return;
+            }
+        }
     }
 
     // 오답 후보에서 상자 종류에 맞는 걸 랜덤으로 뽑아서 결과에 넣어줌

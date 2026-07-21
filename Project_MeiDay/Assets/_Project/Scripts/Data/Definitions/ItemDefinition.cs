@@ -18,6 +18,7 @@ public class ItemDefinition : ScriptableObject
 
     public int maxLevel = 3; // 영구템 몇 레벨까지 올릴 수 있는지
     public float power = 1;  // 효과 세기 (영구템은 레벨당 이만큼씩 세짐)
+    public float sidePower = 0; // 밀수템의 부작용 세기 (보수 깎는 %, 매일 오르는 의심도 등)
 
     // 랜덤박스일 때 보상 범위
     public int boxRewardMin = 0;

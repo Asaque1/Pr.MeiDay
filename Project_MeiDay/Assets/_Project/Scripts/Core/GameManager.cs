@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 // 게임 전체를 관리하는 대장 클래스
@@ -130,7 +131,14 @@ public class GameManager : MonoBehaviour
         extraComplaintsToday = pendingExtraComplaints;
         pendingPayoutBuff = 0;
         pendingExtraComplaints = 0;
-        arbeit.ResetDaily();   // 알바 횟수 충전
+        arbeit.ResetDaily();     // 알바 횟수 충전
+        ApplyDailyItemEffects(); // 밀수템 아침 정산
+
+        // 밀수템 의심도 때문에 아침부터 게임오버 났으면 하루 시작 안 함
+        if (phase == GamePhase.GameOver)
+        {
+            return;
+        }
 
         ChangePhase(GamePhase.DayWork);
 
@@ -143,6 +151,35 @@ public class GameManager : MonoBehaviour
         }
 
         complaint.StartDay(null);
+    }
+
+    // 매일 아침 밀수템 효과 정산
+    void ApplyDailyItemEffects()
+    {
+        List<ItemDefinition> items = content.items;
+        for (int i = 0; i < items.Count; i++)
+        {
+            ItemDefinition item = items[i];
+            if (item.kind != ItemKind.Permanent || inventory.GetItemLevel(item.id) <= 0)
+            {
+                continue; // 안 산 물건
+            }
+
+            if (item.effect == ItemEffect.DailyMoneyPercent)
+            {
+                // 복제된 법인카드: 돈이 붇는 대신 매일 의심받음
+                if (economy.credits > 0)
+                {
+                    economy.credits += Mathf.RoundToInt(economy.credits * item.power / 100f);
+                }
+                suspicion.AddSuspicion(item.sidePower);
+            }
+            else if (item.effect == ItemEffect.DailyRandomBox)
+            {
+                // 밀수 루트 지도: 매일 아침 랜덤박스가 굴러감
+                economy.AddCredits(UnityEngine.Random.Range(item.boxRewardMin, item.boxRewardMax + 1));
+            }
+        }
     }
 
     // 아침 이벤트 대사 다 봤을 때 (EventManager 가 불러줌)

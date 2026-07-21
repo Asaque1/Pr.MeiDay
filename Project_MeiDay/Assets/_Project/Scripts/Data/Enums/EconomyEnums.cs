@@ -24,4 +24,8 @@ public enum ItemEffect
     PayoutBuff,      // 내일 하루 성과금 증가 (파티용품점)
     ExtraComplaints, // 내일 민원인 증가 (파티용품점)
     ReduceSuspicion, // 의심도 바로 감소 (브로커 1회성)
+    ArbeitCountUp,     // 알바 가능 횟수 늘려줌, 대신 낮 보수 깎임 (위조 신분증)
+    DailyMoneyPercent, // 매일 돈이 % 로 붇지만 매일 의심도도 오름 (복제된 법인카드)
+    DailyRandomBox,    // 매일 아침 랜덤박스가 굴러감 (밀수 루트 지도)
+    FreeAnswerWord,    // 상자 하나가 미리 풀려있음, 대신 보수 깎임 (번역서)
 }

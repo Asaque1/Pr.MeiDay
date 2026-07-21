@@ -176,6 +176,14 @@ public class ComplaintManager : MonoBehaviour
                 pay += pay * GameManager.instance.payoutBuffToday / 100;
             }
 
+            // 밀수템 부작용: 위조 신분증/번역서 쓰면 보수가 깎임
+            int payCut = (int)GameManager.instance.inventory.GetSidePower(ItemEffect.ArbeitCountUp)
+                + (int)GameManager.instance.inventory.GetSidePower(ItemEffect.FreeAnswerWord);
+            if (payCut > 0)
+            {
+                pay -= pay * payCut / 100;
+            }
+
             GameManager.instance.economy.AddCredits(pay);
             successCount++;
             earnedToday += pay;

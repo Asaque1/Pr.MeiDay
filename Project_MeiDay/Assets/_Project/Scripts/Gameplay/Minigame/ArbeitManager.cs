@@ -25,6 +25,9 @@ public class ArbeitManager : MonoBehaviour
             count = config.arbeitMax;
         }
 
+        // 위조 신분증: 레벨만큼 알바 횟수 추가 (상한이랑 별개)
+        count += (int)GameManager.instance.inventory.GetEffectPower(ItemEffect.ArbeitCountUp);
+
         arbeitLeftToday = count;
         currentArbeit = null;
     }

@@ -81,4 +81,28 @@ public class InventorySystem : MonoBehaviour
 
         return total;
     }
+
+    // 이 효과를 가진 영구템들의 부작용 세기 합침 (레벨 x sidePower)
+    public float GetSidePower(ItemEffect effect)
+    {
+        float total = 0;
+        List<ItemDefinition> items = GameManager.instance.content.items;
+
+        for (int i = 0; i < items.Count; i++)
+        {
+            ItemDefinition item = items[i];
+            if (item.kind != ItemKind.Permanent || item.effect != effect)
+            {
+                continue;
+            }
+
+            int level = GetItemLevel(item.id);
+            if (level > 0)
+            {
+                total += level * item.sidePower;
+            }
+        }
+
+        return total;
+    }
 }
