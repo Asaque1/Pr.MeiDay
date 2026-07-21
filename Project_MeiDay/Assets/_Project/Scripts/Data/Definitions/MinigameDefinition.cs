@@ -16,4 +16,10 @@ public class MinigameDefinition : ScriptableObject
     public int basePay = 40;    // 수행률 100% 기준 보수
     public float bonusChance = 0.1f;    // 보너스 터질 확률
     public float bonusMultiplier = 2f;  // 보너스 배수
+
+    public MinigameKind kind;   // 어떤 규칙으로 도는 알바인지
+
+    // 책 정리(BookSort)용 설정
+    public int bookCount = 6;   // 한 판에 나오는 책 수
+    public int genreCount = 3;  // 장르(칸) 개수
 }

@@ -165,6 +165,13 @@ public class DebugLoopDriver : MonoBehaviour
         if (gm.arbeit.currentArbeit != null)
         {
             GUILayout.Label("알바 중: " + gm.arbeit.currentArbeit.minigameName);
+
+            // 책 정리 알바면 진짜로 플레이
+            if (gm.arbeit.bookSort != null)
+            {
+                DrawBookSort(gm);
+                return;
+            }
             if (GUILayout.Button("잘 끝냄(수행률 100%"))
             {
                 gm.arbeit.FinishArbeit(1f);
@@ -194,6 +201,36 @@ public class DebugLoopDriver : MonoBehaviour
             }
         }
     }
+    // 책 정리 미니게임 디버그 UI
+    void DrawBookSort(GameManager gm)
+    {
+        BookSortGame game = gm.arbeit.bookSort;
+
+        GUILayout.Label("정리한 책: " + game.sortedCount + " / " + game.totalBooks + "  (실수 " + game.missCount + ")");
+
+        // 책 다 나왔으면 정산
+        if (game.IsDone() == true)
+        {
+            GUILayout.Label("정리 끝! 수행률 " + Mathf.RoundToInt(game.GetRate() * 100) + "%");
+            if (GUILayout.Button("보수 받기"))
+            {
+                gm.arbeit.FinishArbeit(game.GetRate());
+            }
+            return;
+        }
+
+        GUILayout.Label("카트에서 나온 책: " + (game.currentGenre + 1) + "번 장르");
+        GUILayout.BeginHorizontal();
+        for (int i = 0; i < game.genreCount; i++)
+        {
+            if (GUILayout.Button((i + 1) + "번 칸"))
+            {
+                game.PlaceBook(i);
+            }
+        }
+        GUILayout.EndHorizontal();
+    }
+
     // 밤 상점 디버그 UI (아이템 사기)
     void DrawShop(GameManager gm)
     {
