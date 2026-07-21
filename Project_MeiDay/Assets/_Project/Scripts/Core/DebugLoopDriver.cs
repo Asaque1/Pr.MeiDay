@@ -21,6 +21,18 @@ public class DebugLoopDriver : MonoBehaviour
         GUILayout.Label("날짜: " + gm.calendar.day + "일차");
         GUILayout.Label("크레딧: " + gm.economy.credits);
         GUILayout.Label("의심도: " + gm.suspicion.current + " / " + gm.config.maxSuspicion);
+
+        // 테스트용 치트
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("+500cr"))
+        {
+            gm.economy.AddCredits(500);
+        }
+        if (GUILayout.Button("의심도 -20"))
+        {
+            gm.suspicion.ReduceSuspicion(20);
+        }
+        GUILayout.EndHorizontal();
         GUILayout.Space(10);
 
         // 하드모드면 진행 상황 + 아직 답 안 했으면 브로커 선택창 먼저
