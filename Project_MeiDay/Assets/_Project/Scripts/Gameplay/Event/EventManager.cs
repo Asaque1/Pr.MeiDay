@@ -44,6 +44,20 @@ public class EventManager : MonoBehaviour
             return fixedPick;
         }
 
+        // 일정 아끼기 스위치: 랜덤 이벤트를 확률 없이 목록 순서대로 하나씩 보여줌
+        if (GameManager.instance.config.eventsInOrder == true)
+        {
+            for (int i = 0; i < all.Count; i++)
+            {
+                EventDefinition ev = all[i];
+                if (ev.timing == EventTiming.Random && HasSeen(ev.id) == false)
+                {
+                    return ev;
+                }
+            }
+            return null;
+        }
+
         // 2순위: 랜덤 이벤트 (안 본 것들을 섞어서 하나씩 확률 굴림)
         List<EventDefinition> candidates = new List<EventDefinition>();
         for (int i = 0; i < all.Count; i++)

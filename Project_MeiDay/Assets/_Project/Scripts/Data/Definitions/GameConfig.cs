@@ -40,5 +40,8 @@ public class GameConfig : ScriptableObject
     public int arbeitGrowEvery = 5; // 며칠마다 횟수가 1씩 늘어나는지
     public int arbeitMax = 3;       // 하루 알바 횟수 상한
 
+    [Header("이벤트")]
+    public bool eventsInOrder = false; // 켜면 랜덤 이벤트가 확률 없이 목록 순서대로 나옴 (일정 밀릴 때 스위치)
+
 
 }
