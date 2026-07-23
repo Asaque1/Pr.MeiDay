@@ -4,7 +4,9 @@ using UnityEngine;
 // TODO: 진짜 UI 생기면 이거 지우기
 public class DebugLoopDriver : MonoBehaviour
 {
-    int _selectedCard = 0; // 지금 고른 카드 번호
+    int _selectedCard = 0;  // 지금 고른 카드 번호
+    float _autoRate = 0.8f; // 자동 플레이 정답률
+    int _autoDays = 0;      // 남은 자동 진행 일수
 
     void OnGUI()
     {
@@ -15,6 +17,17 @@ public class DebugLoopDriver : MonoBehaviour
         }
 
         GUILayout.BeginArea(new Rect(20, 20, 340, 700), GUI.skin.box);
+
+        // 자동 진행 중이면 한 프레임에 하루씩 소화 (끝나거나 게임오버면 멈춤)
+        if (gm.phase == GamePhase.Ending || gm.phase == GamePhase.GameOver)
+        {
+            _autoDays = 0;
+        }
+        if (_autoDays > 0 && (gm.phase == GamePhase.DayWork || gm.phase == GamePhase.DayResult))
+        {
+            _autoDays--;
+            AutoPlayOneDay(gm);
+        }
 
         // 지금 상태 보여주기
         GUILayout.Label("페이즈: " + gm.phase);
@@ -31,6 +44,27 @@ public class DebugLoopDriver : MonoBehaviour
         if (GUILayout.Button("의심도 -20"))
         {
             gm.suspicion.ReduceSuspicion(20);
+        }
+        GUILayout.EndHorizontal();
+
+        // 자동 플레이 (밸런스 확인용 - 정답률 굴려가며 하루를 통째로 돌림)
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("자동 정답률 " + Mathf.RoundToInt(_autoRate * 100) + "%", GUILayout.Width(110));
+        _autoRate = GUILayout.HorizontalSlider(_autoRate, 0f, 1f);
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("1일 자동"))
+        {
+            _autoDays = 1;
+        }
+        if (GUILayout.Button("7일 자동"))
+        {
+            _autoDays = 7;
+        }
+        if (GUILayout.Button("30일 자동"))
+        {
+            _autoDays = 30;
         }
         GUILayout.EndHorizontal();
         GUILayout.Space(10);
@@ -417,5 +451,55 @@ public class DebugLoopDriver : MonoBehaviour
         }
 
         return ComplaintResolution.CallSecurity;
+    }
+
+    // 하루를 자동으로 돌림 (밸런스 보는 용도. 정답률만큼 성공하고 나머진 실수 냄)
+    void AutoPlayOneDay(GameManager gm)
+    {
+        // 아침 이벤트 대사는 그냥 넘김
+        int guard = 0;
+        while (gm.events.currentEvent != null && guard < 200)
+        {
+            guard++;
+            gm.events.AdvanceLine();
+        }
+
+        ComplaintManager cm = gm.complaint;
+        guard = 0;
+        while (gm.phase == GamePhase.DayWork && cm.currentIndex < cm.todayComplaints.Count && guard < 200)
+        {
+            guard++;
+            ComplaintDefinition c = cm.todayComplaints[cm.currentIndex];
+
+            if (Random.value < _autoRate)
+            {
+                // 성공: 해석 통과한 셈 치고 바로 맞게 처리
+                cm.stage = ComplaintStage.Resolve;
+                cm.SelectResolution(c.correctResolution);
+            }
+            else
+            {
+                // 실수: 빈 답안 제출해서 해석 실수 하나 쌓음 (쌓이면 민원인이 알아서 나감)
+                cm.ConfirmTranslation();
+            }
+
+            if (gm.phase == GamePhase.GameOver)
+            {
+                return;
+            }
+        }
+
+        if (gm.phase == GamePhase.DayResult)
+        {
+            Debug.Log("[자동] " + gm.calendar.day + "일차: 크레딧 " + gm.economy.credits
+                + ", 의심도 " + gm.suspicion.current
+                + ", 성공 " + cm.successCount + " / " + cm.todayComplaints.Count);
+            gm.ConfirmDayResult();
+        }
+
+        if (gm.phase == GamePhase.NightShop)
+        {
+            gm.SleepAndAdvance();
+        }
     }
 }
