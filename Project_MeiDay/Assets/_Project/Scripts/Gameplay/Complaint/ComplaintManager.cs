@@ -133,6 +133,12 @@ public class ComplaintManager : MonoBehaviour
         translation.AddWrong();
         mistakeCount++;
 
+        // 틀린 소리
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySfx(SoundManager.instance.wrongAnswer);
+        }
+
         // 의심도 초과로 게임오버 됐으면 여기서 끝 (집계 중복 방지)
         if (GameManager.instance.phase == GamePhase.GameOver)
         {
@@ -199,6 +205,12 @@ public class ComplaintManager : MonoBehaviour
             // 틀리게 처리 -> 의심받고 같은 민원을 다시 처리함
             resolutionWrongCount++;
             mistakeCount++;
+
+            // 틀린 소리
+            if (SoundManager.instance != null)
+            {
+                SoundManager.instance.PlaySfx(SoundManager.instance.wrongAnswer);
+            }
             GameManager.instance.suspicion.AddSuspicion(GameManager.instance.config.suspicionWrongResolution);
 
             if (GameManager.instance.phase == GamePhase.GameOver)

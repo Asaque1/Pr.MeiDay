@@ -188,6 +188,12 @@ public class TranslationController : MonoBehaviour
         slots[slotIndex].placedWord = card.word;
         card.isUsed = true;
         _slotCardIndex[slotIndex] = cardIndex;
+
+        // 카드 놓는 소리
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySfx(SoundManager.instance.cardPlace);
+        }
     }
 
     // 상자에서 카드 빼기 (되돌리기)

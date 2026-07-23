@@ -42,6 +42,12 @@ public class ShopManager : MonoBehaviour
             GameManager.instance.hasSpaceship = true;
         }
 
+        // 구매 소리
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySfx(SoundManager.instance.buyItem);
+        }
+
         return true;
     }
 

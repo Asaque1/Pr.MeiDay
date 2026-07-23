@@ -98,6 +98,13 @@ public class DialogueView : MonoBehaviour
         for (int i = 0; i < _fullLine.Length; i++)
         {
             lineText.text += _fullLine[i];
+
+            // 타이핑 소리 (시끄러우면 몇 글자마다 한 번으로 조절)
+            if (SoundManager.instance != null)
+            {
+                SoundManager.instance.PlaySfx(SoundManager.instance.typeTick);
+            }
+
             yield return new WaitForSeconds(charDelay);
         }
 
