@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 // 의심도를 관리하는 매니저
@@ -5,6 +6,9 @@ using UnityEngine;
 public class SuspicionManager : MonoBehaviour
 {
     public float current = 0; // 지금 의심도
+
+    // 의심도 바뀌면 알려줌 (연출 UI 가 듣고 씀. 바뀐 양이랑 바뀐 뒤 값)
+    public event Action<float, float> OnChanged;
 
     // 의심도 올리기 (민원 틀렸을 때 등)
     public void AddSuspicion(float amount)
@@ -20,10 +24,16 @@ public class SuspicionManager : MonoBehaviour
         current += amount;
 
         float max = GameManager.instance.config.maxSuspicion;
-        if (current >= max)
+        if (current > max)
         {
             current = max;
-            // 의심도 꽉 참 -> 들킴 -> 게임오버
+        }
+
+        NotifyChanged(amount);
+
+        // 의심도 꽉 참 -> 들킴 -> 게임오버
+        if (current >= max)
+        {
             GameManager.instance.GameOver(GameOverReason.SuspicionExceeded);
         }
     }
@@ -35,6 +45,17 @@ public class SuspicionManager : MonoBehaviour
         if (current < 0)
         {
             current = 0; // 0 아래로는 안 내려감
+        }
+
+        NotifyChanged(-amount);
+    }
+
+    // 구독한 연출한테 알려주기
+    void NotifyChanged(float delta)
+    {
+        if (OnChanged != null)
+        {
+            OnChanged(delta, current);
         }
     }
 }
