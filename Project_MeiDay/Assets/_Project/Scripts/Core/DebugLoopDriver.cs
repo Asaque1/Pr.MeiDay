@@ -218,6 +218,13 @@ public class DebugLoopDriver : MonoBehaviour
                 DrawBookSort(gm);
                 return;
             }
+
+            // 조명 연출 알바면 진짜로 플레이
+            if (gm.arbeit.spotlight != null)
+            {
+                DrawSpotlight(gm);
+                return;
+            }
             if (GUILayout.Button("잘 끝냄(수행률 100%"))
             {
                 gm.arbeit.FinishArbeit(1f);
@@ -275,6 +282,69 @@ public class DebugLoopDriver : MonoBehaviour
             }
         }
         GUILayout.EndHorizontal();
+    }
+
+    // 조명 연출 미니게임 디버그 UI (버튼 꾹 눌러서 조명 움직이기)
+    void DrawSpotlight(GameManager gm)
+    {
+        SpotlightGame game = gm.arbeit.spotlight;
+
+        // 시간 다 됐으면 정산
+        if (game.IsDone() == true)
+        {
+            GUILayout.Label("공연 끝! 수행률 " + Mathf.RoundToInt(game.GetRate() * 100) + "%");
+            if (GUILayout.Button("보수 받기"))
+            {
+                gm.arbeit.FinishArbeit(game.GetRate());
+            }
+            return;
+        }
+
+        GUILayout.Label("남은 시간: " + Mathf.CeilToInt(game.timeLeft) + "초  (비춘 시간 " + game.onTargetTime.ToString("F1") + "초)");
+        GUILayout.Label("무대: " + StageBar(game.actorPos, game.lightPos));
+        GUILayout.Label("A = 배우, V = 조명, O = 비추는 중");
+
+        int dir = 0;
+        GUILayout.BeginHorizontal();
+        if (GUILayout.RepeatButton("< 조명 왼쪽"))
+        {
+            dir = -1;
+        }
+        if (GUILayout.RepeatButton("조명 오른쪽 >"))
+        {
+            dir = 1;
+        }
+        GUILayout.EndHorizontal();
+
+        // OnGUI 는 한 프레임에 여러 번 불려서 그리기 단계에서만 진행시킴
+        if (Event.current.type == EventType.Repaint)
+        {
+            game.Tick(Time.deltaTime, dir);
+        }
+    }
+
+    // 배우랑 조명 위치를 글자 줄로 그려줌
+    string StageBar(float actor, float light)
+    {
+        char[] bar = new char[25];
+        for (int i = 0; i < bar.Length; i++)
+        {
+            bar[i] = '-';
+        }
+
+        int a = Mathf.RoundToInt(actor * (bar.Length - 1));
+        int l = Mathf.RoundToInt(light * (bar.Length - 1));
+        bar[l] = 'V';
+        if (a == l)
+        {
+            bar[a] = 'O';
+        }
+        else
+        {
+            bar[a] = 'A';
+        }
+
+        return new string(bar);
     }
 
     // 밤 상점 디버그 UI (아이템 사기)

@@ -22,4 +22,7 @@ public class MinigameDefinition : ScriptableObject
     // 책 정리(BookSort)용 설정
     public int bookCount = 6;   // 한 판에 나오는 책 수
     public int genreCount = 3;  // 장르(칸) 개수
+
+    // 시간제 알바(조명 등)용 설정
+    public float playSeconds = 20f; // 제한 시간
 }
