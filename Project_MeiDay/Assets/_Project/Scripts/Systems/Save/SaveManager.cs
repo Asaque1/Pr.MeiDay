@@ -78,6 +78,15 @@ public class SaveManager : MonoBehaviour
             PlayerPrefs.SetInt("arbeitDone" + i, gm.arbeit.arbeitDoneCounts[i]);
         }
 
+        // 안 쓰고 남긴 알바 횟수 (다음 날 이월용)
+        PlayerPrefs.SetInt("arbeitLeft", gm.arbeit.arbeitLeftToday);
+
+        // 상점별 경험치
+        for (int i = 0; i < gm.shop.shopExp.Count; i++)
+        {
+            PlayerPrefs.SetInt("shopExp" + i, gm.shop.shopExp[i]);
+        }
+
         // 모든 값을 다 넣은 뒤 마지막에 저장 있음 표시
         PlayerPrefs.SetInt("saveExists", 1);
         PlayerPrefs.Save();
@@ -142,6 +151,15 @@ public class SaveManager : MonoBehaviour
         for(int i = 0; i < gm.arbeit.arbeitDoneCounts.Count; i++)
         {
             gm.arbeit.arbeitDoneCounts[i] = PlayerPrefs.GetInt("arbeitDone" + i, 0);
+        }
+
+        // 안 쓰고 남긴 알바 횟수
+        gm.arbeit.arbeitLeftToday = PlayerPrefs.GetInt("arbeitLeft", 0);
+
+        // 상점별 경험치
+        for (int i = 0; i < gm.shop.shopExp.Count; i++)
+        {
+            gm.shop.shopExp[i] = PlayerPrefs.GetInt("shopExp" + i, 0);
         }
 
         Debug.Log("불러오기 완료");

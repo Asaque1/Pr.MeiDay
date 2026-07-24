@@ -266,7 +266,8 @@ public class DebugLoopDriver : MonoBehaviour
     {
         BookSortGame game = gm.arbeit.bookSort;
 
-        GUILayout.Label("정리한 책: " + game.sortedCount + " / " + game.totalBooks + "  (실수 " + game.missCount + ")");
+        GUILayout.Label("정리한 책: " + game.sortedCount + " / " + game.totalBooks
+            + "  (황금 " + game.goldenCount + " / 실수 " + game.missCount + ")");
 
         // 책 다 나왔으면 정산
         if (game.IsDone() == true)
@@ -279,7 +280,12 @@ public class DebugLoopDriver : MonoBehaviour
             return;
         }
 
-        GUILayout.Label("카트에서 나온 책: " + (game.currentGenre + 1) + "번 장르");
+        string bookLabel = "카트에서 나온 책: " + (game.currentGenre + 1) + "번 장르";
+        if (game.currentGolden == true)
+        {
+            bookLabel += " (황금 책!)";
+        }
+        GUILayout.Label(bookLabel);
         GUILayout.BeginHorizontal();
         for (int i = 0; i < game.genreCount; i++)
         {
@@ -310,6 +316,10 @@ public class DebugLoopDriver : MonoBehaviour
         GUILayout.Label("남은 시간: " + Mathf.CeilToInt(game.timeLeft) + "초  (비춘 시간 " + game.onTargetTime.ToString("F1") + "초)");
         GUILayout.Label("무대: " + StageBar(game.actorPos, game.lightPos));
         GUILayout.Label("A = 배우, V = 조명, O = 비추는 중");
+        if (game.actorGolden == true)
+        {
+            GUILayout.Label("황금 배우 등장! (비추면 두 배)");
+        }
 
         int dir = 0;
         GUILayout.BeginHorizontal();
@@ -373,7 +383,7 @@ public class DebugLoopDriver : MonoBehaviour
 
         GUILayout.Label("남은 시간: " + Mathf.CeilToInt(game.timeLeft) + "초  줌 " + game.handedCount + " / 헛손질 " + game.missCount);
         GUILayout.Label("길거리: " + StreetBar(game));
-        GUILayout.Label("P = 행인, G = 황금 행인, = 구간일 때 던질 것");
+        GUILayout.Label("P = 손님, G = 황금 손님, = 구간일 때 던질 것");
 
         if (GUILayout.Button("홍보물 던지기!"))
         {
@@ -387,7 +397,7 @@ public class DebugLoopDriver : MonoBehaviour
         }
     }
 
-    // 행인들 위치를 글자 줄로 그려줌 (= 구간이 던질 타이밍)
+    // 손님 위치를 글자 줄로 그려줌 (= 구간이 던질 타이밍)
     string StreetBar(PromoGame game)
     {
         char[] bar = new char[25];

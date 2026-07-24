@@ -11,7 +11,7 @@ public class ArbeitManager : MonoBehaviour
     public SpotlightGame spotlight;          // 조명 연출 하는 중이면 여기 들어있음 (아니면 null)
     public PromoGame promo;                  // 판촉 하는 중이면 여기 들어있음 (아니면 null)
 
-    // 상점별 알바 누적 횟수 (서점, 연극단, 파티, 브로커 순. 상점 레벨 계산에 씀)
+    // 상점별 알바 누적 횟수 (서점, 연극단, 파티, 브로커 순. 통계용)
     public List<int> arbeitDoneCounts = new List<int>() { 0, 0, 0, 0 };
 
     // 아침마다 횟수 충전 (날짜가 지날수록 늘어나고 상한 있음)
@@ -29,9 +29,18 @@ public class ArbeitManager : MonoBehaviour
         }
 
         // 위조 신분증: 레벨만큼 알바 횟수 추가 (상한이랑 별개)
-        count += (int)GameManager.instance.inventory.GetEffectPower(ItemEffect.ArbeitCountUp);
+        int idBonus = (int)GameManager.instance.inventory.GetEffectPower(ItemEffect.ArbeitCountUp);
+        count += idBonus;
 
-        arbeitLeftToday = count;
+        // 어제 안 쓴 횟수는 조금만 이월됨 (위조 신분증이 이월량도 늘려줌)
+        int carryMax = config.arbeitCarryMax + idBonus;
+        int carried = arbeitLeftToday;
+        if (carried > carryMax)
+        {
+            carried = carryMax;
+        }
+
+        arbeitLeftToday = count + carried;
         currentArbeit = null;
         bookSort = null;
         spotlight = null;
@@ -79,7 +88,7 @@ public class ArbeitManager : MonoBehaviour
         return true;
     }
 
-    // 알바 끝 - 수행률(0~1)만큼 보수 받음 (가끔 보너스)
+    // 알바 끝 - 수행률 구간에 따라 보수랑 상점 경험치를 받음
     public void FinishArbeit(float rate)
     {
         if (currentArbeit == null)
@@ -87,16 +96,28 @@ public class ArbeitManager : MonoBehaviour
             return;
         }
 
-        int pay = Mathf.RoundToInt(currentArbeit.basePay * rate);
-
-        // 낮은 확률로 보너스 터짐
-        if (Random.value < currentArbeit.bonusChance)
+        // 기획서 계단: 80% 이상 전부, 60% 이상 3/4, 40% 이상 절반, 그 밑은 실패
+        float tier = 0f;
+        if (rate >= 0.8f)
         {
-            pay = Mathf.RoundToInt(pay * currentArbeit.bonusMultiplier);
+            tier = 1f;
         }
+        else if (rate >= 0.6f)
+        {
+            tier = 0.75f;
+        }
+        else if (rate >= 0.4f)
+        {
+            tier = 0.5f;
+        }
+
+        int pay = Mathf.RoundToInt(currentArbeit.basePay * tier);
+        int exp = Mathf.RoundToInt(currentArbeit.expReward * tier);
 
         arbeitDoneCounts[(int)currentArbeit.shopType]++; // 이 상점에서 일한 횟수 +1
         GameManager.instance.economy.AddCredits(pay);
+        GameManager.instance.shop.AddShopExp(currentArbeit.shopType, exp);
+
         currentArbeit = null;
         bookSort = null;
         spotlight = null;
