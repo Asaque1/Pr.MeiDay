@@ -9,6 +9,7 @@ public class ArbeitManager : MonoBehaviour
     public MinigameDefinition currentArbeit; // 지금 하는 알바 (없으면 null)
     public BookSortGame bookSort;            // 책 정리 하는 중이면 여기 들어있음 (아니면 null)
     public SpotlightGame spotlight;          // 조명 연출 하는 중이면 여기 들어있음 (아니면 null)
+    public PromoGame promo;                  // 판촉 하는 중이면 여기 들어있음 (아니면 null)
 
     // 상점별 알바 누적 횟수 (서점, 연극단, 파티, 브로커 순. 상점 레벨 계산에 씀)
     public List<int> arbeitDoneCounts = new List<int>() { 0, 0, 0, 0 };
@@ -34,6 +35,7 @@ public class ArbeitManager : MonoBehaviour
         currentArbeit = null;
         bookSort = null;
         spotlight = null;
+        promo = null;
     }
 
     // 오늘 알바 더 할 수 있는지
@@ -67,6 +69,13 @@ public class ArbeitManager : MonoBehaviour
             spotlight.StartGame(arbeit.playSeconds);
         }
 
+        // 판촉 알바면 게임 규칙 준비
+        if (arbeit.kind == MinigameKind.Promo)
+        {
+            promo = new PromoGame();
+            promo.StartGame(arbeit.playSeconds);
+        }
+
         return true;
     }
 
@@ -91,5 +100,6 @@ public class ArbeitManager : MonoBehaviour
         currentArbeit = null;
         bookSort = null;
         spotlight = null;
+        promo = null;
     }
 }
