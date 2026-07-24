@@ -36,9 +36,14 @@ public class GameConfig : ScriptableObject
     public int wrongCardsPerSlot = 2;   // 상자 하나당 깔리는 오답 카드 수 (정답 1 + 오답 2 = 3장)
 
     [Header("아르바이트")]
-    public int arbeitStart = 1;     // 1일차 알바 가능 횟수
+    public int arbeitStart = 1;     // 1일차 알바 가능 횟수 (해금 규칙 정해지면 바뀔 수 있음)
     public int arbeitGrowEvery = 5; // 며칠마다 횟수가 1씩 늘어나는지
     public int arbeitMax = 3;       // 하루 알바 횟수 상한
+    public int arbeitCarryMax = 1;  // 안 쓴 알바 횟수를 다음 날로 넘길 수 있는 최대치
+
+    [Header("상점")]
+    public int shopExpPerBuy = 10;   // 아이템 하나 살 때 오르는 상점 경험치
+    public int shopExpPerLevel = 30; // 상점 레벨 하나에 필요한 경험치 (레벨 최대 5)
 
     [Header("이벤트")]
     public bool eventsInOrder = false; // 켜면 랜덤 이벤트가 확률 없이 목록 순서대로 나옴 (일정 밀릴 때 스위치)

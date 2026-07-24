@@ -218,6 +218,20 @@ public class DebugLoopDriver : MonoBehaviour
                 DrawBookSort(gm);
                 return;
             }
+
+            // 조명 연출 알바면 진짜로 플레이
+            if (gm.arbeit.spotlight != null)
+            {
+                DrawSpotlight(gm);
+                return;
+            }
+
+            // 판촉 알바면 진짜로 플레이
+            if (gm.arbeit.promo != null)
+            {
+                DrawPromo(gm);
+                return;
+            }
             if (GUILayout.Button("잘 끝냄(수행률 100%"))
             {
                 gm.arbeit.FinishArbeit(1f);
@@ -252,7 +266,8 @@ public class DebugLoopDriver : MonoBehaviour
     {
         BookSortGame game = gm.arbeit.bookSort;
 
-        GUILayout.Label("정리한 책: " + game.sortedCount + " / " + game.totalBooks + "  (실수 " + game.missCount + ")");
+        GUILayout.Label("정리한 책: " + game.sortedCount + " / " + game.totalBooks
+            + "  (황금 " + game.goldenCount + " / 실수 " + game.missCount + ")");
 
         // 책 다 나왔으면 정산
         if (game.IsDone() == true)
@@ -265,7 +280,12 @@ public class DebugLoopDriver : MonoBehaviour
             return;
         }
 
-        GUILayout.Label("카트에서 나온 책: " + (game.currentGenre + 1) + "번 장르");
+        string bookLabel = "카트에서 나온 책: " + (game.currentGenre + 1) + "번 장르";
+        if (game.currentGolden == true)
+        {
+            bookLabel += " (황금 책!)";
+        }
+        GUILayout.Label(bookLabel);
         GUILayout.BeginHorizontal();
         for (int i = 0; i < game.genreCount; i++)
         {
@@ -275,6 +295,139 @@ public class DebugLoopDriver : MonoBehaviour
             }
         }
         GUILayout.EndHorizontal();
+    }
+
+    // 조명 연출 미니게임 디버그 UI (버튼 꾹 눌러서 조명 움직이기)
+    void DrawSpotlight(GameManager gm)
+    {
+        SpotlightGame game = gm.arbeit.spotlight;
+
+        // 시간 다 됐으면 정산
+        if (game.IsDone() == true)
+        {
+            GUILayout.Label("공연 끝! 수행률 " + Mathf.RoundToInt(game.GetRate() * 100) + "%");
+            if (GUILayout.Button("보수 받기"))
+            {
+                gm.arbeit.FinishArbeit(game.GetRate());
+            }
+            return;
+        }
+
+        GUILayout.Label("남은 시간: " + Mathf.CeilToInt(game.timeLeft) + "초  (비춘 시간 " + game.onTargetTime.ToString("F1") + "초)");
+        GUILayout.Label("무대: " + StageBar(game.actorPos, game.lightPos));
+        GUILayout.Label("A = 배우, V = 조명, O = 비추는 중");
+        if (game.actorGolden == true)
+        {
+            GUILayout.Label("황금 배우 등장! (비추면 두 배)");
+        }
+
+        int dir = 0;
+        GUILayout.BeginHorizontal();
+        if (GUILayout.RepeatButton("< 조명 왼쪽"))
+        {
+            dir = -1;
+        }
+        if (GUILayout.RepeatButton("조명 오른쪽 >"))
+        {
+            dir = 1;
+        }
+        GUILayout.EndHorizontal();
+
+        // OnGUI 는 한 프레임에 여러 번 불려서 그리기 단계에서만 진행시킴
+        if (Event.current.type == EventType.Repaint)
+        {
+            game.Tick(Time.deltaTime, dir);
+        }
+    }
+
+    // 배우랑 조명 위치를 글자 줄로 그려줌
+    string StageBar(float actor, float light)
+    {
+        char[] bar = new char[25];
+        for (int i = 0; i < bar.Length; i++)
+        {
+            bar[i] = '-';
+        }
+
+        int a = Mathf.RoundToInt(actor * (bar.Length - 1));
+        int l = Mathf.RoundToInt(light * (bar.Length - 1));
+        bar[l] = 'V';
+        if (a == l)
+        {
+            bar[a] = 'O';
+        }
+        else
+        {
+            bar[a] = 'A';
+        }
+
+        return new string(bar);
+    }
+
+    // 판촉 미니게임 디버그 UI (타이밍 맞춰 던지기)
+    void DrawPromo(GameManager gm)
+    {
+        PromoGame game = gm.arbeit.promo;
+
+        // 시간 다 됐으면 정산
+        if (game.IsDone() == true)
+        {
+            GUILayout.Label("판촉 끝! 수행률 " + Mathf.RoundToInt(game.GetRate() * 100) + "%"
+                + " (줌 " + game.handedCount + " / 황금 " + game.goldenCount + " / 헛손질 " + game.missCount + ")");
+            if (GUILayout.Button("보수 받기"))
+            {
+                gm.arbeit.FinishArbeit(game.GetRate());
+            }
+            return;
+        }
+
+        GUILayout.Label("남은 시간: " + Mathf.CeilToInt(game.timeLeft) + "초  줌 " + game.handedCount + " / 헛손질 " + game.missCount);
+        GUILayout.Label("길거리: " + StreetBar(game));
+        GUILayout.Label("P = 손님, G = 황금 손님, = 구간일 때 던질 것");
+
+        if (GUILayout.Button("홍보물 던지기!"))
+        {
+            game.Throw();
+        }
+
+        // OnGUI 는 한 프레임에 여러 번 불려서 그리기 단계에서만 진행시킴
+        if (Event.current.type == EventType.Repaint)
+        {
+            game.Tick(Time.deltaTime);
+        }
+    }
+
+    // 손님 위치를 글자 줄로 그려줌 (= 구간이 던질 타이밍)
+    string StreetBar(PromoGame game)
+    {
+        char[] bar = new char[25];
+        for (int i = 0; i < bar.Length; i++)
+        {
+            float t = (float)i / (bar.Length - 1);
+            if (t >= 0.35f && t <= 0.65f)
+            {
+                bar[i] = '=';
+            }
+            else
+            {
+                bar[i] = '-';
+            }
+        }
+
+        for (int i = 0; i < game.peoplePos.Count; i++)
+        {
+            int p = Mathf.RoundToInt(game.peoplePos[i] * (bar.Length - 1));
+            if (game.peopleGolden[i] == true)
+            {
+                bar[p] = 'G';
+            }
+            else
+            {
+                bar[p] = 'P';
+            }
+        }
+
+        return new string(bar);
     }
 
     // 밤 상점 디버그 UI (아이템 사기)

@@ -22,6 +22,9 @@ public class GameManager : MonoBehaviour
     public ComplaintManager complaint;
     public EventManager events;
     public ArbeitManager arbeit;
+    public SlideshowView slideshow; // 인트로 컷신 (없으면 그냥 바로 시작)
+
+    public Sprite[] introSlides; // 새 게임 시작할 때 보여줄 그림들 (인스펙터에서 연결)
 
     // 게임 상태
     public GamePhase phase = GamePhase.Intro; // 지금 어느 단계인지
@@ -66,9 +69,16 @@ public class GameManager : MonoBehaviour
     // 새 게임 시작 (타이틀에서 부름)
     public void GameStart()
     {
-        // TODO: 나중에 여기서 인트로 슬라이드쇼 재생
         ResetForNewGame();
         save.Save(); // 첫날 아침도 이어할 수 있게 저장
+
+        // 인트로 슬라이드쇼 보고 나서 첫날 시작 (연결 안 했거나 그림 없으면 바로 시작)
+        if (slideshow != null)
+        {
+            slideshow.Play(introSlides, StartNewDay);
+            return;
+        }
+
         StartNewDay();
     }
 
@@ -112,10 +122,16 @@ public class GameManager : MonoBehaviour
         payoutBuffToday = 0;
         extraComplaintsToday = 0;
         arbeit.currentArbeit = null;
+        arbeit.arbeitLeftToday = 0;
 
         for(int i = 0; i < arbeit.arbeitDoneCounts.Count; i++)
         {
             arbeit.arbeitDoneCounts[i] = 0;
+        }
+
+        for (int i = 0; i < shop.shopExp.Count; i++)
+        {
+            shop.shopExp[i] = 0;
         }
 
         events.seenEventIds.Clear();

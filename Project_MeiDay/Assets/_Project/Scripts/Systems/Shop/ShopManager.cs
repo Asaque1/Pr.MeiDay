@@ -1,9 +1,12 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-// 상점 매니저 (아이템 사기 + 해금 확인)
+// 상점 매니저 (아이템 사기 + 해금 확인 + 상점 레벨)
 public class ShopManager : MonoBehaviour
 {
+    // 상점별 경험치 (서점, 연극단, 파티, 브로커 순. 저장됨)
+    public List<int> shopExp = new List<int>() { 0, 0, 0, 0 };
+
     // 아이템 사기. 성공하면 true, 돈 없거나 못 사는 물건이면 false
     public bool Buy(ItemDefinition item)
     {
@@ -41,6 +44,9 @@ public class ShopManager : MonoBehaviour
         {
             GameManager.instance.hasSpaceship = true;
         }
+
+        // 사면 그 상점 경험치가 참
+        AddShopExp(item.shopType, GameManager.instance.config.shopExpPerBuy);
 
         // 구매 소리
         if (SoundManager.instance != null)
@@ -96,17 +102,25 @@ public class ShopManager : MonoBehaviour
         int level = GameManager.instance.inventory.GetItemLevel(item.requiresMaxed.id);
         return level >= item.requiresMaxed.maxLevel;
     }
+    // 상점 경험치 주기 (구매나 알바로)
+    public void AddShopExp(ShopType type, int amount)
+    {
+        shopExp[(int)type] += amount;
+    }
+
+    // 상점 레벨 = 경험치로 계산 (기획서상 최대 5레벨)
     public int GetShopLevel(ShopType type)
     {
-        int level = GameManager.instance.arbeit.arbeitDoneCounts[(int)type];
-
-        List<ItemDefinition> items = GameManager.instance.content.items;
-        for (int i = 0; i < items.Count; i++)
+        int perLevel = GameManager.instance.config.shopExpPerLevel;
+        if (perLevel <= 0)
         {
-            if (items[i].shopType == type && items[i].kind == ItemKind.Permanent)
-            {
-                level += GameManager.instance.inventory.GetItemLevel(items[i].id);
-            }
+            return 0;
+        }
+
+        int level = shopExp[(int)type] / perLevel;
+        if (level > 5)
+        {
+            level = 5;
         }
         return level;
     }

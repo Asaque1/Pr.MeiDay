@@ -6,12 +6,16 @@ using UnityEngine;
 public class BookSortGame
 {
     public int genreCount = 3;    // 장르(칸) 개수
-    public int totalBooks = 6;    // 이번에 정리할 책 수
+    public int totalBooks = 6;    // 이번에 정리할 책 수 (황금 책은 여기 안 셈)
     public int sortedCount = 0;   // 맞게 꽂은 수
+    public int goldenCount = 0;   // 맞게 꽂은 황금 책 수 (보너스)
     public int missCount = 0;     // 잘못 꽂은 수
     public int currentGenre = -1; // 지금 카트에 나온 책 장르 (-1이면 끝)
+    public bool currentGolden = false; // 지금 책이 황금 책인지
+    public float goldenChance = 0.15f; // 황금 책이 껴서 들어올 확률
 
-    List<int> _queue = new List<int>(); // 아직 안 나온 책들
+    List<int> _queue = new List<int>();          // 아직 안 나온 책들
+    List<bool> _queueGolden = new List<bool>();  // 그 책이 황금인지
 
     // 게임 준비 (책 큐 만들어서 첫 책 꺼냄)
     public void StartGame(int books, int genres)
@@ -19,12 +23,22 @@ public class BookSortGame
         totalBooks = books;
         genreCount = genres;
         sortedCount = 0;
+        goldenCount = 0;
         missCount = 0;
 
         _queue.Clear();
+        _queueGolden.Clear();
         for (int i = 0; i < totalBooks; i++)
         {
             _queue.Add(Random.Range(0, genreCount));
+            _queueGolden.Add(false);
+
+            // 가끔 황금 책이 껴서 들어옴 (최대치엔 안 세는 보너스)
+            if (Random.value < goldenChance)
+            {
+                _queue.Add(Random.Range(0, genreCount));
+                _queueGolden.Add(true);
+            }
         }
 
         NextBook();
@@ -36,11 +50,14 @@ public class BookSortGame
         if (_queue.Count == 0)
         {
             currentGenre = -1;
+            currentGolden = false;
             return;
         }
 
         currentGenre = _queue[0];
+        currentGolden = _queueGolden[0];
         _queue.RemoveAt(0);
+        _queueGolden.RemoveAt(0);
     }
 
     // 지금 책을 이 장르 칸에 꽂기
@@ -53,7 +70,14 @@ public class BookSortGame
 
         if (shelfGenre == currentGenre)
         {
-            sortedCount++;
+            if (currentGolden == true)
+            {
+                goldenCount++; // 황금 책은 보너스로 침
+            }
+            else
+            {
+                sortedCount++;
+            }
         }
         else
         {
@@ -69,13 +93,13 @@ public class BookSortGame
         return currentGenre < 0;
     }
 
-    // 수행률 (맞게 꽂은 비율)
+    // 수행률 (맞게 꽂은 비율. 황금 책은 순수 보너스라 넘칠 수 있음)
     public float GetRate()
     {
         if (totalBooks == 0)
         {
             return 0;
         }
-        return (float)sortedCount / totalBooks;
+        return Mathf.Clamp01((float)(sortedCount + goldenCount) / totalBooks);
     }
 }
