@@ -39,6 +39,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e58be570442b5b8ea539aeb2e4ed34d8, type: 2}
   - {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
   - {fileID: 11400000, guid: 3bd23550d41257ac88480337e68913fe, type: 2}
-  complaints: []
+  - {fileID: 11400000, guid: 0c11c7dcff8a5b0c88a3f3629e9a82b3, type: 2}
+  - {fileID: 11400000, guid: f13025af0e915491a9749bb6dc4e74ab, type: 2}
+  - {fileID: 11400000, guid: 059172576b395878938213c04fbab593, type: 2}
+  - {fileID: 11400000, guid: 15983d4137285ed19ba43ca783fb6fe0, type: 2}
+  - {fileID: 11400000, guid: cd676a31c4f55469bd331505cf3d38ee, type: 2}
+  - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
+  complaints:
+  - {fileID: 11400000, guid: 6e51ab8b094f5bcba670369bc2761f3b, type: 2}
   items: []
   minigames: []
+  events: []

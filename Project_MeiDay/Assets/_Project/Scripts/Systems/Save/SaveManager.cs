@@ -165,4 +165,13 @@ public class SaveManager : MonoBehaviour
         Debug.Log("불러오기 완료");
         return true;
     }
+
+    // 저장 지우기 (죽거나 엔딩 봤을 때 부름 - 이어하기 못 하게)
+    public void Clear()
+    {
+        PlayerPrefs.DeleteKey("saveExists");
+        PlayerPrefs.DeleteKey("day"); // 이거 안 지우면 HasSave() 가 계속 true 나옴
+        PlayerPrefs.Save();
+        Debug.Log("저장 지움");
+    }
 }

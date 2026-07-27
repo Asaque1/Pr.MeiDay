@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5544fca1a217ce4f9716fa7a7ec0901, type: 3}
+  m_Name: word_resi_prf
+  m_EditorClassIdentifier:
+  id: word_resi_prf
+  category: 0
+  meaning: 거주증명서
+  dialectText: 살다,생활권, 집
+  hint: 거주하였음을 증명하다

@@ -334,6 +334,7 @@ public class GameManager : MonoBehaviour
         phase = GamePhase.GameOver;
         lastGameOverReason = reason;
         Debug.Log("게임 오버! 이유: " + reason);
+        save.Clear(); // 죽었으니 이어하기 못 하게 저장 지움
 
         if (OnPhaseChanged != null)
         {
@@ -347,6 +348,7 @@ public class GameManager : MonoBehaviour
         phase = GamePhase.Ending;
         lastEnding = type;
         Debug.Log("엔딩! " + type);
+        save.Clear(); // 엔딩 봤으니 이 회차는 끝 (새로 시작해야 함)
 
         if (OnPhaseChanged != null)
         {
