@@ -149,6 +149,13 @@ public class EventManager : MonoBehaviour
             seenEventIds.Add(done.id);
         }
 
+        // 상점 여는 이벤트였으면 오늘 밤부터 상점이 열림
+        // (의심도보다 먼저 - 이 이벤트로 게임오버 나도 순서 때문에 꼬이지 않게)
+        if (done.unlocksShop == true)
+        {
+            GameManager.instance.UnlockShop();
+        }
+
         // 이벤트 내용에 따라 의심도가 오르내림
         if (done.suspicionChange > 0)
         {

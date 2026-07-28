@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     // 게임 상태
     public GamePhase phase = GamePhase.Intro; // 지금 어느 단계인지
     public bool hasSpaceship = false;         // 우주선 샀는지
+    public bool shopUnlocked = false;         // 밤 상점이 열렸는지 (이벤트로 해금)
 
     // 하드모드 (우주선 산 뒤)
     public bool hardMode = false;                             // 하드모드 중인지
@@ -99,6 +100,7 @@ public class GameManager : MonoBehaviour
     {
         phase = GamePhase.Intro;
         hasSpaceship = false;
+        shopUnlocked = false;
         hardMode = false;
         hardModeDay = 0;
         brokerChoice = BrokerChoice.None;
@@ -233,10 +235,34 @@ public class GameManager : MonoBehaviour
         ChangePhase(GamePhase.DayResult);
     }
 
-    // 결산 확인 -> 밤 (상점)으로
+    // 결산 확인 -> 밤 (상점)으로. 상점 해금 전엔 밤 없이 바로 다음날
     public void ConfirmDayResult()
     {
+        if (phase != GamePhase.DayResult)
+        {
+            return; // 두 번 눌려도 하루가 두 번 넘어가지 않게
+        }
+
+        if (shopUnlocked == false)
+        {
+            SleepAndAdvance();
+            return;
+        }
+
         ChangePhase(GamePhase.NightShop);
+    }
+
+    // 상점 해금 (해금 이벤트가 불러줌) - 오늘 밤부터 상점 열리고 알바도 한 번 생김
+    public void UnlockShop()
+    {
+        if (shopUnlocked == true)
+        {
+            return;
+        }
+
+        shopUnlocked = true;
+        arbeit.arbeitLeftToday += 1; // 아침 충전은 이미 끝났으니 오늘 몫은 직접 넣어줌
+        Debug.Log("상점 해금됨");
     }
 
     // 자고 다음날로 (밥값/월세/엔딩 체크는 calendar 가 함)

@@ -36,9 +36,8 @@ public class GameConfig : ScriptableObject
     public int wrongCardsPerSlot = 2;   // 상자 하나당 깔리는 오답 카드 수 (정답 1 + 오답 2 = 3장)
 
     [Header("아르바이트")]
-    public int arbeitStart = 1;     // 1일차 알바 가능 횟수 (해금 규칙 정해지면 바뀔 수 있음)
-    public int arbeitGrowEvery = 5; // 며칠마다 횟수가 1씩 늘어나는지
-    public int arbeitMax = 3;       // 하루 알바 횟수 상한
+    public int arbeitStart = 0;     // 상점 해금 전 알바 횟수 (해금되면 여기에 +1)
+    public int arbeitMax = 3;       // 기본 횟수 상한 (위조 신분증 보너스랑 이월분은 이 위로 더 붙음)
     public int arbeitCarryMax = 1;  // 안 쓴 알바 횟수를 다음 날로 넘길 수 있는 최대치
 
     [Header("상점")]

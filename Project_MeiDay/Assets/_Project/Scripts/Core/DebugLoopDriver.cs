@@ -45,6 +45,10 @@ public class DebugLoopDriver : MonoBehaviour
         {
             gm.suspicion.ReduceSuspicion(20);
         }
+        if (gm.shopUnlocked == false && GUILayout.Button("상점 해금"))
+        {
+            gm.UnlockShop();
+        }
         GUILayout.EndHorizontal();
 
         // 자동 플레이 (밸런스 확인용 - 정답률 굴려가며 하루를 통째로 돌림)
@@ -156,7 +160,12 @@ public class DebugLoopDriver : MonoBehaviour
             }
             GUILayout.Label("남은 크레딧: " + gm.economy.credits);
 
-            if (GUILayout.Button("결산 확인 -> 밤으로"))
+            string confirmLabel = "결산 확인 -> 밤으로";
+            if (gm.shopUnlocked == false)
+            {
+                confirmLabel = "결산 확인 -> 다음날 (상점 잠김)";
+            }
+            if (GUILayout.Button(confirmLabel))
             {
                 gm.ConfirmDayResult();
             }

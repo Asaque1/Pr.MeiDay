@@ -46,6 +46,14 @@ public class SaveManager : MonoBehaviour
         }
         PlayerPrefs.SetInt("hasSpaceship", shipValue);
 
+        // 밤 상점이 열렸는지 (우주선이랑 같은 방식)
+        int shopValue = 0;
+        if (gm.shopUnlocked == true)
+        {
+            shopValue = 1;
+        }
+        PlayerPrefs.SetInt("shopUnlocked", shopValue);
+
         // 가진 아이템들 (리스트는 못 넣으니까 개수 + 하나씩 번호 붙여서 저장)
         PlayerPrefs.SetInt("itemCount", gm.inventory.ownedItems.Count);
         for (int i = 0; i < gm.inventory.ownedItems.Count; i++)
@@ -117,6 +125,9 @@ public class SaveManager : MonoBehaviour
 
         // 우주선 (1이면 샀던 거)
         gm.hasSpaceship = (PlayerPrefs.GetInt("hasSpaceship", 0) == 1);
+
+        // 밤 상점 해금 (1이면 열렸던 거)
+        gm.shopUnlocked = (PlayerPrefs.GetInt("shopUnlocked", 0) == 1);
 
         // 아이템들 (저장했던 개수만큼 다시 꺼내서 리스트에 넣기)
         gm.inventory.ownedItems.Clear();
