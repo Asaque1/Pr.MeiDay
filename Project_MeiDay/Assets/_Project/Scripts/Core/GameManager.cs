@@ -331,27 +331,19 @@ public class GameManager : MonoBehaviour
     // 게임 오버
     public void GameOver(GameOverReason reason)
     {
-        phase = GamePhase.GameOver;
         lastGameOverReason = reason;
         Debug.Log("게임 오버! 이유: " + reason);
-
-        if (OnPhaseChanged != null)
-        {
-            OnPhaseChanged(phase);
-        }
+        save.Clear(); // 죽었으니 이어하기 못 하게 저장 지움
+        ChangePhase(GamePhase.GameOver);
     }
 
     // 엔딩
     public void Ending(EndingType type)
     {
-        phase = GamePhase.Ending;
         lastEnding = type;
         Debug.Log("엔딩! " + type);
-
-        if (OnPhaseChanged != null)
-        {
-            OnPhaseChanged(phase);
-        }
+        save.Clear(); // 엔딩 봤으니 이 회차는 끝 (새로 시작해야 함)
+        ChangePhase(GamePhase.Ending);
     }
 
     // 타이틀로 (지금은 그냥 씬 다시 켜서 처리)
