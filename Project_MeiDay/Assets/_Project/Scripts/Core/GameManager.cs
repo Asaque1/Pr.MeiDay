@@ -290,20 +290,32 @@ public class GameManager : MonoBehaviour
         StartNewDay();
     }
 
-    // 우주선 사기 (돈 되면 사고 true)
+    // 우주선 사기 (브로커 상점의 우주선표를 사는 것과 같음)
     public bool TryBuySpaceship()
     {
-        if (hasSpaceship == true)
+        ItemDefinition ticket = FindSpaceshipItem();
+        if (ticket == null)
         {
+            Debug.LogWarning("우주선표 아이템이 데이터에 없음");
             return false;
         }
-        if (economy.SpendCredits(config.spaceshipPrice) == false)
+
+        return shop.Buy(ticket); // 값이랑 해금 조건은 전부 상점이 봐줌
+    }
+
+    // 데이터에서 우주선표 찾기 (없으면 null)
+    public ItemDefinition FindSpaceshipItem()
+    {
+        List<ItemDefinition> items = content.items;
+        for (int i = 0; i < items.Count; i++)
         {
-            return false; // 돈 부족
+            if (items[i].isSpaceshipTicket == true)
+            {
+                return items[i];
+            }
         }
 
-        hasSpaceship = true;
-        return true;
+        return null;
     }
 
     // 브로커한테 답하기 (하드모드 첫 아침에 UI 가 불러줌)

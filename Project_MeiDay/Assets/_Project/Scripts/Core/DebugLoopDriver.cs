@@ -177,17 +177,26 @@ public class DebugLoopDriver : MonoBehaviour
             DrawArbeit(gm);
 
             GUILayout.Space(6);
-            GUILayout.Label("우주선 가격: " + gm.config.spaceshipPrice);
-            if (gm.hasSpaceship == false)
+            ItemDefinition ticket = gm.FindSpaceshipItem();
+            if (gm.hasSpaceship == true)
             {
-                if (GUILayout.Button("우주선 구매"))
-                {
-                    gm.TryBuySpaceship();
-                }
+                GUILayout.Label("우주선 보유중 (자면 하드모드 시작)");
+            }
+            else if (ticket == null)
+            {
+                GUILayout.Label("우주선표 아이템이 데이터에 없음");
             }
             else
             {
-                GUILayout.Label("우주선 보유중 (자면 하드모드 시작)");
+                GUILayout.Label("우주선 가격: " + ticket.price);
+                if (gm.shop.CanBuy(ticket) == false)
+                {
+                    GUILayout.Label("아직 못 삼 (상점 레벨 합 " + gm.config.spaceshipShopLevel + " 이상 필요)");
+                }
+                else if (GUILayout.Button("우주선 구매"))
+                {
+                    gm.TryBuySpaceship();
+                }
             }
 
             if (GUILayout.Button("자기 -> 다음날"))
