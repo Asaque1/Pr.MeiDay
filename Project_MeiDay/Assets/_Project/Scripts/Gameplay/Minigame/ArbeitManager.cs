@@ -14,14 +14,14 @@ public class ArbeitManager : MonoBehaviour
     // 상점별 알바 누적 횟수 (서점, 연극단, 파티, 브로커 순. 통계용)
     public List<int> arbeitDoneCounts = new List<int>() { 0, 0, 0, 0 };
 
-    // 아침마다 횟수 충전 (날짜가 지날수록 늘어나고 상한 있음)
+    // 아침마다 횟수 충전 (상점 해금돼야 생기고, 그 뒤론 아이템으로만 늘어남)
     public void ResetDaily()
     {
         GameConfig config = GameManager.instance.config;
         int count = config.arbeitStart;
-        if (config.arbeitGrowEvery > 0)
+        if (GameManager.instance.shopUnlocked == true)
         {
-            count += (GameManager.instance.calendar.day - 1) / config.arbeitGrowEvery;
+            count += 1; // 상점 해금 보너스
         }
         if (count > config.arbeitMax)
         {

@@ -27,6 +27,19 @@ public class ShopManager : MonoBehaviour
             return false; // 돈 부족해서 못 삼
         }
 
+        // 구매 소리
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySfx(SoundManager.instance.buyItem);
+        }
+
+        // 우주선표는 탈출 표시만 하고 끝 (레벨이나 즉시효과, 경험치에 안 섞음)
+        if (item.isSpaceshipTicket == true)
+        {
+            GameManager.instance.hasSpaceship = true;
+            return true;
+        }
+
         if (item.kind == ItemKind.Permanent)
         {
             // 영구템은 살 때마다 레벨이 오름
@@ -39,20 +52,8 @@ public class ShopManager : MonoBehaviour
             ApplyInstantEffect(item);
         }
 
-        // 우주선표면 탈출 가능 표시
-        if (item.isSpaceshipTicket == true)
-        {
-            GameManager.instance.hasSpaceship = true;
-        }
-
         // 사면 그 상점 경험치가 참
         AddShopExp(item.shopType, GameManager.instance.config.shopExpPerBuy);
-
-        // 구매 소리
-        if (SoundManager.instance != null)
-        {
-            SoundManager.instance.PlaySfx(SoundManager.instance.buyItem);
-        }
 
         return true;
     }

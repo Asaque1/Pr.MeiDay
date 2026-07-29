@@ -26,4 +26,5 @@ public class EventDefinition : ScriptableObject
 
     public ComplaintDefinition linkedComplaint; // 대사 끝나고 이어지는 민원 (없으면 대사만 하고 끝)
     public float suspicionChange = 0;           // 이벤트 보고 나면 오르내리는 의심도 (음수면 내려감)
+    public bool unlocksShop = false;            // 켜면 이 이벤트 보고 나서 밤 상점이 열림 (해금 이벤트용)
 }
