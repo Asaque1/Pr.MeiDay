@@ -77,7 +77,7 @@ public class DebugLoopDriver : MonoBehaviour
         if (gm.hardMode == true)
         {
             GUILayout.Label("[하드모드] " + gm.hardModeDay + " / " + gm.config.hardModeDays + "일");
-            if (gm.brokerChoice == BrokerChoice.None)
+            if (gm.brokerChoice == BrokerChoice.None && gm.events.currentEvent == null)
             {
                 GUILayout.Label("브로커: 자, 이제 어떻게 할 거야?");
                 if (GUILayout.Button("DB 접근시키기 (돈 뜯김)"))
