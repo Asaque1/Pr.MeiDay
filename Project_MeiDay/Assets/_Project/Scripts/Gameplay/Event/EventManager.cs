@@ -25,7 +25,7 @@ public class EventManager : MonoBehaviour
         for (int i = 0; i < all.Count; i++)
         {
             EventDefinition ev = all[i];
-            if (ev.timing != EventTiming.FixedDay || HasSeen(ev.id) == true)
+            if (ev == null || ev.timing != EventTiming.FixedDay || HasSeen(ev.id) == true)
             {
                 continue;
             }
@@ -44,13 +44,27 @@ public class EventManager : MonoBehaviour
             return fixedPick;
         }
 
+        // 2순위: 조건 이벤트 (조건 맞는 게 있으면 목록 순서대로 하나)
+        for (int i = 0; i < all.Count; i++)
+        {
+            EventDefinition ev = all[i];
+            if (ev == null || ev.timing != EventTiming.Trigger || HasSeen(ev.id) == true)
+            {
+                continue;
+            }
+            if (IsConditionMet(ev) == true)
+            {
+                return ev;
+            }
+        }
+
         // 일정 아끼기 스위치: 랜덤 이벤트를 확률 없이 목록 순서대로 하나씩 보여줌
         if (GameManager.instance.config.eventsInOrder == true)
         {
             for (int i = 0; i < all.Count; i++)
             {
                 EventDefinition ev = all[i];
-                if (ev.timing == EventTiming.Random && HasSeen(ev.id) == false)
+                if (ev != null && ev.timing == EventTiming.Random && HasSeen(ev.id) == false)
                 {
                     return ev;
                 }
@@ -58,12 +72,12 @@ public class EventManager : MonoBehaviour
             return null;
         }
 
-        // 2순위: 랜덤 이벤트 (안 본 것들을 섞어서 하나씩 확률 굴림)
+        // 3순위: 랜덤 이벤트 (안 본 것들을 섞어서 하나씩 확률 굴림)
         List<EventDefinition> candidates = new List<EventDefinition>();
         for (int i = 0; i < all.Count; i++)
         {
             EventDefinition ev = all[i];
-            if (ev.timing == EventTiming.Random && HasSeen(ev.id) == false)
+            if (ev != null && ev.timing == EventTiming.Random && HasSeen(ev.id) == false)
             {
                 candidates.Add(ev);
             }
@@ -87,6 +101,42 @@ public class EventManager : MonoBehaviour
         }
 
         return null; // 오늘은 이벤트 없는 아침
+    }
+
+    // Trigger 이벤트를 지금 꺼낼 조건이 됐는지
+    bool IsConditionMet(EventDefinition ev)
+    {
+        GameManager gm = GameManager.instance;
+
+        if (ev.condition == EventCondition.None)
+        {
+            return true;
+        }
+        if (ev.condition == EventCondition.DayAtLeast)
+        {
+            return gm.calendar.day >= ev.conditionValue;
+        }
+        if (ev.condition == EventCondition.CreditsAtLeast)
+        {
+            return gm.economy.credits >= ev.conditionValue;
+        }
+        if (ev.condition == EventCondition.SuspicionAtLeast)
+        {
+            return gm.suspicion.current >= ev.conditionValue;
+        }
+        if (ev.condition == EventCondition.ShopLevelSum)
+        {
+            int sum = gm.shop.GetShopLevel(ShopType.Bookstore)
+                + gm.shop.GetShopLevel(ShopType.Theater)
+                + gm.shop.GetShopLevel(ShopType.PartyShop);
+            return sum >= ev.conditionValue;
+        }
+        if (ev.condition == EventCondition.HasSpaceship)
+        {
+            return gm.hasSpaceship == true;
+        }
+
+        return false; // 모르는 조건이면 안 나옴
     }
 
     // 이벤트 대사 시작
