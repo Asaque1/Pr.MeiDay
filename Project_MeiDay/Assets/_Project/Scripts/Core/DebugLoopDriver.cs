@@ -23,7 +23,10 @@ public class DebugLoopDriver : MonoBehaviour
         {
             _autoDays = 0;
         }
-        if (_autoDays > 0 && (gm.phase == GamePhase.DayWork || gm.phase == GamePhase.DayResult))
+        // OnGUI 는 한 프레임에 여러 번 불리니까 Layout 때만 하루를 소화함 (안 그러면 두 배로 빨리 감)
+        if (Event.current.type == EventType.Layout
+            && _autoDays > 0
+            && (gm.phase == GamePhase.DayWork || gm.phase == GamePhase.DayResult))
         {
             _autoDays--;
             AutoPlayOneDay(gm);
@@ -48,6 +51,21 @@ public class DebugLoopDriver : MonoBehaviour
         if (gm.shopUnlocked == false && GUILayout.Button("상점 해금"))
         {
             gm.UnlockShop();
+        }
+        GUILayout.EndHorizontal();
+
+        // 후반부(우주선 -> 브로커 -> 엔딩)를 알바 19번 안 하고 바로 보려고 넣은 치트
+        GUILayout.BeginHorizontal();
+        if (GUILayout.Button("상점레벨 +2씩"))
+        {
+            int amount = gm.config.shopExpPerLevel * 2;
+            gm.shop.AddShopExp(ShopType.Bookstore, amount);
+            gm.shop.AddShopExp(ShopType.Theater, amount);
+            gm.shop.AddShopExp(ShopType.PartyShop, amount);
+        }
+        if (gm.hasSpaceship == false && GUILayout.Button("우주선 바로 얻기"))
+        {
+            gm.hasSpaceship = true;
         }
         GUILayout.EndHorizontal();
 
