@@ -22,6 +22,9 @@ public class EventDefinition : ScriptableObject
     [Range(0f, 1f)]
     public float randomChance = 0.3f; // Random 이면 아침에 나올 확률
 
+    public EventCondition condition;  // Trigger 면 이 조건이 맞는 날 나옴
+    public float conditionValue = 0;  // 조건에 쓰는 숫자 (며칠차, 크레딧 등)
+
     public List<EventLine> lines = new List<EventLine>(); // 대사들 (순서대로)
 
     public ComplaintDefinition linkedComplaint; // 대사 끝나고 이어지는 민원 (없으면 대사만 하고 끝)

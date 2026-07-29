@@ -47,6 +47,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
   complaints:
   - {fileID: 11400000, guid: 6e51ab8b094f5bcba670369bc2761f3b, type: 2}
-  items: []
-  minigames: []
-  events: []
+  items:
+  - {fileID: 11400000, guid: 79d0d4d56148558abf8d08dcd2812d2d, type: 2}
+  minigames:
+  - {fileID: 11400000, guid: 77740145d6535a8aab2124a48a2064f0, type: 2}
+  - {fileID: 11400000, guid: 163c1d4ff3c7591b833d52124cd54e88, type: 2}
+  - {fileID: 11400000, guid: 2959475e8e73503c96255f049a4a7c11, type: 2}
+  events:
+  - {fileID: 11400000, guid: 787e3e8648565ba8b5efcbfe422e3ebd, type: 2}
+  - {fileID: 11400000, guid: b2fe03e3b82d5726b6e42cb02fc83427, type: 2}

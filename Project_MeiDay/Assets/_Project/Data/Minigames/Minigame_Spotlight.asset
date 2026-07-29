@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62e61bc4de632374982843e7d37baf52, type: 3}
+  m_Name: Minigame_Spotlight
+  m_EditorClassIdentifier:
+  id: arbeit_spotlight
+  minigameName: 조명 연출
+  description: 무대 위 배우를 조명으로 계속 따라다닌다.
+  sceneName: 
+  shopType: 1
+  basePay: 40
+  expReward: 8
+  kind: 2
+  bookCount: 6
+  genreCount: 3
+  playSeconds: 20

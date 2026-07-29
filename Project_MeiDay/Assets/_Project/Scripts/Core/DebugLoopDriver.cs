@@ -8,6 +8,9 @@ public class DebugLoopDriver : MonoBehaviour
     float _autoRate = 0.8f; // 자동 플레이 정답률
     int _autoDays = 0;      // 남은 자동 진행 일수
 
+    int _fontSize = 18;             // 글자 크기 (화면에 따라 +/- 로 조절)
+    Vector2 _scroll = Vector2.zero; // 내용이 길어지면 스크롤
+
     void OnGUI()
     {
         GameManager gm = GameManager.instance;
@@ -16,26 +19,51 @@ public class DebugLoopDriver : MonoBehaviour
             return;
         }
 
-        GUILayout.BeginArea(new Rect(20, 20, 340, 700), GUI.skin.box);
+        // 기본 글자가 너무 작아서 키워줌 (버튼도 손가락 크기로)
+        GUI.skin.label.fontSize = _fontSize;
+        GUI.skin.button.fontSize = _fontSize;
+        GUI.skin.box.fontSize = _fontSize;
+        GUI.skin.button.padding = new RectOffset(10, 10, 7, 7);
+        GUI.skin.label.wordWrap = true;
+
+        // 화면 높이에 맞춰서 창을 잡고, 넘치면 스크롤로 봄
+        float boxWidth = 520;
+        float boxHeight = Screen.height - 40;
+        GUILayout.BeginArea(new Rect(20, 20, boxWidth, boxHeight), GUI.skin.box);
+        _scroll = GUILayout.BeginScrollView(_scroll);
 
         // 자동 진행 중이면 한 프레임에 하루씩 소화 (끝나거나 게임오버면 멈춤)
         if (gm.phase == GamePhase.Ending || gm.phase == GamePhase.GameOver)
         {
             _autoDays = 0;
         }
-        if (_autoDays > 0 && (gm.phase == GamePhase.DayWork || gm.phase == GamePhase.DayResult))
+        // OnGUI 는 한 프레임에 여러 번 불리니까 Layout 때만 하루를 소화함 (안 그러면 두 배로 빨리 감)
+        if (Event.current.type == EventType.Layout
+            && _autoDays > 0
+            && (gm.phase == GamePhase.DayWork || gm.phase == GamePhase.DayResult))
         {
             _autoDays--;
             AutoPlayOneDay(gm);
         }
 
-        // 지금 상태 보여주기
-        GUILayout.Label("페이즈: " + gm.phase);
-        GUILayout.Label("날짜: " + gm.calendar.day + "일차");
-        GUILayout.Label("크레딧: " + gm.economy.credits);
-        GUILayout.Label("의심도: " + gm.suspicion.current + " / " + gm.config.maxSuspicion);
+        // 지금 상태 (맨 위에 크게)
+        GUILayout.Label("■ " + PhaseName(gm.phase) + "   /   " + gm.calendar.day + "일차");
+        GUILayout.Label("크레딧 " + gm.economy.credits
+            + "      의심도 " + Mathf.RoundToInt(gm.suspicion.current)
+            + " / " + Mathf.RoundToInt(gm.config.maxSuspicion));
+        if (gm.shopUnlocked == true)
+        {
+            GUILayout.Label("남은 알바 " + gm.arbeit.arbeitLeftToday + "회"
+                + "      상점레벨 합 " + ShopLevelSum(gm));
+        }
+        else
+        {
+            GUILayout.Label("상점 잠김 (2일차 아침에 열림)");
+        }
+        DrawLine();
 
         // 테스트용 치트
+        GUILayout.Label("- 치트 -");
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("+500cr"))
         {
@@ -51,33 +79,65 @@ public class DebugLoopDriver : MonoBehaviour
         }
         GUILayout.EndHorizontal();
 
-        // 자동 플레이 (밸런스 확인용 - 정답률 굴려가며 하루를 통째로 돌림)
+        // 후반부(우주선 -> 브로커 -> 엔딩)를 알바 19번 안 하고 바로 보려고 넣은 치트
         GUILayout.BeginHorizontal();
-        GUILayout.Label("자동 정답률 " + Mathf.RoundToInt(_autoRate * 100) + "%", GUILayout.Width(110));
-        _autoRate = GUILayout.HorizontalSlider(_autoRate, 0f, 1f);
+        if (GUILayout.Button("상점레벨 +2씩"))
+        {
+            int amount = gm.config.shopExpPerLevel * 2;
+            gm.shop.AddShopExp(ShopType.Bookstore, amount);
+            gm.shop.AddShopExp(ShopType.Theater, amount);
+            gm.shop.AddShopExp(ShopType.PartyShop, amount);
+        }
+        if (gm.hasSpaceship == false && GUILayout.Button("우주선 바로 얻기"))
+        {
+            gm.hasSpaceship = true;
+        }
+        GUILayout.EndHorizontal();
+
+        DrawLine();
+
+        // 자동 플레이 (밸런스 확인용 - 정답률 굴려가며 하루를 통째로 돌림)
+        GUILayout.Label("- 자동 플레이 -");
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("정답률 " + Mathf.RoundToInt(_autoRate * 100) + "%", GUILayout.Width(140));
+        _autoRate = GUILayout.HorizontalSlider(_autoRate, 0f, 1f, GUILayout.Height(24));
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("1일 자동"))
+        if (GUILayout.Button("1일"))
         {
             _autoDays = 1;
         }
-        if (GUILayout.Button("7일 자동"))
+        if (GUILayout.Button("7일"))
         {
             _autoDays = 7;
         }
-        if (GUILayout.Button("30일 자동"))
+        if (GUILayout.Button("30일"))
         {
             _autoDays = 30;
         }
         GUILayout.EndHorizontal();
-        GUILayout.Space(10);
+
+        // 글자가 작거나 크면 여기서 조절
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("글자 크기 " + _fontSize, GUILayout.Width(140));
+        if (GUILayout.Button("-", GUILayout.Width(50)) && _fontSize > 10)
+        {
+            _fontSize--;
+        }
+        if (GUILayout.Button("+", GUILayout.Width(50)) && _fontSize < 36)
+        {
+            _fontSize++;
+        }
+        GUILayout.EndHorizontal();
+
+        DrawLine();
 
         // 하드모드면 진행 상황 + 아직 답 안 했으면 브로커 선택창 먼저
         if (gm.hardMode == true)
         {
             GUILayout.Label("[하드모드] " + gm.hardModeDay + " / " + gm.config.hardModeDays + "일");
-            if (gm.brokerChoice == BrokerChoice.None)
+            if (gm.brokerChoice == BrokerChoice.None && gm.events.currentEvent == null)
             {
                 GUILayout.Label("브로커: 자, 이제 어떻게 할 거야?");
                 if (GUILayout.Button("DB 접근시키기 (돈 뜯김)"))
@@ -221,8 +281,53 @@ public class DebugLoopDriver : MonoBehaviour
             }
         }
 
+        GUILayout.EndScrollView();
         GUILayout.EndArea();
     }
+
+    // 페이즈를 한국말로 바꿔줌 (팀원들이 보기 편하게)
+    string PhaseName(GamePhase phase)
+    {
+        if (phase == GamePhase.Intro)
+        {
+            return "타이틀";
+        }
+        if (phase == GamePhase.DayWork)
+        {
+            return "낮 - 민원 처리";
+        }
+        if (phase == GamePhase.DayResult)
+        {
+            return "결산";
+        }
+        if (phase == GamePhase.NightShop)
+        {
+            return "밤 - 상점 / 알바";
+        }
+        if (phase == GamePhase.Ending)
+        {
+            return "엔딩";
+        }
+
+        return "게임 오버";
+    }
+
+    // 우주선 조건에 쓰는 상점 레벨 합 (브로커 빼고 셋)
+    int ShopLevelSum(GameManager gm)
+    {
+        return gm.shop.GetShopLevel(ShopType.Bookstore)
+            + gm.shop.GetShopLevel(ShopType.Theater)
+            + gm.shop.GetShopLevel(ShopType.PartyShop);
+    }
+
+    // 구분선 하나 긋기
+    void DrawLine()
+    {
+        GUILayout.Space(6);
+        GUILayout.Box("", GUILayout.Height(2), GUILayout.ExpandWidth(true));
+        GUILayout.Space(6);
+    }
+
     void DrawArbeit(GameManager gm)
     {
         GUILayout.Label("남은 알바 횟수: " + gm.arbeit.arbeitLeftToday);

@@ -16,6 +16,13 @@ public class UiRoot : MonoBehaviour
     void Start()
     {
         GameManager.instance.OnPhaseChanged += ShowPanelFor;
+
+        // 대사 끝나면 브로커 선택창 뜨게 (매니저 연결 안 해뒀어도 안 터지게)
+        if (GameManager.instance.events != null)
+        {
+            GameManager.instance.events.OnDialogueUpdated += RefreshHardChoice;
+        }
+
         ShowPanelFor(GameManager.instance.phase); // 시작할 때 한 번 맞춰줌
         RefreshContinueButton();
     }
@@ -34,6 +41,11 @@ public class UiRoot : MonoBehaviour
         if (GameManager.instance != null)
         {
             GameManager.instance.OnPhaseChanged -= ShowPanelFor;
+
+            if (GameManager.instance.events != null)
+            {
+                GameManager.instance.events.OnDialogueUpdated -= RefreshHardChoice;
+            }
         }
     }
 
@@ -46,11 +58,19 @@ public class UiRoot : MonoBehaviour
         nightPanel.SetActive(phase == GamePhase.NightShop);
         endingPanel.SetActive(phase == GamePhase.Ending || phase == GamePhase.GameOver);
 
-        // 하드모드 시작한 아침엔 브로커 선택창부터 (아직 답 안 했을 때만)
+        RefreshHardChoice();
+    }
+
+    // 하드모드 시작한 아침엔 브로커 선택창 (대사 다 보고 나서, 아직 답 안 했을 때만)
+    void RefreshHardChoice()
+    {
         GameManager gm = GameManager.instance;
-        hardChoicePanel.SetActive(phase == GamePhase.DayWork
+        bool inDialogue = (gm.events != null && gm.events.currentEvent != null);
+
+        hardChoicePanel.SetActive(gm.phase == GamePhase.DayWork
             && gm.hardMode == true
-            && gm.brokerChoice == BrokerChoice.None);
+            && gm.brokerChoice == BrokerChoice.None
+            && inDialogue == false);
     }
 
     // ---- 아래는 버튼 OnClick 에 연결해서 씀 ----

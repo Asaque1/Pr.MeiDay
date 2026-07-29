@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54fc82f47a838d74281652bb19c146cd, type: 3}
+  m_Name: GameConfig
+  m_EditorClassIdentifier:
+  startingCredits: 100
+  foodCost: 10
+  rentCost: 120
+  firstRentDay: 3
+  rentEveryDays: 6
+  rentMissLimit: 3
+  spaceshipShopLevel: 5
+  rentDunEveryDays: 3
+  hardModeDays: 7
+  hardModeExtraCost: 30
+  brokerTakeRate: 0.3
+  reportSuspicionPerDay: 8
+  maxSuspicion: 100
+  suspicionWrongTranslation: 5
+  suspicionWrongResolution: 12
+  suspicionPerfectClear: 3
+  complaintsPerDay: 3
+  complaintsGrowEvery: 5
+  complaintsMax: 6
+  maxWrongTries: 3
+  perfectDayBonus: 30
+  wrongCardsPerSlot: 2
+  arbeitStart: 0
+  arbeitMax: 3
+  arbeitCarryMax: 1
+  shopExpPerBuy: 10
+  shopExpPerLevel: 30
+  eventsInOrder: 0
