@@ -282,7 +282,7 @@ public class GameManager : MonoBehaviour
             hardMode = true;
             hardModeDay = 0;
             brokerChoice = BrokerChoice.None;
-            // TODO: 여기서 브로커 만나는 연출 넣기
+            // 브로커 등장 대사는 이벤트 데이터로 넣음 (timing=Trigger, condition=HasSpaceship)
         }
 
         save.Save(); // 아침마다 자동 저장
