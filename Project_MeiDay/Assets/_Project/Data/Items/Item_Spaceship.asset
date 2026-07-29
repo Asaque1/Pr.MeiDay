@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cb6d72b7c7b3014ca1ab66772d3686a, type: 3}
+  m_Name: Item_Spaceship
+  m_EditorClassIdentifier:
+  id: item_spaceship
+  itemName: 우주선 탑승권
+  shopType: 3
+  kind: 1
+  effect: 0
+  description: 지구로 돌아가는 배의 자리 하나. 브로커는 웃으며 값을 부른다.
+  price: 3000
+  isSpaceshipTicket: 1
+  maxLevel: 1
+  power: 0
+  sidePower: 0
+  boxRewardMin: 0
+  boxRewardMax: 0
+  requiresMaxed: {fileID: 0}
+  requiredShopLevel: 0
