@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 // 임시 디버그용 - 진짜 UI 만들기 전에 하루 루프 도는지 버튼으로 확인
@@ -7,6 +8,17 @@ public class DebugLoopDriver : MonoBehaviour
     int _selectedCard = 0;  // 지금 고른 카드 번호
     float _autoRate = 0.8f; // 자동 플레이 정답률
     int _autoDays = 0;      // 남은 자동 진행 일수
+
+    float _autoArbeitRate = 0.8f;   // 자동 플레이에서 알바 수행률
+    bool _autoReportBroker = false; // 자동 플레이에서 브로커를 신고할지 (끄면 DB 접근)
+
+    // 자동 플레이 결과 요약용 (밸런스 회의에 쓸 숫자)
+    bool _simRunning = false;  // 자동 플레이 중인지 (요약을 한 번만 찍으려고)
+    int _simSpaceshipDay = 0;  // 우주선 산 날 (0이면 못 삼)
+    int _simArbeitDone = 0;    // 알바 총 횟수
+    int _simDays = 0;          // 몇 일 돌렸는지
+    int _simComplaints = 0;    // 나온 민원 총 수
+    int _simFail = 0;          // 놓친 민원 수
 
     int _fontSize = 18;             // 글자 크기 (화면에 따라 +/- 로 조절)
     Vector2 _scroll = Vector2.zero; // 내용이 길어지면 스크롤
@@ -35,6 +47,10 @@ public class DebugLoopDriver : MonoBehaviour
         // 자동 진행 중이면 한 프레임에 하루씩 소화 (끝나거나 게임오버면 멈춤)
         if (gm.phase == GamePhase.Ending || gm.phase == GamePhase.GameOver)
         {
+            if (_simRunning == true)
+            {
+                LogSimSummary(gm); // 끝났으니 결과 정리해서 콘솔에 찍음
+            }
             _autoDays = 0;
         }
         // OnGUI 는 한 프레임에 여러 번 불리니까 Layout 때만 하루를 소화함 (안 그러면 두 배로 빨리 감)
@@ -44,6 +60,13 @@ public class DebugLoopDriver : MonoBehaviour
         {
             _autoDays--;
             AutoPlayOneDay(gm);
+        }
+
+        // 정해둔 일수를 다 돌았는데 아직 안 끝났으면 왜 못 끝났는지 알려줌 (조용히 멈추면 안 됨)
+        if (_simRunning == true && _autoDays == 0
+            && gm.phase != GamePhase.Ending && gm.phase != GamePhase.GameOver)
+        {
+            LogSimStuck(gm);
         }
 
         // 지금 상태 (맨 위에 크게)
@@ -98,25 +121,53 @@ public class DebugLoopDriver : MonoBehaviour
 
         // 자동 플레이 (밸런스 확인용 - 정답률 굴려가며 하루를 통째로 돌림)
         GUILayout.Label("- 자동 플레이 -");
+        // 슬라이더 값은 5% 단위로 맞춤 (계단 경계에서 결과가 갈리는데 라벨로는 구분이 안 되니까)
         GUILayout.BeginHorizontal();
-        GUILayout.Label("정답률 " + Mathf.RoundToInt(_autoRate * 100) + "%", GUILayout.Width(140));
-        _autoRate = GUILayout.HorizontalSlider(_autoRate, 0f, 1f, GUILayout.Height(24));
+        GUILayout.Label("카드 정답률 " + Mathf.RoundToInt(_autoRate * 100) + "%", GUILayout.Width(200));
+        _autoRate = SnapRate(GUILayout.HorizontalSlider(_autoRate, 0f, 1f, GUILayout.Height(24)));
         GUILayout.EndHorizontal();
+
+        // 카드 제출 한 번당 확률이라, 민원 하나를 끝내 성공하는 확률은 이거보다 훨씬 높음
+        GUILayout.Label("  -> 민원 성공률 " + Mathf.RoundToInt(EffectiveSuccess(gm) * 100)
+            + "% (" + gm.config.maxWrongTries + "번까지 다시 하니까)");
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("알바 수행률 " + Mathf.RoundToInt(_autoArbeitRate * 100) + "%", GUILayout.Width(200));
+        _autoArbeitRate = SnapRate(GUILayout.HorizontalSlider(_autoArbeitRate, 0f, 1f, GUILayout.Height(24)));
+        GUILayout.EndHorizontal();
+
+        GUILayout.Label("  -> 보수·경험치 " + Mathf.RoundToInt(ArbeitTier(_autoArbeitRate) * 100) + "% 받음");
+
+        string brokerLabel = "브로커: DB 접근 루트";
+        if (_autoReportBroker == true)
+        {
+            brokerLabel = "브로커: 신고 루트";
+        }
+        if (GUILayout.Button(brokerLabel))
+        {
+            _autoReportBroker = !_autoReportBroker;
+        }
 
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("1일"))
         {
-            _autoDays = 1;
+            StartSim(1, false);
         }
         if (GUILayout.Button("7일"))
         {
-            _autoDays = 7;
+            StartSim(7, false);
         }
         if (GUILayout.Button("30일"))
         {
-            _autoDays = 30;
+            StartSim(30, false);
         }
         GUILayout.EndHorizontal();
+
+        // 엔딩(또는 게임오버) 날 때까지 돌리고 결과를 콘솔에 요약해줌
+        if (GUILayout.Button("엔딩까지 돌리기 (결과 요약)"))
+        {
+            StartSim(300, true);
+        }
 
         // 글자가 작거나 크면 여기서 조절
         GUILayout.BeginHorizontal();
@@ -740,6 +791,19 @@ public class DebugLoopDriver : MonoBehaviour
             gm.events.AdvanceLine();
         }
 
+        // 하드모드 첫 아침이면 브로커한테 답부터 함 (안 하면 7일 시계가 안 돌아서 엔딩이 안 옴)
+        if (gm.hardMode == true && gm.brokerChoice == BrokerChoice.None)
+        {
+            if (_autoReportBroker == true)
+            {
+                gm.ChooseBroker(BrokerChoice.ReportBroker);
+            }
+            else
+            {
+                gm.ChooseBroker(BrokerChoice.DatabaseAccess);
+            }
+        }
+
         ComplaintManager cm = gm.complaint;
         guard = 0;
         while (gm.phase == GamePhase.DayWork && cm.currentIndex < cm.todayComplaints.Count && guard < 200)
@@ -767,15 +831,209 @@ public class DebugLoopDriver : MonoBehaviour
 
         if (gm.phase == GamePhase.DayResult)
         {
-            Debug.Log("[자동] " + gm.calendar.day + "일차: 크레딧 " + gm.economy.credits
-                + ", 의심도 " + gm.suspicion.current
-                + ", 성공 " + cm.successCount + " / " + cm.todayComplaints.Count);
+            _simDays++;
+            _simComplaints += cm.todayComplaints.Count;
+            _simFail += cm.failCount;
+
+            Debug.Log("[자동] " + gm.calendar.day + "일차"
+                + " | 크레딧 " + gm.economy.credits
+                + " | 의심도 " + Mathf.RoundToInt(gm.suspicion.current)
+                + " | 상점레벨합 " + ShopLevelSum(gm)
+                + " | 성공 " + cm.successCount + "/" + cm.todayComplaints.Count);
             gm.ConfirmDayResult();
         }
 
+        // 상점이 열려 있으면 밤도 자동으로 (알바 + 우주선 구매)
         if (gm.phase == GamePhase.NightShop)
         {
+            AutoPlayNight(gm);
             gm.SleepAndAdvance();
         }
+    }
+
+    // 자동 플레이 시작 (횟수 정하고 결과 카운터 초기화)
+    // summary 는 끝까지 돌려서 결과 요약을 찍을 실행인지
+    void StartSim(int days, bool summary)
+    {
+        GameManager gm = GameManager.instance;
+
+        // 이미 끝난 화면에서 누르면 지난 판 숫자로 엉뚱한 요약이 찍혀서 막음
+        if (gm.phase != GamePhase.DayWork && gm.phase != GamePhase.DayResult
+            && gm.phase != GamePhase.NightShop)
+        {
+            Debug.LogWarning("[자동] 게임이 도는 중에만 돌릴 수 있음 (지금: " + PhaseName(gm.phase) + ")");
+            return;
+        }
+
+        _autoDays = days;
+        _simRunning = summary;
+        _simSpaceshipDay = 0;
+        _simArbeitDone = 0;
+        _simDays = 0;
+        _simComplaints = 0;
+        _simFail = 0;
+    }
+
+    // 슬라이더를 5% 단위로 맞춤 (0.799 랑 0.800 이 결과를 3일씩 바꿔서 재현이 안 됨)
+    float SnapRate(float value)
+    {
+        return Mathf.Round(value * 20f) / 20f;
+    }
+
+    // 알바 수행률이 실제로 받는 비율 (ArbeitManager 의 계단이랑 같아야 함)
+    float ArbeitTier(float rate)
+    {
+        if (rate >= 0.8f)
+        {
+            return 1f;
+        }
+        if (rate >= 0.6f)
+        {
+            return 0.75f;
+        }
+        if (rate >= 0.4f)
+        {
+            return 0.5f;
+        }
+
+        return 0f;
+    }
+
+    // 민원 하나를 끝내 성공할 확률 (제출을 여러 번 할 수 있으니 카드 정답률보다 높음)
+    float EffectiveSuccess(GameManager gm)
+    {
+        int tries = gm.config.maxWrongTries;
+        if (tries < 1)
+        {
+            tries = 1;
+        }
+
+        return 1f - Mathf.Pow(1f - _autoRate, tries);
+    }
+
+    // 자동 플레이의 밤 - 알바 남은 만큼 하고, 살 수 있으면 우주선 산다
+    void AutoPlayNight(GameManager gm)
+    {
+        int guard = 0;
+        while (gm.arbeit.CanWork() == true && guard < 20)
+        {
+            guard++;
+            MinigameDefinition pick = PickArbeitForSim(gm);
+            if (pick == null)
+            {
+                break; // 알바 데이터가 아직 없음
+            }
+
+            gm.arbeit.StartArbeit(pick);
+            gm.arbeit.FinishArbeit(_autoArbeitRate);
+            _simArbeitDone++;
+        }
+
+        ItemDefinition ticket = gm.FindSpaceshipItem();
+        if (ticket != null && gm.hasSpaceship == false && gm.shop.CanBuy(ticket) == true)
+        {
+            if (gm.TryBuySpaceship() == true)
+            {
+                _simSpaceshipDay = gm.calendar.day;
+                Debug.Log("[자동] " + gm.calendar.day + "일차에 우주선 구매!");
+            }
+        }
+    }
+
+    // 시뮬레이션에서 할 알바 고르기 (경험치 제일 낮은 상점부터 - 레벨을 골고루 올려야 우주선이 풀림)
+    MinigameDefinition PickArbeitForSim(GameManager gm)
+    {
+        List<MinigameDefinition> all = gm.content.minigames;
+        MinigameDefinition best = null;
+        int bestExp = 0;
+
+        for (int i = 0; i < all.Count; i++)
+        {
+            MinigameDefinition m = all[i];
+            if (m == null)
+            {
+                continue;
+            }
+
+            int exp = gm.shop.shopExp[(int)m.shopType];
+            if (best == null || exp < bestExp)
+            {
+                best = m;
+                bestExp = exp;
+            }
+        }
+
+        return best;
+    }
+
+    // 다 돌렸는데 엔딩에 못 닿았을 때 - 어디서 막혔는지 짚어줌 (조용히 끝나면 숫자를 오해함)
+    void LogSimStuck(GameManager gm)
+    {
+        Debug.LogWarning("===== 엔딩에 못 닿고 멈춤 (" + gm.calendar.day + "일차까지 돌림) =====");
+
+        if (gm.content.minigames.Count == 0)
+        {
+            Debug.LogWarning("  알바 데이터가 없어서 상점 경험치를 못 올림");
+        }
+        if (gm.FindSpaceshipItem() == null)
+        {
+            Debug.LogWarning("  우주선표 아이템이 데이터에 없음");
+        }
+        if (gm.hasSpaceship == false && ShopLevelSum(gm) < gm.config.spaceshipShopLevel)
+        {
+            Debug.LogWarning("  상점레벨 합 " + ShopLevelSum(gm) + " < 조건 " + gm.config.spaceshipShopLevel
+                + "  (알바 수행률이 40% 밑이면 경험치가 0이라 영원히 안 오름)");
+        }
+        if (gm.hasSpaceship == false)
+        {
+            Debug.LogWarning("  아직 우주선을 못 샀음 (크레딧 " + gm.economy.credits + ")");
+        }
+
+        LogSimSummary(gm); // 거기까지의 숫자도 같이 남김
+    }
+
+    // 자동 플레이가 끝났을 때 결과 요약 (밸런스 회의에 쓸 숫자)
+    void LogSimSummary(GameManager gm)
+    {
+        _simRunning = false;
+
+        string result = "아직 진행 중 (엔딩 못 봄)";
+        if (gm.phase == GamePhase.Ending)
+        {
+            result = "엔딩 (" + gm.lastEnding + ")";
+        }
+        else if (gm.phase == GamePhase.GameOver)
+        {
+            result = "게임 오버 (" + gm.lastGameOverReason + ")";
+        }
+
+        string ship = "끝까지 못 삼";
+        if (_simSpaceshipDay > 0)
+        {
+            ship = _simSpaceshipDay + "일차";
+        }
+
+        // 하루에 몇 건 나왔는지 (민원 데이터가 적으면 할당량보다 적게 나와서 숫자가 확 달라짐)
+        string perDay = "0";
+        if (_simDays > 0)
+        {
+            perDay = ((float)_simComplaints / _simDays).ToString("0.0");
+        }
+
+        Debug.Log("===== 자동 플레이 결과 =====");
+        Debug.Log("  " + gm.calendar.day + "일차에 끝남 -> " + result);
+        Debug.Log("  우주선 구매: " + ship);
+        Debug.Log("  알바 " + _simArbeitDone + "회, 상점레벨 합 " + ShopLevelSum(gm)
+            + " (우주선 조건 " + gm.config.spaceshipShopLevel + ")");
+        Debug.Log("  남은 크레딧 " + gm.economy.credits
+            + ", 의심도 " + Mathf.RoundToInt(gm.suspicion.current));
+        Debug.Log("  민원 하루 평균 " + perDay + "건 (할당량 설정은 " + gm.config.complaintsPerDay
+            + "건), 놓친 민원 " + _simFail + "건");
+        Debug.Log("  설정: 카드 정답률 " + Mathf.RoundToInt(_autoRate * 100)
+            + "% -> 민원 성공률 " + Mathf.RoundToInt(EffectiveSuccess(gm) * 100) + "%"
+            + " / 알바 수행률 " + Mathf.RoundToInt(_autoArbeitRate * 100)
+            + "% -> 보수 " + Mathf.RoundToInt(ArbeitTier(_autoArbeitRate) * 100) + "%");
+        Debug.Log("  * 이 시뮬레이션이 안 하는 것: 처리(3택) 오답, 아이템 구매, 버프·밀수템."
+            + " 실제 플레이보다 의심도가 낮고 수입이 후하게 나옴");
     }
 }
