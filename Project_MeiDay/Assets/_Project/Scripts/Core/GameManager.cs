@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        instance = this; // 게임 켜질 때 instance 에 나를 넣어줌
+        instance = this; // 게임 켜질 때 instance 에 나를 넣어줌 (싱글톤 패턴)
     }
 
     // 단계 바꾸기
