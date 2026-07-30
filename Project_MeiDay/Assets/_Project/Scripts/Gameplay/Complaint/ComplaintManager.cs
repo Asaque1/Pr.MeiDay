@@ -25,6 +25,9 @@ public class ComplaintManager : MonoBehaviour
     // 민원 상태 바뀌면 알려줌 (UI 가 듣고 다시 그림)
     public event Action OnComplaintUpdated;
 
+    // 민원인이 화냈을 때 알려줌 (기획서의 "테이블 쿵 치며 화면 흔들림" 연출용)
+    public event Action OnComplainantAngry;
+
     // 하루 시작 - 오늘 처리할 민원 뽑기 (이벤트에서 넘어온 민원 있으면 맨 앞에)
     public void StartDay(ComplaintDefinition eventComplaint)
     {
@@ -98,6 +101,15 @@ public class ComplaintManager : MonoBehaviour
         NotifyUpdated();
     }
 
+    // 화면 흔들기 같은 연출한테 알려주기
+    void NotifyAngry()
+    {
+        if (OnComplainantAngry != null)
+        {
+            OnComplainantAngry();
+        }
+    }
+
     // 구독한 UI 한테 알려주기
     void NotifyUpdated()
     {
@@ -138,6 +150,7 @@ public class ComplaintManager : MonoBehaviour
         {
             SoundManager.instance.PlaySfx(SoundManager.instance.wrongAnswer);
         }
+        NotifyAngry(); // 화면 흔들기 연출
 
         // 의심도 초과로 게임오버 됐으면 여기서 끝 (집계 중복 방지)
         if (GameManager.instance.phase == GamePhase.GameOver)
@@ -211,6 +224,8 @@ public class ComplaintManager : MonoBehaviour
             {
                 SoundManager.instance.PlaySfx(SoundManager.instance.wrongAnswer);
             }
+            NotifyAngry(); // 화면 흔들기 연출
+
             GameManager.instance.suspicion.AddSuspicion(GameManager.instance.config.suspicionWrongResolution);
 
             if (GameManager.instance.phase == GamePhase.GameOver)
