@@ -18,6 +18,8 @@ public class HudView : MonoBehaviour
 
         dayText.text = gm.calendar.day + "일차";
         creditsText.text = gm.economy.credits + " cr";
-        suspicionText.text = "의심도 " + gm.suspicion.current + " / " + gm.config.maxSuspicion;
+        // 기획서상 의심도는 0~100 정수라서 소수점은 안 보여줌
+        suspicionText.text = "의심도 " + Mathf.RoundToInt(gm.suspicion.current)
+            + " / " + Mathf.RoundToInt(gm.config.maxSuspicion);
     }
 }
