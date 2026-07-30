@@ -28,6 +28,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b27c7ad5509253d3b7b6f70e7f0da3ef, type: 2}
   - {fileID: 11400000, guid: ecefe2a865a0516197d06b3a6f5a7d31, type: 2}
   - {fileID: 11400000, guid: 09fd3a51a63b5dafb3c4e55c4598b70d, type: 2}
+  - {fileID: 11400000, guid: c230d8dc18925192a781f91b9077bc17, type: 2}
+  - {fileID: 11400000, guid: 13659cfa087e5375a2bd4daf92f4b2e2, type: 2}
+  - {fileID: 11400000, guid: 816edfc3412251bf966a65ce3f730da9, type: 2}
   words:
   - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
   - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}

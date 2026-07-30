@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c097b509655c3d54a951a4b6b97f3dfe, type: 3}
+  m_Name: char_helen
+  m_EditorClassIdentifier:
+  id: char_helen
+  displayName: 헬렌 머핀 2세
+  nickname: 헬렌
+  role: 3
+  gender: 여성
+  job: 6급 공무원 (예산 관리부 차장)
+  species: 웩스포드
+  bio: 델타 픽토르 13동 동사무소 소속. 자칭 명문가인 머핀 가의 2녀로 특기가 없어 연줄로 낙하산 입사했다. 가문이 포기하면서 이곳으로 좌천되어, 지금은 직책을 유지하는 수준으로만 업무를 처리한다. 지구인인 주인공을 아니꼽게 보며 계속 의심한다.
+  portrait: {fileID: 0}

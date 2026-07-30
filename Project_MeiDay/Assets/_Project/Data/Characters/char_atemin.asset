@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c097b509655c3d54a951a4b6b97f3dfe, type: 3}
+  m_Name: char_atemin
+  m_EditorClassIdentifier:
+  id: char_atemin
+  displayName: 알-아테미나-테하리반
+  nickname: 알-아테민
+  role: 4
+  gender: 관측되지 않음
+  job: 우주 행정 관리처 관장
+  species: 레반티아
+  bio: 주기적으로 우주 동사무소를 찾아와 점검을 실시한다. 인프라 수준에 불만이 있지만 크게 화를 내지는 않는다. 등장 민원은 수리·유지보수 담당에게 업무를 이관시키는 건.
+  portrait: {fileID: 0}

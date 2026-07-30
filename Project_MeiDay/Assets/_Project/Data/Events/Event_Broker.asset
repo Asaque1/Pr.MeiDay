@@ -19,11 +19,11 @@ MonoBehaviour:
   condition: 5
   conditionValue: 0
   lines:
-  - speaker: {fileID: 0}
+  - speaker: {fileID: 11400000, guid: c230d8dc18925192a781f91b9077bc17, type: 2}
     text: 표는 잘 받았나. 이제 진짜 얘기를 하지.
-  - speaker: {fileID: 0}
+  - speaker: {fileID: 11400000, guid: c230d8dc18925192a781f91b9077bc17, type: 2}
     text: 배가 뜨려면 일주일이 걸려. 그동안 네가 할 일이 하나 있다.
-  - speaker: {fileID: 0}
+  - speaker: {fileID: 11400000, guid: c230d8dc18925192a781f91b9077bc17, type: 2}
     text: 자, 이제 어떻게 할 거야?
   linkedComplaint: {fileID: 0}
   suspicionChange: 0
