@@ -12,7 +12,7 @@ public class BookSortGame
     public int missCount = 0;     // 잘못 꽂은 수
     public int currentGenre = -1; // 지금 카트에 나온 책 장르 (-1이면 끝)
     public bool currentGolden = false; // 지금 책이 황금 책인지
-    public float goldenChance = 0.15f; // 황금 책이 껴서 들어올 확률
+    public float goldenPerGame = 1f; // 한 판에 나올 황금 책 기대 개수 (기획: 한 판에 한 번 정도)
 
     List<int> _queue = new List<int>();          // 아직 안 나온 책들
     List<bool> _queueGolden = new List<bool>();  // 그 책이 황금인지
@@ -25,6 +25,13 @@ public class BookSortGame
         sortedCount = 0;
         goldenCount = 0;
         missCount = 0;
+
+        // 책마다 한 번씩 굴리니까 책 수로 나눠야 한 판에 한 개쯤 나옴
+        float goldenChance = 0f;
+        if (totalBooks > 0)
+        {
+            goldenChance = goldenPerGame / totalBooks;
+        }
 
         _queue.Clear();
         _queueGolden.Clear();

@@ -16,8 +16,11 @@ public class PromoGame
     public List<float> peoplePos = new List<float>();  // 행인들 위치 (0~1)
     public List<bool> peopleGolden = new List<bool>(); // 행인별 황금 여부
 
-    public float personSpeed = 0.45f;  // 행인 걷는 속도
-    public float goldenChance = 0.15f; // 황금 행인 확률
+    public float personSpeed = 0.45f; // 행인 걷는 속도
+    public float goldenPerGame = 1f;  // 한 판에 나올 황금 행인 기대 수 (기획: 한 판에 한 번 정도)
+
+    public float personGapMin = 0.8f; // 행인이 다음으로 나오는 간격
+    public float personGapMax = 1.6f;
     public float throwMin = 0.35f;     // 던지면 닿는 구간
     public float throwMax = 0.65f;
 
@@ -51,7 +54,7 @@ public class PromoGame
         _nextPersonIn -= dt;
         if (_nextPersonIn <= 0f)
         {
-            bool golden = Random.value < goldenChance;
+            bool golden = Random.value < GoldenChance();
             peoplePos.Add(0f);
             peopleGolden.Add(golden);
 
@@ -60,7 +63,7 @@ public class PromoGame
                 totalPeople++; // 황금 행인은 최대치에 안 셈
             }
 
-            _nextPersonIn = Random.Range(0.8f, 1.6f);
+            _nextPersonIn = Random.Range(personGapMin, personGapMax);
         }
 
         // 다들 길을 걸어감. 끝까지 가면 못 준 것
@@ -98,6 +101,24 @@ public class PromoGame
         }
 
         missCount++; // 구간에 아무도 없었음
+    }
+
+    // 행인이 나올 때마다 굴리니까, 한 판에 몇 명 나오는지로 나눠야 한 명쯤 나옴
+    float GoldenChance()
+    {
+        float avgGap = (personGapMin + personGapMax) / 2f;
+        if (duration <= 0f || avgGap <= 0f)
+        {
+            return 0f;
+        }
+
+        float personCount = duration / avgGap;
+        if (personCount < 1f)
+        {
+            personCount = 1f;
+        }
+
+        return goldenPerGame / personCount;
     }
 
     // 시간 다 됐는지

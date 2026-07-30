@@ -14,8 +14,11 @@ public class SpotlightGame
     public float actorSpeed = 0.25f; // 배우가 걷는 속도
     public float hitRange = 0.12f;   // 이 거리 안이면 비추는 걸로 침
 
-    public bool actorGolden = false;   // 지금 배우가 황금 배우인지 (비추면 두 배)
-    public float goldenChance = 0.15f; // 황금 배우가 나올 확률
+    public bool actorGolden = false; // 지금 배우가 황금 배우인지 (비추면 두 배)
+    public float goldenPerGame = 1f; // 한 판에 나올 황금 배우 기대 횟수 (기획: 한 판에 한 번 정도)
+
+    public float swapMin = 2f; // 배우가 다음 목표를 정하는 간격 (다음 배우로 교체되는 셈)
+    public float swapMax = 4f;
 
     float _actorTarget = 0.5f; // 배우가 걸어가는 목표 지점
     float _nextMoveIn = 0f;    // 배우가 다음 목표를 정할 때까지 남은 시간
@@ -47,8 +50,8 @@ public class SpotlightGame
         if (_nextMoveIn <= 0f)
         {
             _actorTarget = Random.value;
-            _nextMoveIn = Random.Range(2f, 4f);
-            actorGolden = Random.value < goldenChance; // 가끔 황금 배우 등장
+            _nextMoveIn = Random.Range(swapMin, swapMax);
+            actorGolden = Random.value < GoldenChance(); // 가끔 황금 배우 등장
         }
         actorPos = Mathf.MoveTowards(actorPos, _actorTarget, actorSpeed * dt);
 
@@ -67,6 +70,24 @@ public class SpotlightGame
                 onTargetTime += dt;
             }
         }
+    }
+
+    // 배우가 바뀔 때마다 굴리니까, 한 판에 몇 번 바뀌는지로 나눠야 한 번쯤 나옴
+    float GoldenChance()
+    {
+        float avgSwap = (swapMin + swapMax) / 2f;
+        if (duration <= 0f || avgSwap <= 0f)
+        {
+            return 0f;
+        }
+
+        float swapCount = duration / avgSwap;
+        if (swapCount < 1f)
+        {
+            swapCount = 1f;
+        }
+
+        return goldenPerGame / swapCount;
     }
 
     // 시간 다 됐는지
