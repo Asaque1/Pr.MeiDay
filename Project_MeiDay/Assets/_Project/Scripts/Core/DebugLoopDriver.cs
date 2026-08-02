@@ -24,6 +24,42 @@ public class DebugLoopDriver : MonoBehaviour
     int _fontSize = 18;             // 글자 크기 (화면에 따라 +/- 로 조절)
     Vector2 _scroll = Vector2.zero; // 내용이 길어지면 스크롤
 
+    bool _showAchievements = false; // 업적 목록(수첩) 펼침 여부
+    string _achToast = "";          // 방금 딴 업적 알림 문구
+    float _achToastLeft = 0f;       // 알림 남은 시간
+
+    void Start()
+    {
+        // 업적 따면 화면 위에 잠깐 띄워줌 (진짜 토스트 UI 생기기 전까지 임시)
+        if (GameManager.instance != null && GameManager.instance.achievements != null)
+        {
+            GameManager.instance.achievements.OnUnlocked += ShowAchToast;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (GameManager.instance != null && GameManager.instance.achievements != null)
+        {
+            GameManager.instance.achievements.OnUnlocked -= ShowAchToast;
+        }
+    }
+
+    void Update()
+    {
+        if (_achToastLeft > 0f)
+        {
+            _achToastLeft -= Time.deltaTime;
+        }
+    }
+
+    // 업적 알림 띄우기
+    void ShowAchToast(AchievementDefinition ach)
+    {
+        _achToast = "업적 달성!  " + ach.title;
+        _achToastLeft = 4f;
+    }
+
     void OnGUI()
     {
         GameManager gm = GameManager.instance;
@@ -44,6 +80,15 @@ public class DebugLoopDriver : MonoBehaviour
         float boxHeight = Screen.height - 40;
         GUILayout.BeginArea(new Rect(20, 20, boxWidth, boxHeight), GUI.skin.box);
         _scroll = GUILayout.BeginScrollView(_scroll);
+
+        // 자동 플레이 도는 동안엔 진짜 저장이랑 업적 기록을 막아둠
+        // (안 그러면 30일 자동 한 번에 업적이 뚫리고 세이브도 시뮬 상태로 덮어써짐)
+        bool simming = (_autoDays > 0 || _batchMode == true);
+        gm.save.skipSave = simming;
+        if (gm.achievements != null)
+        {
+            gm.achievements.skipRecord = simming;
+        }
 
         // 자동 진행 중이면 한 프레임에 하루씩 소화 (끝나거나 게임오버면 멈춤)
         if (gm.phase == GamePhase.Ending || gm.phase == GamePhase.GameOver)
@@ -339,8 +384,90 @@ public class DebugLoopDriver : MonoBehaviour
             }
         }
 
+        DrawLine();
+        DrawAchievements(gm);
+
         GUILayout.EndScrollView();
         GUILayout.EndArea();
+
+        // 업적 알림은 창 밖 위쪽에 따로 띄움
+        if (_achToastLeft > 0f)
+        {
+            GUI.Box(new Rect(Screen.width / 2 - 200, 20, 400, 44), _achToast);
+        }
+    }
+
+    // 수첩 - 업적 목록
+    void DrawAchievements(GameManager gm)
+    {
+        if (gm.achievements == null)
+        {
+            GUILayout.Label("- 업적 - (매니저 연결 안 됨)");
+            return;
+        }
+
+        List<AchievementDefinition> all = gm.content.achievements;
+
+        // 지금 데이터에 있는 업적만 셈 (id 를 바꾸거나 지우면 옛 기록이 남아서 11/10 같은 게 나옴)
+        int got = 0;
+        for (int i = 0; i < all.Count; i++)
+        {
+            if (all[i] != null && gm.achievements.HasUnlocked(all[i].id) == true)
+            {
+                got++;
+            }
+        }
+
+        if (GUILayout.Button("- 수첩 (업적 " + got + " / " + all.Count + ") -"))
+        {
+            _showAchievements = !_showAchievements;
+        }
+
+        if (_showAchievements == false)
+        {
+            return;
+        }
+
+        GUILayout.Label("처리한 민원 " + gm.achievements.totalComplaints
+            + "   알바 " + gm.achievements.totalArbeit
+            + "   무실수 " + gm.achievements.totalPerfectDays + "일");
+
+        // 시뮬 돌려서 기록이 더럽혀졌을 때 되돌리는 용도
+        if (GUILayout.Button("업적 기록 초기화"))
+        {
+            gm.achievements.ResetAll();
+        }
+
+        if (all.Count == 0)
+        {
+            GUILayout.Label("  업적 데이터가 아직 없음");
+            return;
+        }
+
+        for (int i = 0; i < all.Count; i++)
+        {
+            AchievementDefinition ach = all[i];
+            if (ach == null)
+            {
+                continue;
+            }
+
+            bool has = gm.achievements.HasUnlocked(ach.id);
+
+            // 숨김 업적은 따기 전엔 물음표로만
+            if (has == false && ach.hidden == true)
+            {
+                GUILayout.Label("  [ ? ]  ???");
+                continue;
+            }
+
+            string mark = "[ ]";
+            if (has == true)
+            {
+                mark = "[O]";
+            }
+            GUILayout.Label("  " + mark + "  " + ach.title + " - " + ach.description);
+        }
     }
 
     // 페이즈를 한국말로 바꿔줌 (팀원들이 보기 편하게)
@@ -899,8 +1026,12 @@ public class DebugLoopDriver : MonoBehaviour
         int deadCount = 0;                     // 게임오버 난 판
         int stuckCount = 0;                    // 날짜 안에 못 끝낸 판
 
-        // 시뮬 도는 동안엔 진짜 저장을 건드리면 안 됨
+        // 시뮬 도는 동안엔 진짜 저장이랑 업적 기록을 건드리면 안 됨
         gm.save.skipSave = true;
+        if (gm.achievements != null)
+        {
+            gm.achievements.skipRecord = true;
+        }
         _batchMode = true;
         _autoDays = 0;
         _simRunning = false;
@@ -946,6 +1077,10 @@ public class DebugLoopDriver : MonoBehaviour
         finally
         {
             gm.save.skipSave = false;
+            if (gm.achievements != null)
+            {
+                gm.achievements.skipRecord = false;
+            }
             _batchMode = false;
 
             // 마지막 판의 끝 상태가 그대로 남으면 그 뒤에 한 번만 자도 진짜 세이브에 덮어써짐
