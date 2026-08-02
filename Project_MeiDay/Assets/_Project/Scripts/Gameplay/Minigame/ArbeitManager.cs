@@ -134,6 +134,13 @@ public class ArbeitManager : MonoBehaviour
         GameManager.instance.economy.AddCredits(pay);
         GameManager.instance.shop.AddShopExp(currentArbeit.shopType, exp);
 
+        // 업적용 누적 기록
+        if (GameManager.instance.achievements != null)
+        {
+            GameManager.instance.achievements.AddArbeit();
+            GameManager.instance.achievements.Check();
+        }
+
         currentArbeit = null;
         bookSort = null;
         spotlight = null;

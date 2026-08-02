@@ -37,6 +37,12 @@ public class ShopManager : MonoBehaviour
         if (item.isSpaceshipTicket == true)
         {
             GameManager.instance.hasSpaceship = true;
+
+            if (GameManager.instance.achievements != null)
+            {
+                GameManager.instance.achievements.Check(); // 우주선 구매 업적
+            }
+
             return true;
         }
 
@@ -54,6 +60,12 @@ public class ShopManager : MonoBehaviour
 
         // 사면 그 상점 경험치가 참
         AddShopExp(item.shopType, GameManager.instance.config.shopExpPerBuy);
+
+        // 상점 레벨로 주는 업적이 있어서 확인
+        if (GameManager.instance.achievements != null)
+        {
+            GameManager.instance.achievements.Check();
+        }
 
         return true;
     }

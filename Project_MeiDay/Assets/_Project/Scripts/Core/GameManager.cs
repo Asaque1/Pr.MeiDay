@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public ComplaintManager complaint;
     public EventManager events;
     public ArbeitManager arbeit;
+    public AchievementManager achievements;
     public SlideshowView slideshow; // 인트로 컷신 (없으면 그냥 바로 시작)
 
     public Sprite[] introSlides;      // 새 게임 시작할 때 보여줄 그림들 (인스펙터에서 연결)
@@ -224,6 +225,20 @@ public class GameManager : MonoBehaviour
         {
             economy.AddCredits(config.perfectDayBonus);
             complaint.earnedToday += config.perfectDayBonus;
+
+            if (achievements != null)
+            {
+                achievements.AddPerfectDay();
+            }
+        }
+
+        // 오늘 처리한 민원을 누적에 더하고 업적 확인
+        // 저장은 여기서 한 번만 함 (업적을 다 따고 나면 Unlock 이 안 불려서 누적이 안 남았음)
+        if (achievements != null)
+        {
+            achievements.AddComplaints(complaint.successCount);
+            achievements.Check();
+            achievements.Save();
         }
 
         // 업무가 끝났으니 식비와 월세를 차례대로 정산
@@ -376,6 +391,12 @@ public class GameManager : MonoBehaviour
         Debug.Log("게임 오버! 이유: " + reason);
         save.Clear(); // 죽었으니 이어하기 못 하게 저장 지움
         ChangePhase(GamePhase.GameOver);
+
+        if (achievements != null)
+        {
+            achievements.Check(); // 죽어야 주는 업적도 있음
+        }
+
         PlayEndCutscene(gameOverSlides);
     }
 
@@ -386,6 +407,11 @@ public class GameManager : MonoBehaviour
         Debug.Log("엔딩! " + type);
         save.Clear(); // 엔딩 봤으니 이 회차는 끝 (새로 시작해야 함)
         ChangePhase(GamePhase.Ending);
+
+        if (achievements != null)
+        {
+            achievements.Check(); // 엔딩 업적
+        }
 
         if (type == EndingType.DatabaseAccess)
         {
