@@ -59,3 +59,14 @@ MonoBehaviour:
   events:
   - {fileID: 11400000, guid: 787e3e8648565ba8b5efcbfe422e3ebd, type: 2}
   - {fileID: 11400000, guid: b2fe03e3b82d5726b6e42cb02fc83427, type: 2}
+  achievements:
+  - {fileID: 11400000, guid: f85358aed38d50f9bbc2130567e83722, type: 2}
+  - {fileID: 11400000, guid: 9354cc0b189657c7b854be6c04b98a64, type: 2}
+  - {fileID: 11400000, guid: 8e7205fc602f5a088cb865eb0f2b6df4, type: 2}
+  - {fileID: 11400000, guid: 1d0cbffc7f3a55dc9899ddba2f5238e3, type: 2}
+  - {fileID: 11400000, guid: 9db7b5581fd751fe8f2a5a3c45106bb7, type: 2}
+  - {fileID: 11400000, guid: 2c579f315ac4555c93ec20d6849a831d, type: 2}
+  - {fileID: 11400000, guid: 6ea1d97bf5a25acaa6373761c45f9af4, type: 2}
+  - {fileID: 11400000, guid: 932664b0241c55b0971f7efaf0302b46, type: 2}
+  - {fileID: 11400000, guid: 9cc02a8aa42f54ae8a5ed9942f27d849, type: 2}
+  - {fileID: 11400000, guid: e604597e66955272b705587d83025684, type: 2}
