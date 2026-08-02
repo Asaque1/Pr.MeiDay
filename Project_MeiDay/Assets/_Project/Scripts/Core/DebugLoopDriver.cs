@@ -19,6 +19,7 @@ public class DebugLoopDriver : MonoBehaviour
     int _simDays = 0;          // 몇 일 돌렸는지
     int _simComplaints = 0;    // 나온 민원 총 수
     int _simFail = 0;          // 놓친 민원 수
+    bool _batchMode = false;   // 여러 판 돌리는 중 (하루하루 로그를 끄려고)
 
     int _fontSize = 18;             // 글자 크기 (화면에 따라 +/- 로 조절)
     Vector2 _scroll = Vector2.zero; // 내용이 길어지면 스크롤
@@ -167,6 +168,12 @@ public class DebugLoopDriver : MonoBehaviour
         if (GUILayout.Button("엔딩까지 돌리기 (결과 요약)"))
         {
             StartSim(300, true);
+        }
+
+        // 한 번만 돌리면 운에 따라 결과가 갈리니까 여러 판을 돌려서 가운데값을 봄
+        if (GUILayout.Button("20판 돌려서 통계 내기"))
+        {
+            RunBatch(20);
         }
 
         // 글자가 작거나 크면 여기서 조절
@@ -835,11 +842,15 @@ public class DebugLoopDriver : MonoBehaviour
             _simComplaints += cm.todayComplaints.Count;
             _simFail += cm.failCount;
 
-            Debug.Log("[자동] " + gm.calendar.day + "일차"
-                + " | 크레딧 " + gm.economy.credits
-                + " | 의심도 " + Mathf.RoundToInt(gm.suspicion.current)
-                + " | 상점레벨합 " + ShopLevelSum(gm)
-                + " | 성공 " + cm.successCount + "/" + cm.todayComplaints.Count);
+            // 여러 판 돌릴 땐 하루하루 찍으면 콘솔이 수백 줄이라 통계만 남김
+            if (_batchMode == false)
+            {
+                Debug.Log("[자동] " + gm.calendar.day + "일차"
+                    + " | 크레딧 " + gm.economy.credits
+                    + " | 의심도 " + Mathf.RoundToInt(gm.suspicion.current)
+                    + " | 상점레벨합 " + ShopLevelSum(gm)
+                    + " | 성공 " + cm.successCount + "/" + cm.todayComplaints.Count);
+            }
             gm.ConfirmDayResult();
         }
 
@@ -872,6 +883,137 @@ public class DebugLoopDriver : MonoBehaviour
         _simDays = 0;
         _simComplaints = 0;
         _simFail = 0;
+    }
+
+    // 여러 판을 연달아 돌려서 분포를 봄 (한 판만 보면 운 좋은/나쁜 한 점을 결론으로 읽게 됨)
+    void RunBatch(int runs)
+    {
+        GameManager gm = GameManager.instance;
+        int dayCap = 200; // 한 판이 이 날짜를 넘으면 못 끝낸 걸로 침
+
+        List<int> endDays = new List<int>();   // 끝난 날들
+        List<int> shipDays = new List<int>();  // 우주선 산 날들
+        int endingCount = 0;                   // 엔딩까지 간 판
+        int deadCount = 0;                     // 게임오버 난 판
+        int stuckCount = 0;                    // 날짜 안에 못 끝낸 판
+
+        // 시뮬 도는 동안엔 진짜 저장을 건드리면 안 됨
+        gm.save.skipSave = true;
+        _batchMode = true;
+        _autoDays = 0;
+        _simRunning = false;
+
+        // 도중에 뭐가 터져도 저장이 꺼진 채로 남으면 안 되니까 finally 로 되돌림
+        try
+        {
+            for (int r = 0; r < runs; r++)
+            {
+                gm.RestartForSim();
+                _simSpaceshipDay = 0;
+
+                int guard = 0;
+                while (guard < dayCap
+                    && gm.phase != GamePhase.Ending
+                    && gm.phase != GamePhase.GameOver)
+                {
+                    guard++;
+                    AutoPlayOneDay(gm);
+                }
+
+                if (gm.phase == GamePhase.Ending)
+                {
+                    endingCount++;
+                    endDays.Add(gm.calendar.day);
+                }
+                else if (gm.phase == GamePhase.GameOver)
+                {
+                    deadCount++;
+                    endDays.Add(gm.calendar.day);
+                }
+                else
+                {
+                    stuckCount++;
+                }
+
+                if (_simSpaceshipDay > 0)
+                {
+                    shipDays.Add(_simSpaceshipDay);
+                }
+            }
+        }
+        finally
+        {
+            gm.save.skipSave = false;
+            _batchMode = false;
+
+            // 마지막 판의 끝 상태가 그대로 남으면 그 뒤에 한 번만 자도 진짜 세이브에 덮어써짐
+            // 타이틀로 돌려놔서 새 게임으로만 이어가게 함
+            gm.ChangePhase(GamePhase.Intro);
+        }
+
+        Debug.Log("===== " + runs + "판 통계 =====");
+        Debug.Log("  엔딩 " + endingCount + "판 / 게임오버 " + deadCount + "판 / "
+            + dayCap + "일 안에 못 끝냄 " + stuckCount + "판");
+        Debug.Log("  끝난 날 가운데값 " + Median(endDays) + "일차"
+            + " (제일 빠른 " + Min(endDays) + " ~ 제일 늦은 " + Max(endDays) + ")");
+        Debug.Log("  우주선 산 날 가운데값 " + Median(shipDays) + "일차"
+            + " (" + shipDays.Count + "판에서 구매)");
+        Debug.Log("  설정: 카드 정답률 " + Mathf.RoundToInt(_autoRate * 100)
+            + "% -> 민원 성공률 " + Mathf.RoundToInt(EffectiveSuccess(gm) * 100) + "%"
+            + " / 알바 수행률 " + Mathf.RoundToInt(_autoArbeitRate * 100)
+            + "% -> 보수 " + Mathf.RoundToInt(ArbeitTier(_autoArbeitRate) * 100) + "%");
+        Debug.Log("  * 통계 돌리는 동안 진짜 저장은 안 건드렸음. 끝나고 타이틀로 돌려놨으니 새 게임으로 시작할 것");
+    }
+
+    // 가운데값 (없으면 0)
+    int Median(List<int> values)
+    {
+        if (values.Count == 0)
+        {
+            return 0;
+        }
+
+        List<int> sorted = new List<int>(values);
+        sorted.Sort();
+        return sorted[sorted.Count / 2];
+    }
+
+    // 제일 작은 값 (없으면 0)
+    int Min(List<int> values)
+    {
+        if (values.Count == 0)
+        {
+            return 0;
+        }
+
+        int best = values[0];
+        for (int i = 1; i < values.Count; i++)
+        {
+            if (values[i] < best)
+            {
+                best = values[i];
+            }
+        }
+        return best;
+    }
+
+    // 제일 큰 값 (없으면 0)
+    int Max(List<int> values)
+    {
+        if (values.Count == 0)
+        {
+            return 0;
+        }
+
+        int best = values[0];
+        for (int i = 1; i < values.Count; i++)
+        {
+            if (values[i] > best)
+            {
+                best = values[i];
+            }
+        }
+        return best;
     }
 
     // 슬라이더를 5% 단위로 맞춤 (0.799 랑 0.800 이 결과를 3일씩 바꿔서 재현이 안 됨)

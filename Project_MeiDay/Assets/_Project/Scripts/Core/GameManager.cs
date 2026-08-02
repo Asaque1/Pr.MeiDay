@@ -409,6 +409,13 @@ public class GameManager : MonoBehaviour
         slideshow.Play(slides, null);
     }
 
+    // 밸런스 시뮬레이션용 - 인트로 없이 바로 1일차부터 다시 시작 (디버그 화면에서만 씀)
+    public void RestartForSim()
+    {
+        ResetForNewGame();
+        StartNewDay();
+    }
+
     // 타이틀로 (지금은 그냥 씬 다시 켜서 처리)
     public void RestartToTitle()
     {
