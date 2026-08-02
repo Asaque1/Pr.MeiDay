@@ -61,31 +61,63 @@ public class ShopManager : MonoBehaviour
     // 지금 이 물건을 살 수 있는 상태인지 (돈은 여기서 안 봄)
     public bool CanBuy(ItemDefinition item)
     {
+        return BuyBlockReason(item).Length == 0;
+    }
+
+    // 못 사는 이유 (살 수 있으면 빈 글자)
+    // 품절이랑 "아직 조건이 안 됨"을 구별해서 화면에 그대로 보여주려고 만듦
+    public string BuyBlockReason(ItemDefinition item)
+    {
+        if (item == null)
+        {
+            return "물건 없음";
+        }
+
         // 우주선표는 한 번만
         if (item.isSpaceshipTicket == true && GameManager.instance.hasSpaceship == true)
         {
-            return false;
+            return "이미 삼";
         }
 
-        // 영구템은 레벨 다 차면 품절
+        // 영구템은 레벨 다 차면 진짜 품절
         if (item.kind == ItemKind.Permanent
             && GameManager.instance.inventory.GetItemLevel(item.id) >= item.maxLevel)
         {
-            return false;
+            return "SOLD OUT";
         }
-        if(item.isSpaceshipTicket == true)
+
+        // 우주선은 상점을 어느 정도 키워야 팔아줌
+        if (item.isSpaceshipTicket == true)
         {
             int total = GetShopLevel(ShopType.Bookstore)
                 + GetShopLevel(ShopType.Theater)
                 + GetShopLevel(ShopType.PartyShop);
 
-            if(total < GameManager.instance.config.spaceshipShopLevel)
+            if (total < GameManager.instance.config.spaceshipShopLevel)
             {
-                return false;
+                return "상점 레벨 합 " + total
+                    + " / " + GameManager.instance.config.spaceshipShopLevel;
             }
         }
 
-        return IsUnlocked(item);
+        // 그 상점을 더 키워야 파는 물건
+        if (item.shopType != ShopType.Broker
+            && GetShopLevel(item.shopType) < item.requiredShopLevel)
+        {
+            return "상점 레벨 " + item.requiredShopLevel + " 필요";
+        }
+
+        // 다른 물건을 끝까지 사야 풀리는 물건
+        if (item.requiresMaxed != null)
+        {
+            int level = GameManager.instance.inventory.GetItemLevel(item.requiresMaxed.id);
+            if (level < item.requiresMaxed.maxLevel)
+            {
+                return item.requiresMaxed.itemName + " 만렙이어야 함";
+            }
+        }
+
+        return "";
     }
 
     // 해금됐는지 (요구하는 영구템을 끝까지 샀는지)

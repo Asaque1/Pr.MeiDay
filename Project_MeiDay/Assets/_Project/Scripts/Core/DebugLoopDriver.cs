@@ -640,9 +640,11 @@ public class DebugLoopDriver : MonoBehaviour
                 label += " lv" + gm.inventory.GetItemLevel(item.id) + "/" + item.maxLevel;
             }
 
-            if (gm.shop.CanBuy(item) == false)
+            // 품절인지 아직 조건이 안 된 건지 구별해서 보여줌
+            string reason = gm.shop.BuyBlockReason(item);
+            if (reason.Length > 0)
             {
-                GUILayout.Label(label + " (품절)");
+                GUILayout.Label(label + "  (" + reason + ")");
                 continue;
             }
 
