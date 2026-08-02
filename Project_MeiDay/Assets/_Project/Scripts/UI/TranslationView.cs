@@ -77,11 +77,19 @@ public class TranslationView : MonoBehaviour
         }
         _slotUis.Clear();
 
+        // 프리팹이나 놓을 자리를 안 꽂아뒀으면 상자를 못 만듦
+        if (slotPrefab == null || slotParent == null)
+        {
+            Debug.LogWarning("해석 화면에 상자 프리팹이나 놓을 자리가 연결 안 됨");
+            return;
+        }
+
         for (int i = 0; i < tc.slots.Count; i++)
         {
+            // 먼저 목록에 넣어둬야 Set 에서 뭐가 잘못돼도 고아 오브젝트가 안 남음
             WordSlotUI slotUi = Instantiate(slotPrefab, slotParent);
-            slotUi.Set(this, i, tc.slots[i]);
             _slotUis.Add(slotUi);
+            slotUi.Set(this, i, tc.slots[i]);
         }
     }
 
@@ -94,6 +102,12 @@ public class TranslationView : MonoBehaviour
         }
         _cardUis.Clear();
 
+        if (cardPrefab == null || cardParent == null)
+        {
+            Debug.LogWarning("해석 화면에 카드 프리팹이나 놓을 자리가 연결 안 됨");
+            return;
+        }
+
         for (int i = 0; i < tc.cards.Count; i++)
         {
             if (tc.cards[i].isRemoved == true)
@@ -102,8 +116,8 @@ public class TranslationView : MonoBehaviour
             }
 
             WordCardUI cardUi = Instantiate(cardPrefab, cardParent);
-            cardUi.Set(i, tc.cards[i]);
             _cardUis.Add(cardUi);
+            cardUi.Set(i, tc.cards[i]);
         }
     }
 
