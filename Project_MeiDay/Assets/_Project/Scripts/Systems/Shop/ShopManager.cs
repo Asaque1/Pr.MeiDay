@@ -112,11 +112,11 @@ public class ShopManager : MonoBehaviour
             }
         }
 
-        // 그 상점을 더 키워야 파는 물건
-        if (item.shopType != ShopType.Broker
-            && GetShopLevel(item.shopType) < item.requiredShopLevel)
+        // 상점을 더 키워야 파는 물건 (브로커 물건도 다른 상점 레벨을 조건으로 걸 수 있음)
+        if (item.requiredShopLevel > 0
+            && GetShopLevel(item.requiredShopType) < item.requiredShopLevel)
         {
-            return "상점 레벨 " + item.requiredShopLevel + " 필요";
+            return ShopName(item.requiredShopType) + " 레벨 " + item.requiredShopLevel + " 필요";
         }
 
         // 다른 물건을 끝까지 사야 풀리는 물건
@@ -135,7 +135,8 @@ public class ShopManager : MonoBehaviour
     // 해금됐는지 (요구하는 영구템을 끝까지 샀는지)
     public bool IsUnlocked(ItemDefinition item)
     {
-        if (item.shopType != ShopType.Broker && GetShopLevel(item.shopType) < item.requiredShopLevel)
+        if (item.requiredShopLevel > 0
+            && GetShopLevel(item.requiredShopType) < item.requiredShopLevel)
         {
             return false;
         }
@@ -147,6 +148,25 @@ public class ShopManager : MonoBehaviour
         int level = GameManager.instance.inventory.GetItemLevel(item.requiresMaxed.id);
         return level >= item.requiresMaxed.maxLevel;
     }
+    // 상점 이름 (못 사는 이유 보여줄 때 씀)
+    public string ShopName(ShopType type)
+    {
+        if (type == ShopType.Bookstore)
+        {
+            return "서점";
+        }
+        if (type == ShopType.Theater)
+        {
+            return "연극단";
+        }
+        if (type == ShopType.PartyShop)
+        {
+            return "사무용품점";
+        }
+
+        return "브로커";
+    }
+
     // 상점 경험치 주기 (구매나 알바로)
     public void AddShopExp(ShopType type, int amount)
     {
