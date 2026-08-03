@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e7b01fc975787e54c92badc3cac6eea8
+guid: 6d8c1c932ba12d2409a856bb01f29203
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2396994176994692105
-    second: "DayBar background UI \uC784\uC2DC_0"
+      213: -6473542199703354697
+    second: closing_bar_in_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -96,17 +96,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "DayBar background UI \uC784\uC2DC_0"
+      name: closing_bar_in_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 600
-        height: 100
+        width: 468
+        height: 57
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 90cc2701185d34120800000000000000
-      internalID: 2396994176994692105
+      spriteID: 7b24e2ceaab5926a0800000000000000
+      internalID: -6473542199703354697
       vertices: []
       indices: 
       edges: []
@@ -135,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "DayBar background UI \uC784\uC2DC_0": 2396994176994692105
+      closing_bar_in_0: -6473542199703354697
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

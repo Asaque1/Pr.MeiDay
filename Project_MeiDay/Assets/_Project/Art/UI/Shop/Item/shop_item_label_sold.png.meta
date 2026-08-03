@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 98d378a5348b3be459548cfae541f435
+guid: 2c3be8b67d44f1b4ea3ac4199ffbc22f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6033605420628627156
-    second: "DayBar Frame UI \uC784\uC2DC_0"
+      213: -660831282719315983
+    second: shop_item_label_sold_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -96,17 +96,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "DayBar Frame UI \uC784\uC2DC_0"
+      name: shop_item_label_sold_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 600
-        height: 100
+        width: 345
+        height: 160
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4dec073a92cabb350800000000000000
-      internalID: 6033605420628627156
+      spriteID: 1f7ac09137144d6f0800000000000000
+      internalID: -660831282719315983
       vertices: []
       indices: 
       edges: []
@@ -135,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "DayBar Frame UI \uC784\uC2DC_0": 6033605420628627156
+      shop_item_label_sold_0: -660831282719315983
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
