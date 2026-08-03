@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4999da927baed2044938ff16b36fae23, type: 3}
+  m_Name: Achievement_EndDatabase
+  m_EditorClassIdentifier:
+  id: ach_end_db
+  title: 거래는 거래
+  description: 브로커에게 데이터베이스를 열어주고 지구로 돌아가기
+  condition: 7
+  goal: 1
+  hidden: 1
+  icon: {fileID: 0}

@@ -4,6 +4,9 @@ using UnityEngine;
 // PlayerPrefs 라는 유니티 기본 저장 기능을 씀 (간단함)
 public class SaveManager : MonoBehaviour
 {
+    // 밸런스 시뮬레이션 돌릴 때만 켬 (수백 판을 돌리면서 진짜 저장을 망치면 안 되니까)
+    public bool skipSave = false;
+
     // 이어할 저장 데이터가 있는지
     public bool HasSave()
     {
@@ -19,6 +22,11 @@ public class SaveManager : MonoBehaviour
     // 저장하기
     public void Save()
     {
+        if (skipSave == true)
+        {
+            return; // 시뮬레이션 중엔 저장 안 함
+        }
+
         GameManager gm = GameManager.instance;
 
         // 기본 숫자들
@@ -180,6 +188,11 @@ public class SaveManager : MonoBehaviour
     // 저장 지우기 (죽거나 엔딩 봤을 때 부름 - 이어하기 못 하게)
     public void Clear()
     {
+        if (skipSave == true)
+        {
+            return; // 시뮬레이션 중엔 진짜 저장을 지우면 안 됨
+        }
+
         PlayerPrefs.DeleteKey("saveExists");
         PlayerPrefs.DeleteKey("day"); // 이거 안 지우면 HasSave() 가 계속 true 나옴
         PlayerPrefs.Save();

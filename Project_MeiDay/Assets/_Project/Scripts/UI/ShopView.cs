@@ -22,8 +22,17 @@ public class ShopView : MonoBehaviour
             return;
         }
 
-        infoText.text = "";
+        SetInfo("");
         Rebuild();
+    }
+
+    // 안내 문구 (아직 안 꽂아뒀어도 안 터지게)
+    void SetInfo(string text)
+    {
+        if (infoText != null)
+        {
+            infoText.text = text;
+        }
     }
 
     // 지금 상점의 아이템 목록 지우고 다시 만들기
@@ -40,9 +49,20 @@ public class ShopView : MonoBehaviour
             shopNameText.text = ShopName(currentShop)+ " Lv. " + GameManager.instance.shop.GetShopLevel(currentShop);
         }
 
+        // 프리팹이나 놓을 자리를 안 꽂아뒀으면 목록을 못 만듦
+        if (itemPrefab == null || itemParent == null)
+        {
+            Debug.LogWarning("상점 화면에 아이템 프리팹이나 놓을 자리가 연결 안 됨");
+            return;
+        }
+
         List<ItemDefinition> items = GameManager.instance.content.items;
         for (int i = 0; i < items.Count; i++)
         {
+            if (items[i] == null)
+            {
+                continue; // 데이터에 빈 칸
+            }
             if (items[i].shopType != currentShop)
             {
                 continue; // 다른 상점 물건
@@ -52,9 +72,10 @@ public class ShopView : MonoBehaviour
                 continue; // 아직 해금 안 된 물건은 안 보여줌
             }
 
+            // 먼저 목록에 넣어둬야 Set 에서 뭐가 잘못돼도 고아 오브젝트가 안 남음
             ShopItemUI itemUi = Instantiate(itemPrefab, itemParent);
-            itemUi.Set(this, items[i]);
             _itemUis.Add(itemUi);
+            itemUi.Set(this, items[i]);
         }
     }
 
@@ -79,20 +100,22 @@ public class ShopView : MonoBehaviour
     // 아이템 버튼이 눌렸다고 알려줌
     public void OnClickItem(ItemDefinition item)
     {
-        // 품절(SOLD OUT)은 눌러도 반응 없음
-        if (GameManager.instance.shop.CanBuy(item) == false)
+        // 못 사는 물건이면 왜 못 사는지라도 알려줌 (전엔 눌러도 아무 반응이 없었음)
+        string reason = GameManager.instance.shop.BuyBlockReason(item);
+        if (reason.Length > 0)
         {
+            SetInfo(item.itemName + " - " + reason);
             return;
         }
 
         if (GameManager.instance.shop.Buy(item) == true)
         {
-            infoText.text = item.itemName + " 구매 완료";
+            SetInfo(item.itemName + " 구매 완료");
             Rebuild(); // 레벨이랑 품절 표시 갱신
         }
         else
         {
-            infoText.text = "크레딧이 부족함";
+            SetInfo("크레딧이 부족함");
         }
     }
 
@@ -126,7 +149,7 @@ public class ShopView : MonoBehaviour
     void ChangeShop(ShopType type)
     {
         currentShop = type;
-        infoText.text = "";
+        SetInfo("");
         Rebuild();
     }
 }

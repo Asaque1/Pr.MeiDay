@@ -13,6 +13,14 @@ public class ItemDefinition : ScriptableObject
     [TextArea(2, 4)]
     public string description;  // 설명
 
+    public Sprite icon; // 상점에 보이는 그림
+
+    // 영구템은 레벨 오를 때마다 그림이랑 설명이 바뀔 수 있음 (기획서: 만렙이면 달라짐)
+    // 안 넣으면 위의 icon / description 을 그대로 씀. 레벨 1부터 순서대로 넣을 것
+    public Sprite[] levelIcons;
+    [TextArea(2, 4)]
+    public string[] levelDescriptions;
+
     public int price = 100;     // 가격
     public bool isSpaceshipTicket = false; // 이게 우주선표인지 (사면 탈출 가능)
 
@@ -27,4 +35,30 @@ public class ItemDefinition : ScriptableObject
     // 이 영구템을 끝까지 사야 풀리는 물건 (브로커 해금용. 없으면 비워둠)
     public ItemDefinition requiresMaxed;
     public int requiredShopLevel = 0;
+
+    // 지금 레벨에 맞는 그림 (레벨별로 안 넣었으면 기본 그림)
+    public Sprite IconFor(int level)
+    {
+        int index = level - 1;
+        if (levelIcons != null && index >= 0 && index < levelIcons.Length
+            && levelIcons[index] != null)
+        {
+            return levelIcons[index];
+        }
+
+        return icon;
+    }
+
+    // 지금 레벨에 맞는 설명 (레벨별로 안 넣었으면 기본 설명)
+    public string DescriptionFor(int level)
+    {
+        int index = level - 1;
+        if (levelDescriptions != null && index >= 0 && index < levelDescriptions.Length
+            && levelDescriptions[index].Length > 0)
+        {
+            return levelDescriptions[index];
+        }
+
+        return description;
+    }
 }

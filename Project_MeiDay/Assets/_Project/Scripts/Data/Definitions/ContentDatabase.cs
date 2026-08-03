@@ -12,4 +12,5 @@ public class ContentDatabase : ScriptableObject
     public List<ItemDefinition> items = new List<ItemDefinition>();
     public List<MinigameDefinition> minigames = new List<MinigameDefinition>();
     public List<EventDefinition> events = new List<EventDefinition>();
+    public List<AchievementDefinition> achievements = new List<AchievementDefinition>();
 }

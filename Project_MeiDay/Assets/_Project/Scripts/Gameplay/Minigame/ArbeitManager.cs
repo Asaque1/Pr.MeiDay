@@ -88,6 +88,22 @@ public class ArbeitManager : MonoBehaviour
         return true;
     }
 
+    // 하다 만 알바 물리기 (화면을 닫거나 그만두기를 눌렀을 때)
+    // 횟수를 돌려주지 않으면 하루치 알바가 통째로 날아가서 되돌려줌
+    public void AbortArbeit()
+    {
+        if (currentArbeit == null)
+        {
+            return;
+        }
+
+        arbeitLeftToday++;
+        currentArbeit = null;
+        bookSort = null;
+        spotlight = null;
+        promo = null;
+    }
+
     // 알바 끝 - 수행률 구간에 따라 보수랑 상점 경험치를 받음
     public void FinishArbeit(float rate)
     {
@@ -117,6 +133,13 @@ public class ArbeitManager : MonoBehaviour
         arbeitDoneCounts[(int)currentArbeit.shopType]++; // 이 상점에서 일한 횟수 +1
         GameManager.instance.economy.AddCredits(pay);
         GameManager.instance.shop.AddShopExp(currentArbeit.shopType, exp);
+
+        // 업적용 누적 기록
+        if (GameManager.instance.achievements != null)
+        {
+            GameManager.instance.achievements.AddArbeit();
+            GameManager.instance.achievements.Check();
+        }
 
         currentArbeit = null;
         bookSort = null;

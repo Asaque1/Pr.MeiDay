@@ -8,7 +8,9 @@ public class UiRoot : MonoBehaviour
     [SerializeField] GameObject titlePanel;  // 타이틀 (시작 버튼)
     [SerializeField] GameObject dayPanel;    // 낮 (민원 처리)
     [SerializeField] GameObject resultPanel; // 결산
-    [SerializeField] GameObject nightPanel;  // 밤 (상점)
+    [SerializeField] GameObject nightPanel;  // 밤 (상점 + 알바)
+    [SerializeField] GameObject shopPanel;   // 밤 안에서 상점 쪽
+    [SerializeField] GameObject arbeitPanel; // 밤 안에서 알바 쪽
     [SerializeField] GameObject endingPanel; // 엔딩 / 게임오버
     [SerializeField] GameObject hardChoicePanel; // 하드모드 첫 아침에 뜨는 브로커 선택창
     [SerializeField] Button continueButton; // 저장 없으면 못 누르는 이어하기 버튼
@@ -52,13 +54,32 @@ public class UiRoot : MonoBehaviour
     // 페이즈에 맞는 패널만 켜기
     void ShowPanelFor(GamePhase phase)
     {
-        titlePanel.SetActive(phase == GamePhase.Intro);
-        dayPanel.SetActive(phase == GamePhase.DayWork);
-        resultPanel.SetActive(phase == GamePhase.DayResult);
-        nightPanel.SetActive(phase == GamePhase.NightShop);
-        endingPanel.SetActive(phase == GamePhase.Ending || phase == GamePhase.GameOver);
+        SetPanel(titlePanel, phase == GamePhase.Intro);
+        SetPanel(dayPanel, phase == GamePhase.DayWork);
+        SetPanel(resultPanel, phase == GamePhase.DayResult);
+        SetPanel(nightPanel, phase == GamePhase.NightShop);
+
+        // 밤에 들어올 때는 상점 쪽부터 보여줌
+        if (phase == GamePhase.NightShop)
+        {
+            ShowShop();
+        }
+        SetPanel(endingPanel, phase == GamePhase.Ending || phase == GamePhase.GameOver);
 
         RefreshHardChoice();
+    }
+
+    // 패널 켜고 끄기
+    // 아직 안 만든 패널이 있어도 게임이 죽으면 안 됨 - 여기서 터지면 ChangePhase 를 부른
+    // 쪽(하루 시작, 결산 등)까지 통째로 끊겨서 루프가 멈춤
+    void SetPanel(GameObject panel, bool on)
+    {
+        if (panel == null)
+        {
+            return;
+        }
+
+        panel.SetActive(on);
     }
 
     // 하드모드 시작한 아침엔 브로커 선택창 (대사 다 보고 나서, 아직 답 안 했을 때만)
@@ -67,7 +88,7 @@ public class UiRoot : MonoBehaviour
         GameManager gm = GameManager.instance;
         bool inDialogue = (gm.events != null && gm.events.currentEvent != null);
 
-        hardChoicePanel.SetActive(gm.phase == GamePhase.DayWork
+        SetPanel(hardChoicePanel, gm.phase == GamePhase.DayWork
             && gm.hardMode == true
             && gm.brokerChoice == BrokerChoice.None
             && inDialogue == false);
@@ -99,18 +120,50 @@ public class UiRoot : MonoBehaviour
         GameManager.instance.SleepAndAdvance();
     }
 
+    // 밤 탭: 상점 보기
+    public void OnClickShopTab()
+    {
+        ShowShop();
+    }
+
+    // 밤 탭: 알바 보기
+    public void OnClickArbeitTab()
+    {
+        if (shopPanel != null)
+        {
+            shopPanel.SetActive(false);
+        }
+        if (arbeitPanel != null)
+        {
+            arbeitPanel.SetActive(true);
+        }
+    }
+
+    // 밤 화면에서 상점 쪽만 켜기
+    void ShowShop()
+    {
+        if (shopPanel != null)
+        {
+            shopPanel.SetActive(true);
+        }
+        if (arbeitPanel != null)
+        {
+            arbeitPanel.SetActive(false);
+        }
+    }
+
     // 브로커 선택: DB 접근시키기 (돈 뜯기고 편한 엔딩 루트)
     public void OnClickBrokerDatabase()
     {
         GameManager.instance.ChooseBroker(BrokerChoice.DatabaseAccess);
-        hardChoicePanel.SetActive(false);
+        SetPanel(hardChoicePanel, false);
     }
 
     // 브로커 선택: 신고하기 (매일 의심받는 엔딩 루트)
     public void OnClickBrokerReport()
     {
         GameManager.instance.ChooseBroker(BrokerChoice.ReportBroker);
-        hardChoicePanel.SetActive(false);
+        SetPanel(hardChoicePanel, false);
     }
 
     // 엔딩/게임오버: 타이틀로

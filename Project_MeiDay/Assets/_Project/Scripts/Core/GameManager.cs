@@ -22,9 +22,13 @@ public class GameManager : MonoBehaviour
     public ComplaintManager complaint;
     public EventManager events;
     public ArbeitManager arbeit;
+    public AchievementManager achievements;
     public SlideshowView slideshow; // 인트로 컷신 (없으면 그냥 바로 시작)
 
-    public Sprite[] introSlides; // 새 게임 시작할 때 보여줄 그림들 (인스펙터에서 연결)
+    public Sprite[] introSlides;      // 새 게임 시작할 때 보여줄 그림들 (인스펙터에서 연결)
+    public Sprite[] databaseEndSlides; // DB 접근 엔딩 컷신
+    public Sprite[] reportEndSlides;   // 신고 엔딩 컷신
+    public Sprite[] gameOverSlides;    // 게임 오버 컷신
 
     // 게임 상태
     public GamePhase phase = GamePhase.Intro; // 지금 어느 단계인지
@@ -74,7 +78,7 @@ public class GameManager : MonoBehaviour
         save.Save(); // 첫날 아침도 이어할 수 있게 저장
 
         // 인트로 슬라이드쇼 보고 나서 첫날 시작 (연결 안 했거나 그림 없으면 바로 시작)
-        if (slideshow != null)
+        if (slideshow != null && introSlides != null && introSlides.Length > 0)
         {
             slideshow.Play(introSlides, StartNewDay);
             return;
@@ -221,6 +225,20 @@ public class GameManager : MonoBehaviour
         {
             economy.AddCredits(config.perfectDayBonus);
             complaint.earnedToday += config.perfectDayBonus;
+
+            if (achievements != null)
+            {
+                achievements.AddPerfectDay();
+            }
+        }
+
+        // 오늘 처리한 민원을 누적에 더하고 업적 확인
+        // 저장은 여기서 한 번만 함 (업적을 다 따고 나면 Unlock 이 안 불려서 누적이 안 남았음)
+        if (achievements != null)
+        {
+            achievements.AddComplaints(complaint.successCount);
+            achievements.Check();
+            achievements.Save();
         }
 
         // 업무가 끝났으니 식비와 월세를 차례대로 정산
@@ -373,6 +391,13 @@ public class GameManager : MonoBehaviour
         Debug.Log("게임 오버! 이유: " + reason);
         save.Clear(); // 죽었으니 이어하기 못 하게 저장 지움
         ChangePhase(GamePhase.GameOver);
+
+        if (achievements != null)
+        {
+            achievements.Check(); // 죽어야 주는 업적도 있음
+        }
+
+        PlayEndCutscene(gameOverSlides);
     }
 
     // 엔딩
@@ -382,6 +407,39 @@ public class GameManager : MonoBehaviour
         Debug.Log("엔딩! " + type);
         save.Clear(); // 엔딩 봤으니 이 회차는 끝 (새로 시작해야 함)
         ChangePhase(GamePhase.Ending);
+
+        if (achievements != null)
+        {
+            achievements.Check(); // 엔딩 업적
+        }
+
+        if (type == EndingType.DatabaseAccess)
+        {
+            PlayEndCutscene(databaseEndSlides);
+        }
+        else
+        {
+            PlayEndCutscene(reportEndSlides);
+        }
+    }
+
+    // 끝날 때 컷신 틀기
+    // 페이즈는 이미 바꿔놓고 그 위에 덮어서 보여줌 - 안 그러면 하루가 더 진행돼버림
+    void PlayEndCutscene(Sprite[] slides)
+    {
+        if (slideshow == null || slides == null || slides.Length == 0)
+        {
+            return; // 그림 아직 없으면 그냥 결과 화면
+        }
+
+        slideshow.Play(slides, null);
+    }
+
+    // 밸런스 시뮬레이션용 - 인트로 없이 바로 1일차부터 다시 시작 (디버그 화면에서만 씀)
+    public void RestartForSim()
+    {
+        ResetForNewGame();
+        StartNewDay();
     }
 
     // 타이틀로 (지금은 그냥 씬 다시 켜서 처리)

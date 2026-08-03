@@ -277,6 +277,7 @@ GameObject:
   - component: {fileID: 200012}
   - component: {fileID: 200002}
   - component: {fileID: 200013}
+  - component: {fileID: 200014}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -322,6 +323,7 @@ MonoBehaviour:
   complaint: {fileID: 200009}
   events: {fileID: 200011}
   arbeit: {fileID: 200012}
+  achievements: {fileID: 200014}
   slideshow: {fileID: 0}
   introSlides: []
   phase: 0
@@ -506,6 +508,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d4f1b12c6fc0ed499fd7da0376c138a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &200014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 200000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 442b5c0ccf602574fa8153efcaf612c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unlockedIds: []
+  totalComplaints: 0
+  totalArbeit: 0
+  totalPerfectDays: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
