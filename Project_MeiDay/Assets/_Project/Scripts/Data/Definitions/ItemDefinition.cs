@@ -34,6 +34,9 @@ public class ItemDefinition : ScriptableObject
 
     // 이 영구템을 끝까지 사야 풀리는 물건 (브로커 해금용. 없으면 비워둠)
     public ItemDefinition requiresMaxed;
+    // 상점 레벨이 얼마 이상이어야 팔아주는 물건 (0 이면 조건 없음)
+    // 어느 상점 레벨을 보는지 따로 적어둠 - 브로커 물건이 "서점 5레벨" 같은 조건을 걸 수 있어야 해서
+    public ShopType requiredShopType;
     public int requiredShopLevel = 0;
 
     // 지금 레벨에 맞는 그림 (레벨별로 안 넣었으면 기본 그림)
