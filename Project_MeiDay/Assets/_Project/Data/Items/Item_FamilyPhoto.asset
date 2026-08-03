@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cb6d72b7c7b3014ca1ab66772d3686a, type: 3}
+  m_Name: Item_FamilyPhoto
+  m_EditorClassIdentifier:
+  id: item_family_photo
+  itemName: 가족 사진 소품
+  shopType: 1
+  kind: 1
+  effect: 5
+  description: 책상에 올려두면 사람들이 조금 덜 의심한다.
+  icon: {fileID: 0}
+  levelIcons: []
+  levelDescriptions: []
+  price: 150
+  isSpaceshipTicket: 0
+  maxLevel: 1
+  power: 25
+  sidePower: 0
+  boxRewardMin: 0
+  boxRewardMax: 0
+  requiresMaxed: {fileID: 0}
+  requiredShopType: 0
+  requiredShopLevel: 0

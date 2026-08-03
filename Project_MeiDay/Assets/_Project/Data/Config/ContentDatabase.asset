@@ -52,6 +52,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6e51ab8b094f5bcba670369bc2761f3b, type: 2}
   items:
   - {fileID: 11400000, guid: 79d0d4d56148558abf8d08dcd2812d2d, type: 2}
+  - {fileID: 11400000, guid: 25b4913038865e0bb3bb7629f6cc6287, type: 2}
+  - {fileID: 11400000, guid: 35bda14c28b45b02b6654c65c17ce5be, type: 2}
+  - {fileID: 11400000, guid: 711206f41ac855da9b80d06cbf4eea40, type: 2}
+  - {fileID: 11400000, guid: 394a96faa4075b8aaf296da1d4aeb6bc, type: 2}
+  - {fileID: 11400000, guid: 8042e652065355caaec1d56f8f0ca01d, type: 2}
+  - {fileID: 11400000, guid: 52aef5692e1351afbc8501521b0bf252, type: 2}
+  - {fileID: 11400000, guid: 9a1eac65a76552c497a6b3fd747a9ce6, type: 2}
   minigames:
   - {fileID: 11400000, guid: 77740145d6535a8aab2124a48a2064f0, type: 2}
   - {fileID: 11400000, guid: 163c1d4ff3c7591b833d52124cd54e88, type: 2}

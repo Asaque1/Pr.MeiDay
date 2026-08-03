@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cb6d72b7c7b3014ca1ab66772d3686a, type: 3}
+  m_Name: Item_Perfume
+  m_EditorClassIdentifier:
+  id: item_perfume
+  itemName: 안드로메다향 향수
+  shopType: 1
+  kind: 1
+  effect: 5
+  description: 뿌리면 그 자리에서 의심이 가라앉는다.
+  icon: {fileID: 0}
+  levelIcons: []
+  levelDescriptions: []
+  price: 90
+  isSpaceshipTicket: 0
+  maxLevel: 1
+  power: 15
+  sidePower: 0
+  boxRewardMin: 0
+  boxRewardMax: 0
+  requiresMaxed: {fileID: 0}
+  requiredShopType: 0
+  requiredShopLevel: 0
