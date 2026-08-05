@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using CustomInspector;
 using UnityEngine.UI;
 
-public class QuickButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, IPointerDownHandler, ISubmitHandler, ISelectHandler, IDeselectHandler
+public class QuickButton : MonoBehaviour, IPointerClickHandler, ISubmitHandler
 {
     //public enum buttonType {
     //    Close, //객체 활성화 끄기
@@ -29,29 +29,6 @@ public class QuickButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
     [Header("Event")] //이벤트.
     [SerializeField] UnityEvent onClick; //클릭 시 활성화되는 이벤트
 
-    [Header("Color setting")] // 호버, 클릭 등의 상황에서 색 변환. 기존 버튼의 모든 설정 가능
-    [SerializeField] bool useColorChange; //색 변경을 활성화하겠다.
-    //이후 조건에 맞춰서 색 변경.
-
-    [ShowIf(nameof(useColorChange))]
-    [SerializeField] Color32 normalColor;
-
-    [ShowIf(nameof(useColorChange))]
-    [SerializeField] Color32 highlightedColor;
-
-    [ShowIf(nameof(useColorChange))]
-    [SerializeField] Color32 pressedColor;
-
-    [ShowIf(nameof(useColorChange))]
-    [SerializeField] Color32 selectedColor;
-
-    [ShowIf(nameof(useColorChange))]
-    [SerializeField] Color32 disabledColor;
-
-    [ShowIf(nameof(useColorChange))]
-    [SerializeField] float fadeDuration;
-
-    Graphic targetGraphic;
         
 
     private bool isTargetObject(){
@@ -86,73 +63,8 @@ public class QuickButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHan
         }
     }
 
-    private void ChangeColor(Color32 color)
-    {
-        if (!useColorChange)
-            return;
-
-        if (targetGraphic == null)
-            return;
-
-        targetGraphic.CrossFadeColor(
-            color,
-            fadeDuration,
-            true,
-            true
-        );
-    }
-    public void Start()
-    {
-        targetGraphic = GetComponent<Graphic>();
-
-        if (doBlock)
-        {
-            ChangeColor(disabledColor);
-        }
-    }
-
-    public void BlockSwitching()
-    {
-        doBlock = !doBlock;
-
-        if (doBlock)
-        {
-            ChangeColor(disabledColor);
-        }
-        else
-        {
-            ChangeColor(normalColor);
-        }
-
-    }
-
-    void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
-    {
-        ChangeColor(highlightedColor);        
-    }
-    void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
-    {
-        ChangeColor(normalColor);
-    }
-    void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
-    {
-        ChangeColor(highlightedColor);
-    }
-    void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
-    {
-        ChangeColor(pressedColor);
-    }
-    void ISelectHandler.OnSelect(BaseEventData eventData)
-    {
-        ChangeColor(selectedColor);
-    }
-    void IDeselectHandler.OnDeselect(BaseEventData eventData)
-    {
-        ChangeColor(normalColor);
-    }
     void ISubmitHandler.OnSubmit(BaseEventData eventData)
     {
-        ChangeColor(pressedColor);
         DoClick();
     }
 
