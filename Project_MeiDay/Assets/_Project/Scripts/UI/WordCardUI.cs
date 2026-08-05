@@ -39,7 +39,11 @@ public class WordCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
 
         _homePos = transform.position;
-        transform.SetAsLastSibling();       // 다른 UI 에 안 가려지게 맨 위로
+
+        // 형제 순서는 절대 건드리지 않음
+        // 예전엔 SetAsLastSibling 으로 맨 위에 올렸는데, 카드들이 격자(Grid Layout) 안에 있어서
+        // 순서가 바뀌면 오른쪽 카드들이 왼쪽으로 당겨지고, 떼면서 옛 자리로 되돌리니 그 자리에 겹쳤음
+        // 카드 묶음이 상자 묶음보다 아래(나중)에 있어서 순서를 안 바꿔도 상자 위에 그려짐
         canvasGroup.blocksRaycasts = false; // 내가 막고 있으면 상자가 드롭을 못 받음
     }
 
