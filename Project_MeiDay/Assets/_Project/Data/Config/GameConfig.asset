@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54fc82f47a838d74281652bb19c146cd, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier:
-  startingCredits: 100
-  foodCost: 10
-  rentCost: 120
+  startingCredits: 350
+  foodCost: 20
+  rentTutorialCost: 100
+  rentBaseCost: 125
+  rentGrowPerStep: 30
+  rentGrowEveryDays: 5
   firstRentDay: 3
   rentEveryDays: 6
   rentMissLimit: 3
@@ -32,11 +35,15 @@ MonoBehaviour:
   complaintsGrowEvery: 5
   complaintsMax: 6
   maxWrongTries: 3
+  maxResolutionWrongTries: 2
   perfectDayBonus: 30
   wrongCardsPerSlot: 2
   arbeitStart: 0
   arbeitMax: 3
   arbeitCarryMax: 1
-  shopExpPerBuy: 10
-  shopExpPerLevel: 30
+  shopLevelExpBase: 100
+  shopLevelExpStep: 50
+  shopExpFirstLevel: 30
+  shopExpGrowRate: 1.25
+  shopExpGrowAdd: 2.5
   eventsInOrder: 0

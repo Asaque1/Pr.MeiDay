@@ -43,8 +43,28 @@ public class EconomyManager : MonoBehaviour
         if (day >= nextRentDay)
         {
             rentWasDueToday = true;
-            PayRent();
+            PayRent(day);
         }
+    }
+
+    // 오늘 내야 하는 월세 (첫 월세는 싸고, 그 뒤론 며칠마다 한 단계씩 오름)
+    public int RentFor(int day)
+    {
+        GameConfig config = GameManager.instance.config;
+
+        // 첫 청구는 튜토라 싸게
+        if (day <= config.firstRentDay)
+        {
+            return config.rentTutorialCost;
+        }
+
+        int step = 0;
+        if (config.rentGrowEveryDays > 0)
+        {
+            step = day / config.rentGrowEveryDays; // 나머지가 아니라 몫이어야 우상향함
+        }
+
+        return config.rentBaseCost + config.rentGrowPerStep * step;
     }
 
     // 매일 밥값 내기
@@ -55,10 +75,10 @@ public class EconomyManager : MonoBehaviour
     }
 
     // 월세 내기 (독촉 방식)
-    public void PayRent()
+    public void PayRent(int day)
     {
         GameConfig config = GameManager.instance.config;
-        int rent = config.rentCost;
+        int rent = RentFor(day);
 
         if (credits >= rent)
         {

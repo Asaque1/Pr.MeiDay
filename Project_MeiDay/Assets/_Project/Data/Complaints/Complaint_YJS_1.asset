@@ -31,4 +31,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5682116dd5605478b7cd29b6d44ba7cb, type: 2}
   - {fileID: 11400000, guid: 059172576b395878938213c04fbab593, type: 2}
   correctResolution: 2
-  reward: 50
+  reward: 30

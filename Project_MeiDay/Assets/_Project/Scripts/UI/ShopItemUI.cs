@@ -47,7 +47,8 @@ public class ShopItemUI : MonoBehaviour
         }
         else
         {
-            priceText.text = item.price + " cr";
+            // 영구템은 다음 레벨 값, 1회성은 그동안 산 만큼 오른 값이라 상점에 물어봄
+            priceText.text = GameManager.instance.shop.PriceFor(item) + " cr";
         }
     }
 

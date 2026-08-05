@@ -57,7 +57,7 @@ public class TranslationView : MonoBehaviour
         }
         else
         {
-            wrongText.text = "처리 실수: " + cm.resolutionWrongCount + " / " + GameManager.instance.config.maxWrongTries;
+            wrongText.text = "처리 실수: " + cm.resolutionWrongCount + " / " + GameManager.instance.config.maxResolutionWrongTries;
         }
 
         // 단계에 맞는 쪽만 보여줌

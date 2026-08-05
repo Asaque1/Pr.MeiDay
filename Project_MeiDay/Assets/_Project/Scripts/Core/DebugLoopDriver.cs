@@ -152,7 +152,8 @@ public class DebugLoopDriver : MonoBehaviour
         GUILayout.BeginHorizontal();
         if (GUILayout.Button("상점레벨 +2씩"))
         {
-            int amount = gm.config.shopExpPerLevel * 2;
+            // 0->1 이랑 1->2 에 드는 만큼 한 번에 넣어줌
+            int amount = gm.config.shopLevelExpBase * 2 + gm.config.shopLevelExpStep;
             gm.shop.AddShopExp(ShopType.Bookstore, amount);
             gm.shop.AddShopExp(ShopType.Theater, amount);
             gm.shop.AddShopExp(ShopType.PartyShop, amount);
@@ -775,7 +776,7 @@ public class DebugLoopDriver : MonoBehaviour
                 continue;
             }
 
-            if (GUILayout.Button(label + " - " + item.price + "cr"))
+            if (GUILayout.Button(label + " - " + gm.shop.PriceFor(item) + "cr"))
             {
                 gm.shop.Buy(item);
             }
@@ -894,7 +895,7 @@ public class DebugLoopDriver : MonoBehaviour
     void DrawResolve(ComplaintManager cm, ComplaintDefinition c)
     {
         GUILayout.Label("[처리 단계]");
-        GUILayout.Label("틀린 횟수: " + cm.resolutionWrongCount + " / " + GameManager.instance.config.maxWrongTries);
+        GUILayout.Label("틀린 횟수: " + cm.resolutionWrongCount + " / " + GameManager.instance.config.maxResolutionWrongTries);
         if (GUILayout.Button("정답 처리"))
         {
             cm.SelectResolution(c.correctResolution);

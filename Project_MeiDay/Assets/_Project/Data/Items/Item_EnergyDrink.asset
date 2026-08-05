@@ -21,7 +21,7 @@ MonoBehaviour:
   icon: {fileID: 0}
   levelIcons: []
   levelDescriptions: []
-  price: 320
+  price: 200
   isSpaceshipTicket: 0
   maxLevel: 2
   power: 1

@@ -139,6 +139,7 @@ public class GameManager : MonoBehaviour
         {
             shop.shopExp[i] = 0;
         }
+        shop.consumableBuyCount = 0;
 
         events.seenEventIds.Clear();
         events.currentEvent = null;
@@ -154,6 +155,7 @@ public class GameManager : MonoBehaviour
         pendingPayoutBuff = 0;
         pendingExtraComplaints = 0;
         arbeit.ResetDaily();     // 알바 횟수 충전
+        shop.DecayConsumableBuys(); // 1회성 물건 값 올려놓은 게 조금 내려감
         ApplyDailyItemEffects(); // 밀수템 아침 정산
 
         // 밀수템 의심도 때문에 아침부터 게임오버 났으면 하루 시작 안 함

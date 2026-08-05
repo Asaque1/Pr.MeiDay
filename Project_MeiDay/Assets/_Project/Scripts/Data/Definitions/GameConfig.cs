@@ -5,9 +5,12 @@ using UnityEngine;
 public class GameConfig : ScriptableObject
 {
     [Header("기간 / 돈")]
-    public int startingCredits = 100; // 새 게임 시작 크레딧
-    public int foodCost = 10;         // 매일 나가는 밥값
-    public int rentCost = 120;        // 월세
+    public int startingCredits = 350; // 새 게임 시작 크레딧
+    public int foodCost = 20;         // 매일 나가는 밥값
+    public int rentTutorialCost = 100; // 첫 월세 (튜토라 싸게 받음)
+    public int rentBaseCost = 125;     // 두 번째부터의 기본 월세
+    public int rentGrowPerStep = 30;   // 월세가 한 단계 오를 때 붙는 금액
+    public int rentGrowEveryDays = 5;  // 며칠마다 월세가 한 단계씩 오르는지
     public int firstRentDay = 3;      // 첫 월세 내는 날
     public int rentEveryDays = 6;     // 며칠마다 월세 내는지
     public int rentMissLimit = 3;     // 월세 몇 번 밀리면 게임오버
@@ -31,6 +34,9 @@ public class GameConfig : ScriptableObject
     public int complaintsGrowEvery = 5; // 며칠마다 할당량이 1씩 늘어나는지
     public int complaintsMax = 6;       // 할당량 상한
     public int maxWrongTries = 3;       // 해석 몇 번 틀리면 민원인이 떠나는지
+    // 처리는 3지선다라 찍어도 2/3 확률로 틀리고 의심도도 훨씬 많이 오름
+    // 해석이랑 같은 제한을 쓰면 처리 쪽이 사실상 즉사라서 따로 뺌
+    public int maxResolutionWrongTries = 2;
     public int perfectDayBonus = 30;    // 하루 다 맞췄을 때 주는 보너스
     public int wrongCardsPerSlot = 2;   // 상자 하나당 깔리는 오답 카드 수 (정답 1 + 오답 2 = 3장)
 
@@ -40,8 +46,37 @@ public class GameConfig : ScriptableObject
     public int arbeitCarryMax = 1;  // 안 쓴 알바 횟수를 다음 날로 넘길 수 있는 최대치
 
     [Header("상점")]
-    public int shopExpPerBuy = 10;   // 아이템 하나 살 때 오르는 상점 경험치
-    public int shopExpPerLevel = 30; // 상점 레벨 하나에 필요한 경험치 (레벨 최대 5)
+    // 상점 레벨 하나 올리는 데 필요한 경험치 (0레벨 시작, 최대 5)
+    // 기본 + 단계*지금레벨  ->  100, 150, 200, 250, 300 (누적 1000)
+    public int shopLevelExpBase = 100;
+    public int shopLevelExpStep = 50;
+
+    // 영구템 몇 레벨짜리를 샀을 때 주는 상점 경험치
+    // 1레벨이 기본값이고 레벨마다 비율+고정으로 뜀  ->  30, 40, 52, 67, 86
+    // 1회성/랜덤박스는 레벨이 없어서 1레벨 값을 줌
+    public int shopExpFirstLevel = 30;
+    public float shopExpGrowRate = 1.25f;
+    public float shopExpGrowAdd = 2.5f;
+
+    // 영구템 레벨을 올릴 때 값이 얼마나 뛰는지
+    // 1레벨은 아이템에 적힌 값 그대로, 2레벨부터: 기본 + 변동치 + (레벨당*레벨) + 전 단계 값*(레벨/나눔값)
+    // 기본값이면 200 -> 275 -> 360 -> 481 -> 665 (만렙까지 총 1981)
+    public int itemPriceBase = 200;
+    public int itemPriceStep = 20;
+    public int itemPricePerLevel = 15;
+    public int itemPriceCarryDiv = 5;
+
+    // 1회성 / 랜덤박스 값
+    // 아이템에 적힌 값(기본값) + 변동치 에, 그동안 산 횟수만큼 % 가 붙고 일차만큼 더 붙음
+    // 산 횟수는 매일 조금씩 깎여서, 몰아서 사든 나눠 사든 부담이 비슷하게 감
+    public int consumablePriceStep = 0;      // 변동치
+    public int consumablePricePerBuy = 3;    // 하나 살 때마다 붙는 %
+    public int consumablePricePerDay = 10;   // 일차마다 붙는 값
+    public int consumableBuyDecayPerDay = 5; // 하루 지날 때 깎이는 구매 횟수
+
+    // 랜덤박스 보상 = 0 ~ (낸 값 * 이 배율) + 아이템에 적힌 추가값
+    // 돈 나오는 랜덤박스는 아이템의 sidePower 만큼 폭이 더 벌어져서 도박성이 커짐
+    public float randomBoxMaxRate = 1.8f;
 
     [Header("이벤트")]
     public bool eventsInOrder = false; // 켜면 랜덤 이벤트가 확률 없이 목록 순서대로 나옴 (일정 밀릴 때 스위치)

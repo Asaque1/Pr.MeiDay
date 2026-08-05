@@ -7,6 +7,9 @@ public class ShopManager : MonoBehaviour
     // 상점별 경험치 (서점, 연극단, 파티, 브로커 순. 저장됨)
     public List<int> shopExp = new List<int>() { 0, 0, 0, 0 };
 
+    // 1회성/랜덤박스를 그동안 몇 번 샀는지 (값이 오르는 기준. 매일 조금씩 깎임)
+    public int consumableBuyCount = 0;
+
     // 아이템 사기. 성공하면 true, 돈 없거나 못 사는 물건이면 false
     public bool Buy(ItemDefinition item)
     {
@@ -20,8 +23,9 @@ public class ShopManager : MonoBehaviour
             return false; // 품절이거나 아직 해금 안 됨
         }
 
-        // 돈 내보기
-        bool paid = GameManager.instance.economy.SpendCredits(item.price);
+        // 돈 내보기 (영구템은 올릴 레벨에 따라 값이 다름)
+        int price = PriceFor(item);
+        bool paid = GameManager.instance.economy.SpendCredits(price);
         if (paid == false)
         {
             return false; // 돈 부족해서 못 삼
@@ -46,20 +50,24 @@ public class ShopManager : MonoBehaviour
             return true;
         }
 
+        int boughtLevel = 1; // 1회성/랜덤박스는 레벨이 없어서 1레벨로 침
+
         if (item.kind == ItemKind.Permanent)
         {
-            // 영구템은 살 때마다 레벨이 오름
+            // 영구템은 살 때마다 레벨이 오름 (경험치는 방금 올린 그 레벨 기준)
+            boughtLevel = GameManager.instance.inventory.GetItemLevel(item.id) + 1;
             GameManager.instance.inventory.LevelUpItem(item.id);
         }
         else
         {
             // 1회성이랑 랜덤박스는 사자마자 효과
             GameManager.instance.inventory.AddItem(item.id);
-            ApplyInstantEffect(item);
+            consumableBuyCount++; // 살수록 값이 오르게 (매일 조금씩 깎임)
+            ApplyInstantEffect(item, price);
         }
 
-        // 사면 그 상점 경험치가 참
-        AddShopExp(item.shopType, GameManager.instance.config.shopExpPerBuy);
+        // 사면 그 상점 경험치가 참 (높은 레벨을 살수록 많이 오름)
+        AddShopExp(item.shopType, ShopExpForLevel(boughtLevel));
 
         // 상점 레벨로 주는 업적이 있어서 확인
         if (GameManager.instance.achievements != null)
@@ -167,38 +175,135 @@ public class ShopManager : MonoBehaviour
         return "브로커";
     }
 
+    // 이 물건을 지금 사면 내는 값
+    // 영구템은 레벨을 올릴수록 비싸짐 (1회성/랜덤박스는 항상 같은 값)
+    public int PriceFor(ItemDefinition item)
+    {
+        if (item == null)
+        {
+            return 0;
+        }
+
+        // 우주선표는 목표 금액이라 날짜나 구매 횟수에 안 흔들리게 값을 고정함
+        if (item.isSpaceshipTicket == true)
+        {
+            return item.price;
+        }
+
+        if (item.kind != ItemKind.Permanent)
+        {
+            return ConsumablePrice(item);
+        }
+
+        int level = GameManager.instance.inventory.GetItemLevel(item.id);
+        return PriceForLevel(item, level + 1); // 다음에 살 레벨 값
+    }
+
+    // 1회성 / 랜덤박스 값 (많이 살수록 % 로 비싸지고, 날이 갈수록도 조금씩 오름)
+    public int ConsumablePrice(ItemDefinition item)
+    {
+        GameConfig config = GameManager.instance.config;
+
+        int basePrice = item.price + config.consumablePriceStep;
+        int marked = basePrice * (100 + consumableBuyCount * config.consumablePricePerBuy) / 100;
+
+        return marked + config.consumablePricePerDay * GameManager.instance.calendar.day;
+    }
+
+    // 하루 지날 때 산 횟수가 조금 깎임 (몰아서 사든 나눠 사든 부담이 비슷하게)
+    public void DecayConsumableBuys()
+    {
+        consumableBuyCount -= GameManager.instance.config.consumableBuyDecayPerDay;
+        if (consumableBuyCount < 0)
+        {
+            consumableBuyCount = 0;
+        }
+    }
+
+    // 이 아이템의 몇 레벨짜리 값 (1레벨은 아이템에 적힌 값 그대로)
+    public int PriceForLevel(ItemDefinition item, int level)
+    {
+        if (level <= 1)
+        {
+            return item.price;
+        }
+
+        GameConfig config = GameManager.instance.config;
+        int price = item.price;
+
+        // 전 단계 값을 계속 물고 올라가야 해서 1레벨부터 차례로 계산함
+        for (int step = 2; step <= level; step++)
+        {
+            int carry = 0;
+            if (config.itemPriceCarryDiv > 0)
+            {
+                carry = Mathf.RoundToInt(price * (step - 1) / (float)config.itemPriceCarryDiv);
+            }
+
+            price = config.itemPriceBase
+                + config.itemPriceStep
+                + config.itemPricePerLevel * (step - 1)
+                + carry;
+        }
+
+        return price;
+    }
+
+    // 이 레벨짜리를 샀을 때 받는 상점 경험치 (30 -> 40 -> 52 -> 67 -> 86)
+    public int ShopExpForLevel(int level)
+    {
+        GameConfig config = GameManager.instance.config;
+        int exp = config.shopExpFirstLevel;
+
+        // 앞 레벨 값을 물고 올라가는 식이라 1레벨부터 차례로 계산함
+        for (int step = 2; step <= level; step++)
+        {
+            exp = Mathf.FloorToInt(exp * config.shopExpGrowRate + config.shopExpGrowAdd);
+        }
+
+        return exp;
+    }
+
     // 상점 경험치 주기 (구매나 알바로)
     public void AddShopExp(ShopType type, int amount)
     {
         shopExp[(int)type] += amount;
     }
 
-    // 상점 레벨 = 경험치로 계산 (기획서상 최대 5레벨)
+    // 상점 레벨 = 경험치로 계산 (0레벨 시작, 기획서상 최대 5레벨)
+    // 레벨 하나 올리는 데 100 -> 150 -> 200 -> 250 -> 300 이 들어서 만렙까지 누적 1000
     public int GetShopLevel(ShopType type)
     {
-        int perLevel = GameManager.instance.config.shopExpPerLevel;
-        if (perLevel <= 0)
+        GameConfig config = GameManager.instance.config;
+        int left = shopExp[(int)type];
+        int level = 0;
+
+        while (level < 5)
         {
-            return 0;
+            int need = config.shopLevelExpBase + config.shopLevelExpStep * level;
+            if (need <= 0 || left < need)
+            {
+                break;
+            }
+
+            left -= need;
+            level++;
         }
 
-        int level = shopExp[(int)type] / perLevel;
-        if (level > 5)
-        {
-            level = 5;
-        }
         return level;
     }
 
-    // 1회성/랜덤박스 효과 바로 적용
-    void ApplyInstantEffect(ItemDefinition item)
+    // 1회성/랜덤박스 효과 바로 적용 (paid = 방금 낸 값)
+    void ApplyInstantEffect(ItemDefinition item, int paid)
     {
         GameManager gm = GameManager.instance;
 
         if (item.kind == ItemKind.RandomBox)
         {
-            // 범위 내 랜덤 크레딧 (본전일 수도, 대박일 수도)
-            int reward = Random.Range(item.boxRewardMin, item.boxRewardMax + 1);
+            // 낸 값의 0 ~ 1.8배 사이 (꽝일 수도 대박일 수도) + 아이템에 적힌 추가값
+            // 돈 나오는 상자는 sidePower 로 위쪽 폭을 더 벌려서 도박성을 키움
+            float top = paid * gm.config.randomBoxMaxRate + item.sidePower;
+            int reward = Mathf.RoundToInt(Random.Range(0f, top)) + item.boxRewardMin;
             gm.economy.AddCredits(reward);
             return;
         }

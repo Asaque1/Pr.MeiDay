@@ -103,6 +103,9 @@ public class SaveManager : MonoBehaviour
             PlayerPrefs.SetInt("shopExp" + i, gm.shop.shopExp[i]);
         }
 
+        // 1회성 물건 값이 얼마나 올라있는지
+        PlayerPrefs.SetInt("consumableBuyCount", gm.shop.consumableBuyCount);
+
         // 모든 값을 다 넣은 뒤 마지막에 저장 있음 표시
         PlayerPrefs.SetInt("saveExists", 1);
         PlayerPrefs.Save();
@@ -180,6 +183,9 @@ public class SaveManager : MonoBehaviour
         {
             gm.shop.shopExp[i] = PlayerPrefs.GetInt("shopExp" + i, 0);
         }
+
+        // 1회성 물건 값이 얼마나 올라있는지
+        gm.shop.consumableBuyCount = PlayerPrefs.GetInt("consumableBuyCount", 0);
 
         Debug.Log("불러오기 완료");
         return true;

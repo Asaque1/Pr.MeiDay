@@ -233,8 +233,8 @@ public class ComplaintManager : MonoBehaviour
                 return;
             }
 
-            // 처리도 너무 많이 틀리면 민원인이 나감
-            if (resolutionWrongCount >= GameManager.instance.config.maxWrongTries)
+            // 처리도 너무 많이 틀리면 민원인이 나감 (해석이랑 제한이 다름)
+            if (resolutionWrongCount >= GameManager.instance.config.maxResolutionWrongTries)
             {
                 failCount++;
                 NextComplaint();
