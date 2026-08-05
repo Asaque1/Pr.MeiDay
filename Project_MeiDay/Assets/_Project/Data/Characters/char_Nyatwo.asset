@@ -20,4 +20,4 @@ MonoBehaviour:
   job: 직원
   species: 냐라오
   bio: 
-  portrait: {fileID: 0}
+  portrait: {fileID: 4201643845298427717, guid: caa482afbcb68e54fabd44bbe682143f, type: 3}

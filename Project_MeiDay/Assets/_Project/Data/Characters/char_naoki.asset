@@ -20,4 +20,4 @@ MonoBehaviour:
   job: "\uD559\uC0DD"
   species: "\uB93C\uBA54\uB9AC\uC559"
   bio: 
-  portrait: {fileID: 0}
+  portrait: {fileID: 5002056126222999835, guid: 0e23ac15f64c31b4b88661bf6d9c4152, type: 3}

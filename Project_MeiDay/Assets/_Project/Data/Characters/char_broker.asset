@@ -20,4 +20,4 @@ MonoBehaviour:
   job: 밀수업자
   species: 
   bio: 이름은 가명. 주인공이 지구인임을 알아챈 외계 밀수업자. 돈 냄새를 맡고 탈출을 돕기로 한다. 뛰어난 눈치와 수완을 가진 베테랑. 본 목적은 주인공을 통해 국가 데이터베이스에 접근하는 것.
-  portrait: {fileID: 0}
+  portrait: {fileID: 5396913674957190600, guid: a5de98c3e4888ed4ab620b07e9ea75be, type: 3}
