@@ -15,6 +15,11 @@ public class TranslationView : MonoBehaviour
     [SerializeField] GameObject translatePart;   // 해석 단계에만 보이는 묶음 (확인 버튼 등)
     [SerializeField] GameObject resolvePart;     // 처리 단계에만 보이는 묶음 (처리 버튼 3개)
 
+    // 왼쪽 창에 뜨는 민원인 그림
+    // 네임드는 전용 그림이 있고, 없는 민원인은 파츠로 조합해서 만듦
+    [SerializeField] UnityEngine.UI.Image complainantImage;
+    [SerializeField] NpcPortrait complainantParts;
+
     // 민원 대사에 끼워넣는 외계어 색 (16진수 고정)
     // 상자(WordSlotUI)랑 완전히 같은 색을 씀 - 같은 색끼리 짝지어 보면 됨
     // 문서 노랑 / 대상 초록 / 수량 파랑 / 부서 빨강
@@ -68,6 +73,7 @@ public class TranslationView : MonoBehaviour
 
         ComplaintDefinition c = cm.todayComplaints[cm.currentIndex];
         complaintLineText.text = BuildComplaintLine(c, cm.translation);
+        ShowComplainant(c);
         quotaText.text = (cm.currentIndex + 1) + " / " + cm.todayComplaints.Count;
         if (cm.stage == ComplaintStage.Translate)
         {
@@ -84,6 +90,47 @@ public class TranslationView : MonoBehaviour
 
         RebuildSlots(cm.translation);
         RebuildCards(cm.translation);
+    }
+
+    // 왼쪽 창에 지금 민원인 보여주기
+    // 전용 그림이 있으면 그걸 쓰고, 없으면 파츠로 조합해서 만듦
+    void ShowComplainant(ComplaintDefinition c)
+    {
+        Sprite portrait = null;
+        string seed = c.id;
+        if (c.complainant != null)
+        {
+            portrait = c.complainant.portrait;
+            seed = c.complainant.id;
+        }
+
+        // 전용 그림이 있는 경우
+        if (portrait != null)
+        {
+            if (complainantParts != null)
+            {
+                complainantParts.gameObject.SetActive(false);
+            }
+            if (complainantImage != null)
+            {
+                complainantImage.enabled = true;
+                complainantImage.sprite = portrait;
+                complainantImage.color = Color.white; // 자리만 잡아둔 검은색이 남아있으면 그림이 안 보임
+                complainantImage.preserveAspect = true;
+            }
+            return;
+        }
+
+        // 전용 그림이 없으면 파츠 조합 (같은 민원인이면 항상 같은 얼굴)
+        if (complainantImage != null)
+        {
+            complainantImage.enabled = false;
+        }
+        if (complainantParts != null)
+        {
+            complainantParts.gameObject.SetActive(true);
+            complainantParts.Build(seed);
+        }
     }
 
     // 민원인이 하는 말 만들기
