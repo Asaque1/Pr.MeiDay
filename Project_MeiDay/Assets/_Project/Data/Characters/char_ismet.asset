@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: char_ismet
   m_EditorClassIdentifier: 
   id: char_ismet
-  displayName: 우즈-이스메트 테하리반
-  nickname: 이스메트 시장
+  displayName: "\uC6B0\uC988-\uC774\uC2A4\uBA54\uD2B8 \uD14C\uD558\uB9AC\uBC18"
+  nickname: "\uC774\uC2A4\uBA54\uD2B8 \uC2DC\uC7A5"
   role: 4
-  gender: 남
-  job: 정치인
-  species: 레반티아
+  gender: "\uB0A8"
+  job: "\uC815\uCE58\uC778"
+  species: "\uB808\uBC18\uD2F0\uC544"
   bio: 
-  portrait: {fileID: 7279111048524647222, guid: b114fd05923c4e641a4d1a6617ad7459, type: 3}
+  portrait: {fileID: 8824239608792793799, guid: a5212263b126c414f9f0d5ef3789f653, type: 3}

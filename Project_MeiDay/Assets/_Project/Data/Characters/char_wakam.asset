@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: char_wakam
   m_EditorClassIdentifier: 
   id: char_wakam
-  displayName: 와카모 야하리
-  nickname: 와카모
+  displayName: "\uC640\uCE74\uBAA8 \uC57C\uD558\uB9AC"
+  nickname: "\uC640\uCE74\uBAA8"
   role: 2
-  gender: 자웅동체
-  job: 무직
-  species: 소조아카니스
+  gender: "\uC790\uC6C5\uB3D9\uCCB4"
+  job: "\uBB34\uC9C1"
+  species: "\uC18C\uC870\uC544\uCE74\uB2C8\uC2A4"
   bio: 
   portrait: {fileID: -4533406615531320429, guid: 8cd69671c2866ac469a877f577e6db06, type: 3}

@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: char_minio
   m_EditorClassIdentifier: 
   id: char_minio
-  displayName: 미니오 카르파니
-  nickname: 미니오
+  displayName: "\uBBF8\uB2C8\uC624 \uCE74\uB974\uD30C\uB2C8"
+  nickname: "\uBBF8\uB2C8\uC624"
   role: 2
-  gender: 남
-  job: 학생
-  species: 모노폴리아
+  gender: "\uB0A8"
+  job: "\uD559\uC0DD"
+  species: "\uBAA8\uB178\uD3F4\uB9AC\uC544"
   bio: 
-  portrait: {fileID: -9218741987405913734, guid: 8c35c794d0155994783634fee48219e7, type: 3}
+  portrait: {fileID: -7396736835789572750, guid: 102b980a33f92774dbb266c79d5d3f29, type: 3}

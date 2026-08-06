@@ -11,13 +11,19 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c097b509655c3d54a951a4b6b97f3dfe, type: 3}
   m_Name: char_helen
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: char_helen
-  displayName: 헬렌 머핀 2세
-  nickname: 헬렌
+  displayName: "\uD5EC\uB80C \uBA38\uD540 2\uC138"
+  nickname: "\uD5EC\uB80C"
   role: 3
-  gender: 여성
-  job: 6급 공무원 (예산 관리부 차장)
-  species: 웩스포드
-  bio: 델타 픽토르 13동 동사무소 소속. 자칭 명문가인 머핀 가의 2녀로 특기가 없어 연줄로 낙하산 입사했다. 가문이 포기하면서 이곳으로 좌천되어, 지금은 직책을 유지하는 수준으로만 업무를 처리한다. 지구인인 주인공을 아니꼽게 보며 계속 의심한다.
+  gender: "\uC5EC\uC131"
+  job: "6\uAE09 \uACF5\uBB34\uC6D0 (\uC608\uC0B0 \uAD00\uB9AC\uBD80 \uCC28\uC7A5)"
+  species: "\uC6E9\uC2A4\uD3EC\uB4DC"
+  bio: "\uB378\uD0C0 \uD53D\uD1A0\uB974 13\uB3D9 \uB3D9\uC0AC\uBB34\uC18C \uC18C\uC18D.
+    \uC790\uCE6D \uBA85\uBB38\uAC00\uC778 \uBA38\uD540 \uAC00\uC758 2\uB140\uB85C
+    \uD2B9\uAE30\uAC00 \uC5C6\uC5B4 \uC5F0\uC904\uB85C \uB099\uD558\uC0B0 \uC785\uC0AC\uD588\uB2E4.
+    \uAC00\uBB38\uC774 \uD3EC\uAE30\uD558\uBA74\uC11C \uC774\uACF3\uC73C\uB85C \uC88C\uCC9C\uB418\uC5B4,
+    \uC9C0\uAE08\uC740 \uC9C1\uCC45\uC744 \uC720\uC9C0\uD558\uB294 \uC218\uC900\uC73C\uB85C\uB9CC
+    \uC5C5\uBB34\uB97C \uCC98\uB9AC\uD55C\uB2E4. \uC9C0\uAD6C\uC778\uC778 \uC8FC\uC778\uACF5\uC744
+    \uC544\uB2C8\uAF3D\uAC8C \uBCF4\uBA70 \uACC4\uC18D \uC758\uC2EC\uD55C\uB2E4."
   portrait: {fileID: 4366155560704257353, guid: 994b79e8b9691fd4b90465f4db55ca29, type: 3}
