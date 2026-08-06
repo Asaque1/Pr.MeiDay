@@ -6,7 +6,34 @@ using UnityEngine;
 public class ComplaintSlot
 {
     public WordCategory category;      // 무슨 색 상자인지
-    public WordDefinition correctWord; // 이 칸의 정답 단어
+    public WordDefinition correctWord; // 이 칸의 정답 단어 (후보를 안 적었을 때 씀)
+
+    // 이 칸에 들어갈 수 있는 후보들
+    // 하나 이상 적어두면 민원이 시작될 때마다 그 중에서 하나를 뽑아 정답으로 씀
+    // 그래서 같은 민원이라도 매번 요구하는 서류가 달라짐 (외우는 게 아니라 익히게 하려고)
+    // 안 뽑힌 후보들은 그대로 오답 카드로 쓰임 - 같은 종류라 그럴싸하게 헷갈림
+    // 후보를 하나만 적으면 그게 고정 정답이 됨
+    public List<WordDefinition> candidateWords = new List<WordDefinition>();
+
+    // 이번 판에 쓸 정답 하나 고르기
+    public WordDefinition PickAnswer()
+    {
+        List<WordDefinition> pool = new List<WordDefinition>();
+        for (int i = 0; i < candidateWords.Count; i++)
+        {
+            if (candidateWords[i] != null && pool.Contains(candidateWords[i]) == false)
+            {
+                pool.Add(candidateWords[i]);
+            }
+        }
+
+        if (pool.Count == 0)
+        {
+            return correctWord; // 후보를 안 적었으면 예전처럼 고정 정답
+        }
+
+        return pool[Random.Range(0, pool.Count)];
+    }
 }
 
 // 민원 한 건의 정보
@@ -21,7 +48,9 @@ public class ComplaintDefinition : ScriptableObject
     public string complaintLine;            // 민원 대사
 
     // 1단계: 외계어 해석
-    // 정답은 slots 에 들어있고, 오답 후보만 따로 적음 (카드 깔기는 로직이 랜덤으로 함)
+    // 정답(또는 후보)은 slots 에 들어있음. 카드 깔기는 로직이 랜덤으로 함
+    // wrongWords 는 더 넣고 싶은 오답이 있을 때만 적으면 됨
+    // (안 적어도 slots 의 안 뽑힌 후보들이 오답으로 쓰임)
     public List<ComplaintSlot> slots = new List<ComplaintSlot>();
     public List<WordDefinition> wrongWords = new List<WordDefinition>();
 

@@ -67,7 +67,7 @@ public class TranslationView : MonoBehaviour
         ShowWorkUi(true); // 손님이 왔으니 작업 UI 켬 (숨겨진 상태였을 수도 있어서)
 
         ComplaintDefinition c = cm.todayComplaints[cm.currentIndex];
-        complaintLineText.text = BuildComplaintLine(c);
+        complaintLineText.text = BuildComplaintLine(c, cm.translation);
         quotaText.text = (cm.currentIndex + 1) + " / " + cm.todayComplaints.Count;
         if (cm.stage == ComplaintStage.Translate)
         {
@@ -90,20 +90,22 @@ public class TranslationView : MonoBehaviour
     // 데이터엔 "저, 그, [단어1], [단어2] 걸로 [단어3] 주세요." 처럼 자리만 비워놨고
     // 그 자리에 해당 상자의 정답 단어가 쓰는 외계어를 색까지 입혀서 끼워넣음
     // (이걸 안 하면 화면에 [단어1] 이 글자 그대로 나옴)
-    string BuildComplaintLine(ComplaintDefinition c)
+    // tc 에서 읽는 이유: 후보가 여럿이면 이번 판 정답은 민원 시작할 때 뽑히므로
+    // 데이터에 적힌 고정 정답을 쓰면 대사랑 상자가 서로 다른 단어를 가리킴
+    string BuildComplaintLine(ComplaintDefinition c, TranslationController tc)
     {
         string line = c.complaintLine;
 
-        for (int i = 0; i < c.slots.Count; i++)
+        for (int i = 0; i < tc.slots.Count; i++)
         {
-            WordDefinition word = c.slots[i].correctWord;
+            WordDefinition word = tc.slots[i].correctWord;
             if (word == null)
             {
                 continue; // 데이터에 빈 칸
             }
 
             // 종류색 + 굵게 (외계어라는 게 한눈에 보이게)
-            string colored = "<b><color=#" + HexOf(c.slots[i].category) + ">"
+            string colored = "<b><color=#" + HexOf(tc.slots[i].category) + ">"
                 + word.dialectText
                 + "</color></b>";
 

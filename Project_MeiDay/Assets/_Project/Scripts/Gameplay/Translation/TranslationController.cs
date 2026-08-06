@@ -20,11 +20,12 @@ public class TranslationController : MonoBehaviour
         _slotCardIndex.Clear();
 
         // 상자 만들기 (민원에 정해진 자리들)
+        // 후보를 여러 개 적어놨으면 그 중 하나를 뽑아서 이번 판 정답으로 씀
         for (int i = 0; i < complaint.slots.Count; i++)
         {
             WordSlot slot = new WordSlot();
             slot.category = complaint.slots[i].category;
-            slot.correctWord = complaint.slots[i].correctWord;
+            slot.correctWord = complaint.slots[i].PickAnswer();
             slot.placedWord = null;
             slots.Add(slot);
             _slotCardIndex.Add(-1);
@@ -84,11 +85,22 @@ public class TranslationController : MonoBehaviour
     // 오답 후보에서 상자 종류에 맞는 걸 랜덤으로 뽑아서 결과에 넣어줌
     void PickWrongWords(ComplaintDefinition complaint, List<WordDefinition> result)
     {
+        // 오답 후보 모으기
+        // 따로 적어둔 wrongWords 에다가, 상자에서 안 뽑힌 후보들까지 같이 씀
+        // 안 뽑힌 후보는 같은 종류의 다른 서류라 제일 그럴싸한 오답이 됨
+        // (덕분에 데이터에 오답을 따로 안 적어도 카드가 채워짐)
+        List<WordDefinition> raw = new List<WordDefinition>();
+        raw.AddRange(complaint.wrongWords);
+        for (int s = 0; s < complaint.slots.Count; s++)
+        {
+            raw.AddRange(complaint.slots[s].candidateWords);
+        }
+
         // 후보 정리 (데이터 실수 대비: 빈 칸, 정답이랑 같은 단어, 두 번 적힌 단어는 걸러냄)
         List<WordDefinition> pool = new List<WordDefinition>();
-        for (int i = 0; i < complaint.wrongWords.Count; i++)
+        for (int i = 0; i < raw.Count; i++)
         {
-            WordDefinition w = complaint.wrongWords[i];
+            WordDefinition w = raw[i];
             if (w == null)
             {
                 continue; // 인스펙터에서 빈 칸으로 남은 것
