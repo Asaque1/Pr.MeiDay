@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4300ae952e722344d96918a470db9590, type: 3}
+  m_Name: Complaint_r15
+  m_EditorClassIdentifier:
+  id: complaint_r15
+  complainant: {fileID: 0}
+  eventOnly: 0
+  complaintLine: 이상하다... 나나의 [단어1] 어디 갔나... 어제까지 있었는데... [단어1] [단어2] 장 다시 받을 수 있나 질문?
+  slots:
+  - category: 0
+    correctWord: {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
+    candidateWords:
+    - {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
+    - {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
+    - {fileID: 11400000, guid: 3bd23550d41257ac88480337e68913fe, type: 2}
+    - {fileID: 11400000, guid: 059172576b395878938213c04fbab593, type: 2}
+    - {fileID: 11400000, guid: cd676a31c4f55469bd331505cf3d38ee, type: 2}
+    - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
+  - category: 2
+    correctWord: {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+    candidateWords:
+    - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+    - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}
+    - {fileID: 11400000, guid: 583f5c2609745e2a97e33e68b37b926c, type: 2}
+    - {fileID: 11400000, guid: 5682116dd5605478b7cd29b6d44ba7cb, type: 2}
+  wrongWords: []
+  correctResolution: 2
+  reward: 30
