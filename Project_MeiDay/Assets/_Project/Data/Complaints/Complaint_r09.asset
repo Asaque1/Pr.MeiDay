@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Complaint_r09
   m_EditorClassIdentifier:
   id: complaint_r09
-  complainant: {fileID: 0}
+  complainant: {fileID: 11400000, guid: 7f164cb9fef956b8ab21bcec962c9944, type: 2}
   eventOnly: 0
   complaintLine: 안녕하셔요. [단어1]의 [단어2] [단어3] 장을 쓰러 왔답니다. 부탁드려요
   slots:

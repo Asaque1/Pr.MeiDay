@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Complaint_r11
   m_EditorClassIdentifier:
   id: complaint_r11
-  complainant: {fileID: 0}
+  complainant: {fileID: 11400000, guid: 2854418d7ea45790b719b0866ef835a4, type: 2}
   eventOnly: 0
   complaintLine: 너의 비효율적인 업무 속도는 나나를 분노하게 만든다. 나나의 [단어1], 빨리 갱신해라.
   slots:

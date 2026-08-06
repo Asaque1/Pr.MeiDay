@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Complaint_r15
   m_EditorClassIdentifier:
   id: complaint_r15
-  complainant: {fileID: 0}
+  complainant: {fileID: 11400000, guid: 07dd1f5f486654c9aeddc76349e9e891, type: 2}
   eventOnly: 0
   complaintLine: 이상하다... 나나의 [단어1] 어디 갔나... 어제까지 있었는데... [단어1] [단어2] 장 다시 받을 수 있나 질문?
   slots:

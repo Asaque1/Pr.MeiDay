@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Complaint_r16
   m_EditorClassIdentifier:
   id: complaint_r16
-  complainant: {fileID: 0}
+  complainant: {fileID: 11400000, guid: acefd99d39615b67aa93ac617128a7e7, type: 2}
   eventOnly: 0
   complaintLine: 늦으면 [단어1] 화난다. [단어2] [단어3] 장 빨리.
   slots:

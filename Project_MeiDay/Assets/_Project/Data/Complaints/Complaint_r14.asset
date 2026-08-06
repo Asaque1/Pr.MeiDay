@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Complaint_r14
   m_EditorClassIdentifier:
   id: complaint_r14
-  complainant: {fileID: 0}
+  complainant: {fileID: 11400000, guid: 26170f65a8935ff39009a32dedf27a98, type: 2}
   eventOnly: 0
   complaintLine: 에구구... 나나의 [단어1] 너무 오래됐는지 글자가 다 흐려졌구먼... 늙은 눈으로는 영 안 보인다네. [단어1] [단어2] 장만 새로 부탁하네.
   slots:

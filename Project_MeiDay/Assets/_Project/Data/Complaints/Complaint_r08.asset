@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Complaint_r08
   m_EditorClassIdentifier:
   id: complaint_r08
-  complainant: {fileID: 0}
+  complainant: {fileID: 11400000, guid: 5be2d07abd1f550ba718a2c3063ff5ad, type: 2}
   eventOnly: 0
   complaintLine: 나나 내 아래가 세상에 첫발을 내디뎠습니다. 첫 기록 [단어1] 장 신청이 가능한가요 질문?
   slots:

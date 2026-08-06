@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Complaint_r13
   m_EditorClassIdentifier:
   id: complaint_r13
-  complainant: {fileID: 0}
+  complainant: {fileID: 11400000, guid: 26170f65a8935ff39009a32dedf27a98, type: 2}
   eventOnly: 0
   complaintLine: 허허, 수고가 많네. [단어1] [단어2] 장만 떼어주게나.
   slots:

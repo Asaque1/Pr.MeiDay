@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Complaint_r18
   m_EditorClassIdentifier:
   id: complaint_r18
-  complainant: {fileID: 0}
+  complainant: {fileID: 11400000, guid: ba32b299989758f3873d5e1bcdf7b243, type: 2}
   eventOnly: 0
   complaintLine: 내 위가 시켰다! [단어1] [단어2] 장 쓰고 오라했다!
   slots:

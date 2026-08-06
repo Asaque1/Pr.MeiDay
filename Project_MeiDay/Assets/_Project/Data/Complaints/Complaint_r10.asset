@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Complaint_r10
   m_EditorClassIdentifier:
   id: complaint_r10
-  complainant: {fileID: 0}
+  complainant: {fileID: 11400000, guid: 5be2d07abd1f550ba718a2c3063ff5ad, type: 2}
   eventOnly: 0
   complaintLine: 삐리리... 여행 갔다오니 나나의 [단어1] 삭제됨... 짝들에게 혼남... [단어2] 장 복구 가능 질문?
   slots:

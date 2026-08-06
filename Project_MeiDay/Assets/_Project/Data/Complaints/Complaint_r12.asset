@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Complaint_r12
   m_EditorClassIdentifier:
   id: complaint_r12
-  complainant: {fileID: 0}
+  complainant: {fileID: 11400000, guid: dcc52281f9175b0eafc7a2f104e3f241, type: 2}
   eventOnly: 0
   complaintLine: 꾸릉... 아까 [단어1] 썼는데... 다시 생각해보니 화풀림 기재 해야 할 것 같아요...
   slots:

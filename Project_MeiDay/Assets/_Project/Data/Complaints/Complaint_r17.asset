@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Complaint_r17
   m_EditorClassIdentifier:
   id: complaint_r17
-  complainant: {fileID: 0}
+  complainant: {fileID: 11400000, guid: ecefe2a865a0516197d06b3a6f5a7d31, type: 2}
   eventOnly: 0
   complaintLine: 내 아래 대신왔다! [단어1] [단어2] 장 쓰고 갈거다!
   slots:
