@@ -11,14 +11,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62e61bc4de632374982843e7d37baf52, type: 3}
   m_Name: Minigame_Promo
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: arbeit_promo
-  minigameName: 판촉
-  description: 지나가는 행인에게 전단을 던져 넣는다.
+  minigameName: "\uD310\uCD09"
+  description: "\uC9C0\uB098\uAC00\uB294 \uD589\uC778\uC5D0\uAC8C \uC804\uB2E8\uC744
+    \uB358\uC838 \uB123\uB294\uB2E4."
   sceneName: 
   shopType: 2
   basePay: 40
-  expReward: 8
+  expReward: 30
   kind: 3
   bookCount: 6
   genreCount: 3

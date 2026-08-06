@@ -11,14 +11,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62e61bc4de632374982843e7d37baf52, type: 3}
   m_Name: Minigame_BookSort
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: arbeit_booksort
-  minigameName: 책 정리
-  description: 손님이 두고 간 책을 장르별 칸에 넣는다.
+  minigameName: "\uCC45 \uC815\uB9AC"
+  description: "\uC190\uB2D8\uC774 \uB450\uACE0 \uAC04 \uCC45\uC744 \uC7A5\uB974\uBCC4
+    \uCE78\uC5D0 \uB123\uB294\uB2E4."
   sceneName: 
   shopType: 0
   basePay: 40
-  expReward: 8
+  expReward: 30
   kind: 1
   bookCount: 6
   genreCount: 3

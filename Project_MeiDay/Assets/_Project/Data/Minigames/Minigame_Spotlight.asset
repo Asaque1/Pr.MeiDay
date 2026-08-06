@@ -11,14 +11,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62e61bc4de632374982843e7d37baf52, type: 3}
   m_Name: Minigame_Spotlight
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: arbeit_spotlight
-  minigameName: 조명 연출
-  description: 무대 위 배우를 조명으로 계속 따라다닌다.
+  minigameName: "\uC870\uBA85 \uC5F0\uCD9C"
+  description: "\uBB34\uB300 \uC704 \uBC30\uC6B0\uB97C \uC870\uBA85\uC73C\uB85C \uACC4\uC18D
+    \uB530\uB77C\uB2E4\uB2CC\uB2E4."
   sceneName: 
   shopType: 1
   basePay: 40
-  expReward: 8
+  expReward: 30
   kind: 2
   bookCount: 6
   genreCount: 3
