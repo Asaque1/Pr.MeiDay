@@ -24,6 +24,9 @@ public class TranslationView : MonoBehaviour
     // 상자(WordSlotUI)랑 완전히 같은 색을 씀 - 같은 색끼리 짝지어 보면 됨
     // 문서 노랑 / 대상 초록 / 수량 파랑 / 부서 빨강
     // 인스펙터에 안 빼둔 이유: 씬에 저장된 옛 값이 코드 기본값을 덮어써서 안 바뀜
+    // 대사 안에서 카드가 들어갈 자리 (밑줄로 비워둠)
+    const string BlankMark = "<u>          </u>";
+
     const string DocumentHex = "FFE666";
     const string TargetHex = "80E680";
     const string QuantityHex = "80B3FF";
@@ -135,28 +138,15 @@ public class TranslationView : MonoBehaviour
 
     // 민원인이 하는 말 만들기
     // 데이터엔 "저, 그, [단어1], [단어2] 걸로 [단어3] 주세요." 처럼 자리만 비워놨고
-    // 그 자리에 해당 상자의 정답 단어가 쓰는 외계어를 색까지 입혀서 끼워넣음
-    // (이걸 안 하면 화면에 [단어1] 이 글자 그대로 나옴)
-    // tc 에서 읽는 이유: 후보가 여럿이면 이번 판 정답은 민원 시작할 때 뽑히므로
-    // 데이터에 적힌 고정 정답을 쓰면 대사랑 상자가 서로 다른 단어를 가리킴
+    // 그 자리를 빈칸으로 남겨둠 - 플레이어가 카드를 꽂아서 채우는 자리라 미리 알려주지 않음
+    // (자리표시를 안 지우면 화면에 [단어1] 이 글자 그대로 나옴)
     string BuildComplaintLine(ComplaintDefinition c, TranslationController tc)
     {
         string line = c.complaintLine;
 
         for (int i = 0; i < tc.slots.Count; i++)
         {
-            WordDefinition word = tc.slots[i].correctWord;
-            if (word == null)
-            {
-                continue; // 데이터에 빈 칸
-            }
-
-            // 종류색 + 굵게 (외계어라는 게 한눈에 보이게)
-            string colored = "<b><color=#" + HexOf(tc.slots[i].category) + ">"
-                + word.dialectText
-                + "</color></b>";
-
-            line = line.Replace("[단어" + (i + 1) + "]", colored);
+            line = line.Replace("[단어" + (i + 1) + "]", BlankMark);
         }
 
         return line;
