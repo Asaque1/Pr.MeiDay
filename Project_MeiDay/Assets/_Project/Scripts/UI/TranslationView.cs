@@ -24,8 +24,11 @@ public class TranslationView : MonoBehaviour
     // 상자(WordSlotUI)랑 완전히 같은 색을 씀 - 같은 색끼리 짝지어 보면 됨
     // 문서 노랑 / 대상 초록 / 수량 파랑 / 부서 빨강
     // 인스펙터에 안 빼둔 이유: 씬에 저장된 옛 값이 코드 기본값을 덮어써서 안 바뀜
-    // 대사 안에서 카드가 들어갈 자리 (밑줄로 비워둠)
-    const string BlankMark = "<u>          </u>";
+    // 대사 안에서 카드가 들어갈 자리
+    // 대괄호는 그대로 두고 안쪽만 비워둠 - 카드를 꽂으면 그 안에 단어가 들어감
+    const string BlankOpen = "[";
+    const string BlankClose = "]";
+    const string BlankInside = "      "; // 아직 안 채운 칸의 여백
 
     const string DocumentHex = "FFE666";
     const string TargetHex = "80E680";
@@ -91,7 +94,10 @@ public class TranslationView : MonoBehaviour
         SetPart(translatePart, cm.stage == ComplaintStage.Translate);
         SetPart(resolvePart, cm.stage == ComplaintStage.Resolve);
 
-        RebuildSlots(cm.translation);
+        // 색 상자는 안 씀 - 카드를 대사 빈칸에 바로 꽂으니까 따로 놓을 자리가 필요 없음
+        // 다시 쓰려면 아래 한 줄만 살리면 됨
+        // RebuildSlots(cm.translation);
+        ClearSlotUis();
         RebuildCards(cm.translation);
     }
 
@@ -137,8 +143,8 @@ public class TranslationView : MonoBehaviour
     }
 
     // 민원인이 하는 말 만들기
-    // 데이터엔 "저, 그, [단어1], [단어2] 걸로 [단어3] 주세요." 처럼 자리만 비워놨고
-    // 그 자리를 빈칸으로 남겨둠 - 플레이어가 카드를 꽂아서 채우는 자리라 미리 알려주지 않음
+    // 데이터엔 "저, 그, [단어1], [단어2] 걸로 [단어3] 주세요." 처럼 자리만 비워놨음
+    // 아직 안 채운 자리는 [      ] 처럼 비워두고, 카드를 꽂은 자리엔 그 카드에 쓰인 말이 들어감
     // (자리표시를 안 지우면 화면에 [단어1] 이 글자 그대로 나옴)
     string BuildComplaintLine(ComplaintDefinition c, TranslationController tc)
     {
@@ -146,7 +152,17 @@ public class TranslationView : MonoBehaviour
 
         for (int i = 0; i < tc.slots.Count; i++)
         {
-            line = line.Replace("[단어" + (i + 1) + "]", BlankMark);
+            string inside = BlankInside;
+
+            // 이 칸에 카드를 꽂아뒀으면 카드에 쓰인 말이 대사에 채워짐
+            if (tc.slots[i].placedWord != null)
+            {
+                inside = "<b><color=#" + HexOf(tc.slots[i].category) + ">"
+                    + tc.slots[i].placedWord.meaning
+                    + "</color></b>";
+            }
+
+            line = line.Replace("[단어" + (i + 1) + "]", BlankOpen + inside + BlankClose);
         }
 
         return line;
@@ -212,14 +228,23 @@ public class TranslationView : MonoBehaviour
         part.SetActive(on);
     }
 
-    // 상자들 지우고 다시 만들기
-    void RebuildSlots(TranslationController tc)
+    // 만들어둔 상자 치우기 (상자를 안 쓰기로 해서 남은 게 있으면 지움)
+    void ClearSlotUis()
     {
         for (int i = 0; i < _slotUis.Count; i++)
         {
-            Destroy(_slotUis[i].gameObject);
+            if (_slotUis[i] != null)
+            {
+                Destroy(_slotUis[i].gameObject);
+            }
         }
         _slotUis.Clear();
+    }
+
+    // 상자들 지우고 다시 만들기
+    void RebuildSlots(TranslationController tc)
+    {
+        ClearSlotUis();
 
         // 프리팹이나 놓을 자리를 안 꽂아뒀으면 상자를 못 만듦
         if (slotPrefab == null || slotParent == null)
@@ -294,7 +319,7 @@ public class TranslationView : MonoBehaviour
         }
     }
 
-    // 카드가 상자에 떨어졌을 때 (상자가 불러줌)
+    // 카드가 상자에 떨어졌을 때 (상자나 대사 빈칸이 불러줌)
     public void OnCardDropped(int cardIndex, int slotIndex)
     {
         GameManager.instance.complaint.translation.PlaceCard(cardIndex, slotIndex);
