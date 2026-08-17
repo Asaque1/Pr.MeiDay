@@ -244,6 +244,31 @@ public class TranslationView : MonoBehaviour
             WordSlotUI slotUi = Instantiate(slotPrefab, slotParent);
             _slotUis.Add(slotUi);
             slotUi.Set(this, i, tc.slots[i]);
+
+            // 카드를 꽂아둔 칸이면 그 카드를 이 칸 안에 놓아줌
+            PutCardInSlot(slotUi, tc.slots[i].placedWord);
+        }
+    }
+
+    // 빈칸 안에 카드 놓기 (꽂힌 게 없으면 아무것도 안 함)
+    void PutCardInSlot(WordSlotUI slotUi, WordDefinition word)
+    {
+        if (word == null || cardPrefab == null)
+        {
+            return;
+        }
+
+        WordCardUI placed = Instantiate(cardPrefab, slotUi.transform);
+        placed.SetPlaced(word);
+
+        // 칸에 꽉 맞게 (칸 크기는 화면 담당이 정하니까 거기 따라감)
+        RectTransform rt = placed.GetComponent<RectTransform>();
+        if (rt != null)
+        {
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.offsetMin = Vector2.zero;
+            rt.offsetMax = Vector2.zero;
         }
     }
 
@@ -267,6 +292,10 @@ public class TranslationView : MonoBehaviour
             if (tc.cards[i].isRemoved == true)
             {
                 continue; // 떨어져 사라진 카드는 안 보여줌
+            }
+            if (tc.cards[i].isUsed == true)
+            {
+                continue; // 빈칸에 꽂아둔 카드는 손패에서 빠짐 (그 칸 안에 그려짐)
             }
 
             WordCardUI cardUi = Instantiate(cardPrefab, cardParent);

@@ -18,6 +18,9 @@ public class AchievementView : MonoBehaviour
     [SerializeField] GameObject newTag;        // 새로 딴 게 있을 때 뜨는 표시
     [SerializeField] TMP_Text newCountText;    // 새로 딴 개수
 
+    // 기록 초기화 확인창 (한 번 지우면 되돌릴 수 없어서 꼭 물어봄)
+    [SerializeField] GameObject resetConfirmPanel;
+
     // 아직 안 딴 업적은 글자를 흐리게 (딴 것만 눈에 들어오게)
     // 줄 전체를 CanvasGroup 으로 흐리게 하면 배경까지 투명해져서 뒤 화면이 비침 - 글자만 건드림
     static readonly Color GotTextColor = new Color(0.1f, 0.1f, 0.1f, 1f);
@@ -31,6 +34,7 @@ public class AchievementView : MonoBehaviour
     void Start()
     {
         SetOn(popUp, false);
+        SetOn(resetConfirmPanel, false);
         RefreshNewTag();
         RebuildList();
 
@@ -212,6 +216,49 @@ public class AchievementView : MonoBehaviour
             tm.text = text;
             tm.color = color;
         }
+    }
+
+    // ---- 아래는 버튼 OnClick 에 연결해서 씀 ----
+
+    // 기록 초기화 버튼 - 바로 지우지 않고 확인창을 띄움
+    // 업적은 회차를 넘겨 남는 유일한 기록이라 실수로 한 번 누르면 복구가 안 됨
+    public void OnClickResetAchievements()
+    {
+        if (resetConfirmPanel == null)
+        {
+            // 확인창을 안 꽂아뒀으면 아무것도 안 함
+            // (여기서 그냥 지워버리면 물어보지도 않고 기록이 날아감)
+            Debug.LogWarning("업적 초기화 확인창이 연결 안 됨 - 안전하게 아무것도 안 함");
+            return;
+        }
+
+        SetOn(resetConfirmPanel, true);
+    }
+
+    // 확인창에서 "예" - 여기서 진짜로 지움
+    public void OnClickConfirmReset()
+    {
+        SetOn(resetConfirmPanel, false);
+
+        if (GameManager.instance == null || GameManager.instance.achievements == null)
+        {
+            return;
+        }
+
+        GameManager.instance.achievements.ResetAll();
+
+        // 지운 걸 화면에도 바로 반영 (목록은 다시 만들고 새 표시는 없앰)
+        _newCount = 0;
+        RefreshNewTag();
+        SetOn(popUp, false);
+        _popUpLeft = 0f;
+        RebuildList();
+    }
+
+    // 확인창에서 "아니오"
+    public void OnClickCancelReset()
+    {
+        SetOn(resetConfirmPanel, false);
     }
 
     // 켜고 끄기 (아직 안 꽂아뒀어도 안 터지게)

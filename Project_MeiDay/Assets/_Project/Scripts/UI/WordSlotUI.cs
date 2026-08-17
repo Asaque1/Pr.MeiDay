@@ -24,15 +24,9 @@ public class WordSlotUI : MonoBehaviour, IDropHandler, IPointerClickHandler
         _view = view;
         _slotIndex = slotIndex;
 
-        if (slot.placedWord != null)
-        {
-            wordText.text = slot.placedWord.meaning;
-        }
-        else
-        {
-            // 빈 상자엔 외계인이 말한 사투리가 보임
-            wordText.text = "[ " + slot.correctWord.dialectText + " ]";
-        }
+        // 빈칸은 진짜로 비워둠 - 카드를 꽂아 넣는 자리라 미리 뭘 써두지 않음
+        // (카드가 들어오면 그 카드가 이 자리에 놓이고, 글자는 카드에 쓰여 있음)
+        wordText.text = "";
 
         background.color = ColorOf(slot.category);
     }
