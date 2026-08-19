@@ -885,8 +885,17 @@ public class DebugLoopDriver : MonoBehaviour
         GUILayout.EndHorizontal();
 
         GUILayout.Space(4);
+
+        // 빈칸을 다 채워야 제출이 됨 (실제 화면의 확인 버튼도 그때 나옴)
+        if (tc.IsAllFilled() == false)
+        {
+            GUILayout.Label("빈칸을 다 채워야 제출 가능");
+        }
+
         if (GUILayout.Button("확인 (해석 제출)"))
         {
+            // 디버그 화면은 등장/대사 연출을 안 거치니까 말 끝난 걸로 쳐줌
+            cm.entry = ComplaintEntry.Ready;
             cm.ConfirmTranslation();
         }
     }
@@ -956,8 +965,9 @@ public class DebugLoopDriver : MonoBehaviour
             }
             else
             {
-                // 실수: 빈 답안 제출해서 해석 실수 하나 쌓음 (쌓이면 민원인이 알아서 나감)
-                cm.ConfirmTranslation();
+                // 실수: 해석 실수 하나 쌓음 (쌓이면 민원인이 알아서 나감)
+                // 예전엔 빈 답안을 제출했는데, 이제 빈칸을 다 채워야 확인 버튼이 나와서 그 길이 막힘
+                cm.AddTranslationMistake();
             }
 
             if (gm.phase == GamePhase.GameOver)

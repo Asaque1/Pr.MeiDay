@@ -227,6 +227,26 @@ public class TranslationController : MonoBehaviour
         _slotCardIndex[slotIndex] = -1;
     }
 
+    // 빈칸을 하나도 안 남기고 다 채웠는지 (맞았는지는 안 봄)
+    // 이게 true 가 돼야 확인 버튼이 나옴
+    public bool IsAllFilled()
+    {
+        if (slots.Count == 0)
+        {
+            return false; // 상자가 없는 민원은 제출할 것도 없음
+        }
+
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (slots[i].placedWord == null)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     // 확인. 다 맞으면 true (여기선 판정만 함)
     public bool CheckAnswer()
     {

@@ -31,19 +31,6 @@ public class WordCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
     }
 
-    // 상자에 꽂힌 카드로 쓸 때 (손패가 아니라 빈칸 안에 놓인 상태)
-    // 여기서는 못 끎 - 빼는 건 상자를 클릭해서 함
-    public void SetPlaced(WordDefinition word)
-    {
-        cardIndex = -1;
-        wordText.text = word.meaning;
-        _canDrag = false;
-
-        canvasGroup.alpha = 1f;
-        // 내가 클릭을 먹으면 상자를 눌러도 카드가 안 빠짐
-        canvasGroup.blocksRaycasts = false;
-    }
-
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (_canDrag == false)

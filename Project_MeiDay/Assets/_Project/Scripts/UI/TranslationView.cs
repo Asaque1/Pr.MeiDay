@@ -1,3 +1,4 @@
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -20,23 +21,42 @@ public class TranslationView : MonoBehaviour
     [SerializeField] UnityEngine.UI.Image complainantImage;
     [SerializeField] NpcPortrait complainantParts;
 
-    // 민원 대사에 끼워넣는 외계어 색 (16진수 고정)
-    // 상자(WordSlotUI)랑 완전히 같은 색을 씀 - 같은 색끼리 짝지어 보면 됨
-    // 문서 노랑 / 대상 초록 / 수량 파랑 / 부서 빨강
-    // 인스펙터에 안 빼둔 이유: 씬에 저장된 옛 값이 코드 기본값을 덮어써서 안 바뀜
-    // 대사 안에서 카드가 들어갈 자리
-    // 대괄호는 그대로 두고 안쪽만 비워둠 - 카드를 꽂으면 그 안에 단어가 들어감
+    [Header("처리 단계에만 열리는 것들")]
+    // 카드를 다 꽂고 해석이 맞아야 여기 버튼들이 나옴
+    // 잠글 때는 아예 숨김 - 눌리지도 않는데 보이면 고장난 걸로 오해함
+    [SerializeField] GameObject pdaButton;     // PDA 여는 버튼
+    [SerializeField] GameObject pdaPanel;      // PDA 창 (다음 민원으로 넘어가면 닫아줌)
+    [SerializeField] GameObject declareButton; // 신고 여는 버튼
+
+    [Header("대사 나오는 속도")]
+    [SerializeField] float charDelay = 0.045f; // 글자 하나 나오는 간격
+
+    [Header("빈칸")]
+    // 빈칸 하나가 몇 글자만큼 자리를 차지할지 (칸마다 똑같음)
+    // 정답 길이에 맞추면 길이가 힌트가 되니까 일부러 고정
+    [SerializeField] int blankSpaces = 8;
+
+    // 빈칸 자리를 글 속에서 찾을 때 쓰는 표시
+    // 화면엔 안 보임 (투명하게 넣어둠). 보이는 건 이 자리에 얹는 빈칸 오브젝트
+    // 종류별 색은 빈칸 오브젝트(WordSlotUI)가 들고 있어서 여기선 색을 안 씀
     const string BlankOpen = "[";
     const string BlankClose = "]";
-    const string BlankInside = "      "; // 아직 안 채운 칸의 여백
 
-    const string DocumentHex = "FFE666";
-    const string TargetHex = "80E680";
-    const string QuantityHex = "80B3FF";
-    const string DepartmentHex = "FF8080";
+    // 줄바꿈이 안 되는 공백 (U+00A0)
+    // 보통 공백을 쓰면 줄 끝에서 빈칸 한가운데가 잘려 두 줄에 걸쳐버림
+    const char NoBreakSpace = '\u00A0';
 
     List<WordSlotUI> _slotUis = new List<WordSlotUI>();
     List<WordCardUI> _cardUis = new List<WordCardUI>();
+
+    // 빈칸마다 대사에서 차지하는 글자 범위 (_slotFrom ~ _slotCloseAt)
+    // 타이핑 도중에 글이 위아래로 움직여서 매번 다시 재야 함
+    List<int> _slotFrom = new List<int>();
+    List<int> _slotCloseAt = new List<int>(); // 타이핑이 여기를 지나면 그 빈칸이 나타남
+
+    Coroutine _typeRoutine; // 대사 한 글자씩 찍는 연출
+    int _typedFor = -1;     // 몇 번째 민원 대사를 이미 찍었는지
+                            // 카드를 꽂을 때마다 화면을 다시 그리는데, 이게 없으면 그때마다 대사가 처음부터 다시 나옴
 
     void OnEnable()
     {
@@ -51,6 +71,10 @@ public class TranslationView : MonoBehaviour
 
     void OnDisable()
     {
+        // 꺼지면 코루틴이 유니티한테 강제로 멈춰지는데 손잡이는 남아있음
+        // 그대로 두면 다시 켰을 때 "찍는 중"으로 오해해서 대사가 영영 안 끝남
+        StopTyping();
+
         if (GameManager.instance != null)
         {
             GameManager.instance.complaint.OnComplaintUpdated -= Rebuild;
@@ -62,25 +86,48 @@ public class TranslationView : MonoBehaviour
     {
         ComplaintManager cm = GameManager.instance.complaint;
 
-        // 지금 받는 민원이 없으면 (다 끝났거나 아직 아침 대사 중) 해석/처리 묶음을 둘 다 숨김
-        // 이걸 안 하면 어제 켜둔 처리 버튼이 다음 날 아침 대사창 위에 그대로 남아있음
-        //
-        // 작업 UI(민원 대사, 진행도, 상자, 카드)까지 같이 숨기는 것도 해봤는데,
-        // 아침 대사를 못 넘기는 상황이 겹치면 화면이 통째로 비어버려서 일단 보류함
-        // 대사창을 확실히 넘길 수 있게 되면 ShowWorkUi(false) 로 바꾸면 됨
-        if (cm.currentIndex >= cm.todayComplaints.Count)
+        // 지금 받는 민원이 없거나(다 끝났거나 아침 대사 중) 손님이 아직 안 왔으면 창구를 비워둠
+        bool empty = (cm.currentIndex >= cm.todayComplaints.Count
+            || cm.entry == ComplaintEntry.Waiting);
+
+        if (empty == true)
         {
-            SetPart(translatePart, false);
-            SetPart(resolvePart, false);
+            StopTyping();
+            _typedFor = -1;
+            ShowWorkUi(false);
+            ShowComplainantSeat(false);
+            LockResolveUi();
             return;
         }
 
-        ShowWorkUi(true); // 손님이 왔으니 작업 UI 켬 (숨겨진 상태였을 수도 있어서)
-
         ComplaintDefinition c = cm.todayComplaints[cm.currentIndex];
-        complaintLineText.text = BuildComplaintLine(c, cm.translation);
+
+        // 손님은 앉았음 - 얼굴부터 보여줌
+        // 자리를 먼저 켜야 함. ShowComplainant 가 전용 그림/파츠 중 안 쓰는 쪽을 다시 꺼줌
+        ShowComplainantSeat(true);
         ShowComplainant(c);
+        SetObject(quotaText, true);
         quotaText.text = (cm.currentIndex + 1) + " / " + cm.todayComplaints.Count;
+
+        // 앉기만 하고 아직 말은 안 하는 동안 (대사창은 비워둠)
+        if (cm.entry == ComplaintEntry.Arrived)
+        {
+            StopTyping();
+            _typedFor = -1;
+            SetObject(complaintLineText, true);
+            complaintLineText.text = "";
+            SetObject(wrongText, false);
+            SetObject(slotParent, false);
+            SetObject(cardParent, false);
+            SetPart(translatePart, false);
+            LockResolveUi();
+            return;
+        }
+
+        // 여기부터는 말하는 중이거나 말이 끝난 상태
+        SetObject(complaintLineText, true);
+        complaintLineText.text = BuildComplaintLine(c, cm.translation);
+
         if (cm.stage == ComplaintStage.Translate)
         {
             wrongText.text = "해석 실수: " + cm.translation.wrongCount + " / " + GameManager.instance.config.maxWrongTries;
@@ -90,19 +137,142 @@ public class TranslationView : MonoBehaviour
             wrongText.text = "처리 실수: " + cm.resolutionWrongCount + " / " + GameManager.instance.config.maxResolutionWrongTries;
         }
 
-        // 단계에 맞는 쪽만 보여줌
-        SetPart(translatePart, cm.stage == ComplaintStage.Translate);
-        SetPart(resolvePart, cm.stage == ComplaintStage.Resolve);
+        // 말하는 중이면 한 글자씩 찍고, 그동안은 카드도 처리도 못 만짐
+        if (cm.entry == ComplaintEntry.Speaking)
+        {
+            SetObject(wrongText, false);
+            SetObject(slotParent, false);
+            SetObject(cardParent, false);
+            SetPart(translatePart, false);
+            LockResolveUi();
 
-        // 색 상자는 안 씀 - 카드를 대사 빈칸에 바로 꽂으니까 따로 놓을 자리가 필요 없음
-        // 다시 쓰려면 아래 한 줄만 살리면 됨
-        // RebuildSlots(cm.translation);
-        ClearSlotUis();
+            // 빈칸은 자리만 미리 잡아두고 전부 숨김 - 타이핑이 지나가면서 하나씩 나타남
+            RebuildSlots(cm.translation);
+            RefreshSlotVisibility(0);
+
+            StartTyping(cm.currentIndex);
+            return;
+        }
+
+        // 말 끝남 - 대사는 전부 보이게
+        StopTyping();
+        complaintLineText.maxVisibleCharacters = int.MaxValue;
+        SetObject(wrongText, true);
+
+        bool translating = (cm.stage == ComplaintStage.Translate);
+
+        // 손패는 해석 단계에만
+        // 빈칸은 처리 단계에도 남겨둠 - 무슨 민원이었는지 보면서 처리를 골라야 하니까
+        SetObject(slotParent, false); // 빈칸이 대사 안으로 들어가서 이 자리는 이제 안 씀
+        SetObject(cardParent, translating);
+
+        // 확인 버튼은 빈칸을 다 채워야 나옴
+        SetPart(translatePart, translating == true && cm.translation.IsAllFilled() == true);
+
+        // 처리 단계가 되어야 PDA 와 신고가 열림
+        bool resolving = (cm.stage == ComplaintStage.Resolve);
+        SetPart(pdaButton, resolving);
+        SetPart(declareButton, resolving);
+        SetPart(resolvePart, resolving);
+        if (resolving == false)
+        {
+            SetPart(pdaPanel, false); // 열어둔 채로 다음 민원으로 넘어가는 것 방지
+        }
+
+        RebuildSlots(cm.translation);
+        RefreshSlotVisibility(int.MaxValue); // 말 다 했으니 빈칸도 전부 보임
         RebuildCards(cm.translation);
+    }
+
+    // 처리 쪽(PDA / 신고 / 처리 버튼)을 전부 닫아둠
+    void LockResolveUi()
+    {
+        SetPart(resolvePart, false);
+        SetPart(pdaButton, false);
+        SetPart(pdaPanel, false);
+        SetPart(declareButton, false);
+    }
+
+    // 대사 한 글자씩 찍기 시작 (이미 찍은 민원이면 아무것도 안 함)
+    void StartTyping(int complaintIndex)
+    {
+        // 이미 찍는 중이면 그대로 둠 (카드 꽂을 때마다 처음부터 다시 나오면 안 됨)
+        // 연출이 중간에 끊겼으면(_typeRoutine 이 비어있음) 다시 돌려줌 - 안 그러면 말이 안 끝나서 카드를 영영 못 꽂음
+        if (_typedFor == complaintIndex && _typeRoutine != null)
+        {
+            return;
+        }
+
+        _typedFor = complaintIndex;
+
+        if (_typeRoutine != null)
+        {
+            StopCoroutine(_typeRoutine);
+        }
+        _typeRoutine = StartCoroutine(TypeLine());
+    }
+
+    // 돌던 타이핑 연출 멈추기
+    void StopTyping()
+    {
+        if (_typeRoutine != null)
+        {
+            StopCoroutine(_typeRoutine);
+            _typeRoutine = null;
+        }
+    }
+
+    // 대사가 한 글자씩 나오는 연출
+    // 글자를 잘라 붙이면 <color> 같은 태그가 중간에 끊겨서 깨짐
+    // 그래서 글은 통째로 넣어두고 몇 글자까지 보여줄지만 늘림
+    IEnumerator TypeLine()
+    {
+        complaintLineText.maxVisibleCharacters = 0;
+        complaintLineText.ForceMeshUpdate(); // 글자 수를 세려면 한 번 그려봐야 함
+
+        int total = complaintLineText.textInfo.characterCount;
+
+        for (int i = 1; i <= total; i++)
+        {
+            complaintLineText.maxVisibleCharacters = i;
+
+            // 글자가 늘면 문단이 움직이니까 자리를 다시 재고
+            complaintLineText.ForceMeshUpdate();
+            RepositionSlots();
+
+            // 이 자리를 지났으면 빈칸이 툭 나타남 (그리고 뒤 글자가 이어서 나옴)
+            RefreshSlotVisibility(i);
+
+            // 타이핑 소리 (시끄러우면 몇 글자마다 한 번으로 조절)
+            if (SoundManager.instance != null)
+            {
+                SoundManager.instance.PlaySfx(SoundManager.instance.typeTick);
+            }
+
+            yield return new WaitForSeconds(charDelay);
+        }
+
+        complaintLineText.maxVisibleCharacters = int.MaxValue;
+        complaintLineText.ForceMeshUpdate();
+        RepositionSlots(); // 다 나온 자리로 마지막에 한 번 더 맞춰줌
+        RefreshSlotVisibility(int.MaxValue);
+        _typeRoutine = null;
+
+        // 말 다 했다고 알려줌 - 여기서부터 카드를 꽂을 수 있음
+        GameManager.instance.complaint.OnLineFinished();
     }
 
     // 왼쪽 창에 지금 민원인 보여주기
     // 전용 그림이 있으면 그걸 쓰고, 없으면 파츠로 조합해서 만듦
+    // 민원인 자리 통째로 비우기 / 되살리기
+    // 전용 그림이랑 파츠 조합 둘 중 뭘 쓰는지는 ShowComplainant 가 정하니까
+    // 여기서는 자리만 켜고 끔 (안 그러면 손님이 오기 전인데 얼굴만 남아있음)
+    void ShowComplainantSeat(bool on)
+    {
+        SetObject(complainantImage, on);
+        SetObject(complainantParts, on);
+    }
+
     void ShowComplainant(ComplaintDefinition c)
     {
         Sprite portrait = null;
@@ -144,47 +314,34 @@ public class TranslationView : MonoBehaviour
 
     // 민원인이 하는 말 만들기
     // 데이터엔 "저, 그, [단어1], [단어2] 걸로 [단어3] 주세요." 처럼 자리만 비워놨음
-    // 아직 안 채운 자리는 [      ] 처럼 비워두고, 카드를 꽂은 자리엔 그 카드에 쓰인 말이 들어감
-    // (자리표시를 안 지우면 화면에 [단어1] 이 글자 그대로 나옴)
+    //
+    // 빈칸은 글자가 아니라 오브젝트임 (카드를 거기다 대고 꽂아야 하니까)
+    // 그래서 글에는 투명한 대괄호로 자리만 잡아두고, 그 위에 빈칸 오브젝트를 얹음
+    // 자리를 글로 잡아두는 이유는 줄바꿈 때문 - 빈칸도 글자처럼 줄을 넘어가야 함
     string BuildComplaintLine(ComplaintDefinition c, TranslationController tc)
     {
         string line = c.complaintLine;
 
         for (int i = 0; i < tc.slots.Count; i++)
         {
-            string inside = BlankInside;
-
-            // 이 칸에 카드를 꽂아뒀으면 카드에 쓰인 말이 대사에 채워짐
-            if (tc.slots[i].placedWord != null)
-            {
-                inside = "<b><color=#" + HexOf(tc.slots[i].category) + ">"
-                    + tc.slots[i].placedWord.meaning
-                    + "</color></b>";
-            }
-
-            line = line.Replace("[단어" + (i + 1) + "]", BlankOpen + inside + BlankClose);
+            line = line.Replace("[단어" + (i + 1) + "]", HiddenGap(i));
         }
 
         return line;
     }
 
-    // 종류별 색 (상자랑 같은 규칙: 문서 노랑 / 대상 초록 / 수량 파랑 / 부서 빨강)
-    string HexOf(WordCategory category)
+    // 빈칸 하나가 차지할 자리 (안 보이는 글자)
+    //
+    // link 로 몇 번째 칸인지 박아둠 - 자리 순서로 세면 안 됨
+    // 대사에 같은 자리표시가 두 번 나오면(예: [단어1] 이 두 군데) 순서랑 칸 번호가 어긋남
+    //
+    // 속을 일반 공백이 아니라 줄바꿈 안 되는 공백으로 채움
+    // 일반 공백이면 줄 끝에서 빈칸 한가운데가 잘려서 두 줄에 걸쳐버림
+    string HiddenGap(int slotIndex)
     {
-        if (category == WordCategory.Document)
-        {
-            return DocumentHex;
-        }
-        if (category == WordCategory.Target)
-        {
-            return TargetHex;
-        }
-        if (category == WordCategory.Quantity)
-        {
-            return QuantityHex;
-        }
-
-        return DepartmentHex;
+        return "<link=" + slotIndex + "><color=#00000000>"
+            + BlankOpen + new string(NoBreakSpace, blankSpaces) + BlankClose
+            + "</color></link>";
     }
 
     // 민원 작업 UI 전체 켜고 끄기
@@ -228,62 +385,176 @@ public class TranslationView : MonoBehaviour
         part.SetActive(on);
     }
 
-    // 만들어둔 상자 치우기 (상자를 안 쓰기로 해서 남은 게 있으면 지움)
+    // 만들어둔 빈칸 치우기
     void ClearSlotUis()
     {
         for (int i = 0; i < _slotUis.Count; i++)
         {
-            if (_slotUis[i] != null)
+            if (_slotUis[i] == null)
             {
-                Destroy(_slotUis[i].gameObject);
+                continue;
             }
+
+            // Destroy 는 이 프레임 끝에야 실제로 지워짐
+            // 같은 프레임에 다시 그리면 헌 빈칸이 새 빈칸이랑 겹쳐 보이고 드롭도 가로챔
+            // 그래서 먼저 꺼두고 지움
+            _slotUis[i].gameObject.SetActive(false);
+            Destroy(_slotUis[i].gameObject);
         }
         _slotUis.Clear();
+        _slotFrom.Clear();
+        _slotCloseAt.Clear();
     }
 
-    // 상자들 지우고 다시 만들기
+    // 대사 안에 빈칸 오브젝트를 박아 넣기
+    // 글에 잡아둔 투명한 대괄호 자리를 찾아서, 그 자리에 딱 맞게 빈칸을 얹음
+    // 빈칸이 대사의 자식이라 대사가 움직이면 같이 따라감
     void RebuildSlots(TranslationController tc)
     {
         ClearSlotUis();
 
-        // 프리팹이나 놓을 자리를 안 꽂아뒀으면 상자를 못 만듦
-        if (slotPrefab == null || slotParent == null)
+        if (slotPrefab == null || complaintLineText == null)
         {
-            Debug.LogWarning("해석 화면에 상자 프리팹이나 놓을 자리가 연결 안 됨");
+            Debug.LogWarning("해석 화면에 빈칸 프리팹이나 대사가 연결 안 됨");
             return;
         }
 
-        for (int i = 0; i < tc.slots.Count; i++)
-        {
-            // 먼저 목록에 넣어둬야 Set 에서 뭐가 잘못돼도 고아 오브젝트가 안 남음
-            WordSlotUI slotUi = Instantiate(slotPrefab, slotParent);
-            _slotUis.Add(slotUi);
-            slotUi.Set(this, i, tc.slots[i]);
+        // 글자 자리를 읽으려면 한 번 그려봐야 함
+        complaintLineText.ForceMeshUpdate();
+        TMP_TextInfo info = complaintLineText.textInfo;
 
-            // 카드를 꽂아둔 칸이면 그 카드를 이 칸 안에 놓아줌
-            PutCardInSlot(slotUi, tc.slots[i].placedWord);
+        // 자리마다 link 로 칸 번호를 박아뒀으니 그걸 그대로 읽음
+        // 자리 순서로 세지 않는 이유: 대사에 같은 자리표시가 두 번 나오면 번호가 어긋남
+        for (int i = 0; i < info.linkCount; i++)
+        {
+            TMP_LinkInfo link = info.linkInfo[i];
+
+            int slotIndex = -1;
+            if (int.TryParse(link.GetLinkID(), out slotIndex) == false)
+            {
+                continue; // 우리가 박은 표시가 아님
+            }
+
+            if (slotIndex < 0 || slotIndex >= tc.slots.Count)
+            {
+                continue; // 대사에 적힌 칸 번호가 데이터랑 안 맞음
+            }
+
+            int from = link.linkTextfirstCharacterIndex;
+            int to = from + link.linkTextLength - 1;
+            if (from < 0 || to < from || to >= info.characterCount)
+            {
+                continue;
+            }
+
+            // 먼저 목록에 넣어둬야 Set 에서 뭐가 잘못돼도 고아 오브젝트가 안 남음
+            WordSlotUI slotUi = Instantiate(slotPrefab, complaintLineText.rectTransform);
+            _slotUis.Add(slotUi);
+            _slotFrom.Add(from);
+            _slotCloseAt.Add(to); // 타이핑이 여기를 지나야 이 빈칸이 나타남
+
+            PlaceOverArea(slotUi, AreaOf(info, from, to));
+
+            // 칸 안 단어는 대사랑 같은 크기까지 커질 수 있게 (더 크면 어색함)
+            slotUi.SetMaxFontSize(complaintLineText.fontSize);
+
+            // 카드를 꽂으면 카드가 이 안으로 들어오는 게 아니라
+            // 카드에 쓰인 글자만 이 칸에 옮겨 적힘 (Set 이 알아서 함)
+            slotUi.Set(this, slotIndex, tc.slots[slotIndex]);
         }
     }
 
-    // 빈칸 안에 카드 놓기 (꽂힌 게 없으면 아무것도 안 함)
-    void PutCardInSlot(WordSlotUI slotUi, WordDefinition word)
+    // 글자 몇 개가 차지하는 네모 (대사 안에서의 자리)
+    Rect AreaOf(TMP_TextInfo info, int from, int to)
     {
-        if (word == null || cardPrefab == null)
+        float left = float.MaxValue;
+        float right = float.MinValue;
+
+        for (int i = from; i <= to; i++)
+        {
+            TMP_CharacterInfo ci = info.characterInfo[i];
+
+            // 공백은 안 그려져도 자리 정보는 있음 (빈칸 속이 전부 공백이라 이게 필요함)
+            if (ci.bottomLeft.x < left) left = ci.bottomLeft.x;
+            if (ci.topRight.x > right) right = ci.topRight.x;
+        }
+
+        // 세로는 글자 상자가 아니라 그 줄 전체 높이를 씀
+        // 대괄호 상자에 맞추면 칸이 납작해서, 안에 넣는 단어가 잘게 줄어들어 안 읽힘
+        int lineNo = info.characterInfo[from].lineNumber;
+        float top = info.lineInfo[lineNo].ascender;
+        float bottom = info.lineInfo[lineNo].descender;
+
+        return Rect.MinMaxRect(left, bottom, right, top);
+    }
+
+    // 빈칸을 그 자리에 딱 맞게 올려놓기
+    void PlaceOverArea(WordSlotUI slotUi, Rect area)
+    {
+        RectTransform rt = slotUi.GetComponent<RectTransform>();
+        if (rt == null)
         {
             return;
         }
 
-        WordCardUI placed = Instantiate(cardPrefab, slotUi.transform);
-        placed.SetPlaced(word);
+        // 대사 한가운데를 기준으로 잡아야 글자 좌표를 그대로 쓸 수 있음
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.localScale = Vector3.one;
+        rt.sizeDelta = new Vector2(area.width, area.height);
+        rt.anchoredPosition = new Vector2(area.center.x, area.center.y);
+    }
 
-        // 칸에 꽉 맞게 (칸 크기는 화면 담당이 정하니까 거기 따라감)
-        RectTransform rt = placed.GetComponent<RectTransform>();
-        if (rt != null)
+    // 빈칸들을 지금 글자 자리에 다시 맞춰줌
+    //
+    // 타이핑 중에는 이걸 매 글자마다 불러야 함
+    // 대사가 세로 가운데 정렬이라, 둘째 줄에 글자가 처음 찍히는 순간
+    // 문단 전체가 반 줄만큼 위로 올라감 - 처음 잰 자리에 그냥 두면 글자랑 어긋나 보임
+    void RepositionSlots()
+    {
+        if (complaintLineText == null)
         {
-            rt.anchorMin = Vector2.zero;
-            rt.anchorMax = Vector2.one;
-            rt.offsetMin = Vector2.zero;
-            rt.offsetMax = Vector2.zero;
+            return;
+        }
+
+        TMP_TextInfo info = complaintLineText.textInfo;
+        if (info == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < _slotUis.Count; i++)
+        {
+            if (_slotUis[i] == null)
+            {
+                continue;
+            }
+
+            int from = _slotFrom[i];
+            int to = _slotCloseAt[i];
+            if (from < 0 || to < from || to >= info.characterCount)
+            {
+                continue; // 글이 바뀌어서 범위가 안 맞음
+            }
+
+            PlaceOverArea(_slotUis[i], AreaOf(info, from, to));
+        }
+    }
+
+    // 타이핑이 지나간 빈칸만 보여주기
+    // 대사가 흐르다가 빈칸 자리에서 칸이 툭 나타나고, 그다음 글자가 이어짐
+    void RefreshSlotVisibility(int visibleChars)
+    {
+        for (int i = 0; i < _slotUis.Count; i++)
+        {
+            if (_slotUis[i] == null)
+            {
+                continue;
+            }
+
+            bool passed = (visibleChars > _slotCloseAt[i]);
+            _slotUis[i].gameObject.SetActive(passed);
         }
     }
 
@@ -322,6 +593,12 @@ public class TranslationView : MonoBehaviour
     // 카드가 상자에 떨어졌을 때 (상자나 대사 빈칸이 불러줌)
     public void OnCardDropped(int cardIndex, int slotIndex)
     {
+        // 손님이 아직 말하는 중이거나 처리 단계면 카드를 못 만짐
+        if (GameManager.instance.complaint.CanUseCards() == false)
+        {
+            return;
+        }
+
         GameManager.instance.complaint.translation.PlaceCard(cardIndex, slotIndex);
         Rebuild();
     }
@@ -329,6 +606,11 @@ public class TranslationView : MonoBehaviour
     // 상자 눌러서 비우기 (상자가 불러줌)
     public void OnSlotClicked(int slotIndex)
     {
+        if (GameManager.instance.complaint.CanUseCards() == false)
+        {
+            return;
+        }
+
         GameManager.instance.complaint.translation.ClearSlot(slotIndex);
         Rebuild();
     }

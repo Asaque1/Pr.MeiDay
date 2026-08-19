@@ -401,6 +401,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translation: {fileID: 200010}
+  arriveDelayMin: 0.7
+  arriveDelayMax: 1.6
+  speakDelayMin: 0.2
+  speakDelayMax: 0.6
+  entry: 0
   todayComplaints: []
   currentIndex: 0
   successCount: 0
@@ -2397,8 +2402,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 155, y: 0}
-  m_SizeDelta: {x: 140, y: 42}
+  m_AnchoredPosition: {x: 120, y: 0}
+  m_SizeDelta: {x: 112, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &186207264
 MonoBehaviour:
@@ -4216,8 +4221,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -155, y: 0}
-  m_SizeDelta: {x: 140, y: 42}
+  m_AnchoredPosition: {x: -120, y: 0}
+  m_SizeDelta: {x: 112, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &306709001
 MonoBehaviour:
@@ -4836,7 +4841,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 140, y: 42}
+  m_SizeDelta: {x: 112, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &357249562
 MonoBehaviour:
@@ -16081,7 +16086,6 @@ GameObject:
   - component: {fileID: 1346494018}
   - component: {fileID: 1346494017}
   - component: {fileID: 1346494016}
-  - component: {fileID: 1346494019}
   m_Layer: 0
   m_Name: ComplaintLine
   m_TagString: Untagged
@@ -16208,21 +16212,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 164}
   m_SizeDelta: {x: 470, y: 36}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1346494019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1346494015}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00af5c0e826183749ad3c908a94b2a21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ComplaintLineDropZone
-  view: {fileID: 1684664693}
-  lineText: {fileID: 1346494016}
-  extraTouch: 6
 --- !u!1 &1349952615
 GameObject:
   m_ObjectHideFlags: 0
@@ -19275,7 +19264,6 @@ RectTransform:
   - {fileID: 88623302}
   - {fileID: 296985499}
   - {fileID: 246270154}
-  - {fileID: 1998356080}
   m_Father: {fileID: 90467406}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -19306,6 +19294,11 @@ MonoBehaviour:
   resolvePart: {fileID: 1998356079}
   complainantImage: {fileID: 129133750}
   complainantParts: {fileID: 1997004469}
+  pdaButton: {fileID: 1029906456}
+  pdaPanel: {fileID: 2021343877}
+  declareButton: {fileID: 1236829396}
+  charDelay: 0.045
+  blankSpaces: 8
 --- !u!114 &1684664694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21586,12 +21579,12 @@ RectTransform:
   - {fileID: 306709000}
   - {fileID: 357249561}
   - {fileID: 186207263}
-  m_Father: {fileID: 1684664692}
+  m_Father: {fileID: 2021343878}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -175}
-  m_SizeDelta: {x: 470, y: 46}
+  m_AnchoredPosition: {x: 15, y: -100}
+  m_SizeDelta: {x: 360, y: 46}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2006832616
 GameObject:
@@ -21855,6 +21848,7 @@ RectTransform:
   m_Children:
   - {fileID: 712218009}
   - {fileID: 969742293}
+  - {fileID: 1998356080}
   m_Father: {fileID: 1272942544}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}

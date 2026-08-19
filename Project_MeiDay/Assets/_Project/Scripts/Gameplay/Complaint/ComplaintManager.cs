@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,21 @@ using UnityEngine;
 public class ComplaintManager : MonoBehaviour
 {
     public TranslationController translation; // 해석 담당 (인스펙터에서 연결)
+
+    [Header("민원인 오는 텀")]
+    // 앞 손님이 끝나고 다음 손님이 앉기까지. 너무 길면 지루해지니 짧게 잡는 게 좋음
+    [SerializeField] float arriveDelayMin = 0.7f;
+    [SerializeField] float arriveDelayMax = 1.6f;
+
+    [Header("앉고 말 걸기까지")]
+    // 앉자마자 말하면 어색해서 살짝 뜸을 들임 (위보다 훨씬 짧게)
+    [SerializeField] float speakDelayMin = 0.2f;
+    [SerializeField] float speakDelayMax = 0.6f;
+
+    // 지금 민원인이 어디까지 왔는지 (화면이 이걸 보고 카드를 잠갔다 풀었다 함)
+    public ComplaintEntry entry = ComplaintEntry.Waiting;
+
+    Coroutine _enterRoutine; // 손님 들이는 연출
 
     public List<ComplaintDefinition> todayComplaints = new List<ComplaintDefinition>(); // 오늘 민원들
     public int currentIndex = 0; // 지금 몇 번째 민원인지
@@ -91,6 +107,8 @@ public class ComplaintManager : MonoBehaviour
         // 민원 다 끝났으면 결산 화면으로
         if (currentIndex >= todayComplaints.Count)
         {
+            entry = ComplaintEntry.Waiting;
+            NotifyUpdated();
             GameManager.instance.OnDayWorkDone();
             return;
         }
@@ -98,7 +116,53 @@ public class ComplaintManager : MonoBehaviour
         stage = ComplaintStage.Translate;
         resolutionWrongCount = 0;
         translation.StartComplaint(todayComplaints[currentIndex]);
+
+        // 문제는 미리 만들어두고, 손님은 텀을 두고 들어옴
+        if (_enterRoutine != null)
+        {
+            StopCoroutine(_enterRoutine);
+        }
+        _enterRoutine = StartCoroutine(EnterComplaint());
+    }
+
+    // 손님이 창구로 오는 연출
+    // 비어있음 -> (텀) 앉음 -> (짧은 텀) 말 시작
+    // 말이 끝났다는 건 대사를 찍는 화면 쪽이 OnLineFinished 로 알려줌
+    IEnumerator EnterComplaint()
+    {
+        entry = ComplaintEntry.Waiting;
         NotifyUpdated();
+
+        yield return new WaitForSeconds(UnityEngine.Random.Range(arriveDelayMin, arriveDelayMax));
+
+        entry = ComplaintEntry.Arrived;
+        NotifyUpdated();
+
+        yield return new WaitForSeconds(UnityEngine.Random.Range(speakDelayMin, speakDelayMax));
+
+        entry = ComplaintEntry.Speaking;
+        NotifyUpdated();
+
+        _enterRoutine = null;
+    }
+
+    // 대사 다 나왔을 때 (대사를 찍는 화면이 불러줌)
+    // 여기서부터 카드를 꽂을 수 있음
+    public void OnLineFinished()
+    {
+        if (entry != ComplaintEntry.Speaking)
+        {
+            return; // 이미 지나갔거나 아직 말할 차례가 아님
+        }
+
+        entry = ComplaintEntry.Ready;
+        NotifyUpdated();
+    }
+
+    // 지금 카드를 만질 수 있는 상태인지
+    public bool CanUseCards()
+    {
+        return entry == ComplaintEntry.Ready && stage == ComplaintStage.Translate;
     }
 
     // 화면 흔들기 같은 연출한테 알려주기
@@ -133,6 +197,19 @@ public class ComplaintManager : MonoBehaviour
             return;
         }
 
+        // 아직 손님이 말하는 중이면 무시
+        if (entry != ComplaintEntry.Ready)
+        {
+            return;
+        }
+
+        // 빈칸을 다 안 채웠으면 아예 제출이 안 됨
+        // (확인 버튼도 다 채워야 나오지만, 키보드나 다른 데서 불릴 수도 있어서 여기서도 막음)
+        if (translation.IsAllFilled() == false)
+        {
+            return;
+        }
+
         // 다 맞으면 처리 단계로
         if (translation.CheckAnswer() == true)
         {
@@ -141,6 +218,14 @@ public class ComplaintManager : MonoBehaviour
             return;
         }
 
+        AddTranslationMistake();
+    }
+
+    // 해석을 틀렸을 때 벌어지는 일
+    // ConfirmTranslation 에서 떼어낸 것 - 밸런스 시뮬은 화면 없이 여기만 부름
+    // (실제 플레이는 빈칸을 다 채워야 제출이 되지만, 시뮬은 결과 숫자만 필요해서 바로 부름)
+    public void AddTranslationMistake()
+    {
         // 틀리면 의심도 오르고 횟수 셈
         translation.AddWrong();
         mistakeCount++;
