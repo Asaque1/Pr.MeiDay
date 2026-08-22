@@ -36,6 +36,16 @@ public class TranslationView : MonoBehaviour
     // 정답 길이에 맞추면 길이가 힌트가 되니까 일부러 고정
     [SerializeField] int blankSpaces = 8;
 
+    // 위아래 줄 빈칸 사이에 남기는 틈
+    // 줄 높이를 꽉 채우면 윗줄 빈칸 바닥이랑 아랫줄 빈칸 천장이 딱 맞닿아서 겹쳐 보임
+    [SerializeField] float blankLineGap = 7f;
+
+    [Header("카드 배치 (손패처럼 겹쳐서)")]
+    [SerializeField] float cardTilt = -6f;          // 카드 기울기 (도)
+    [SerializeField] float cardStepMaxRate = 0.86f; // 카드 간격 최대 (카드 폭 대비, 1이면 안 겹침)
+    [SerializeField] float cardStepMinRate = 0.62f; // 최소 간격 - 이보다 좁히면 글자가 가려짐
+    [SerializeField] float cardDropY = -2f;         // 오른쪽으로 갈수록 조금씩 내려가는 정도
+
     // 빈칸 자리를 글 속에서 찾을 때 쓰는 표시
     // 화면엔 안 보임 (투명하게 넣어둠). 보이는 건 이 자리에 얹는 빈칸 오브젝트
     // 종류별 색은 빈칸 오브젝트(WordSlotUI)가 들고 있어서 여기선 색을 안 씀
@@ -485,6 +495,14 @@ public class TranslationView : MonoBehaviour
         float top = info.lineInfo[lineNo].ascender;
         float bottom = info.lineInfo[lineNo].descender;
 
+        // 줄 높이를 꽉 채우면 위아래 줄 빈칸이 딱 맞닿아서 겹쳐 보임 - 위아래를 조금씩 깎음
+        float half = blankLineGap * 0.5f;
+        if (top - bottom > blankLineGap + 4f)
+        {
+            top -= half;
+            bottom += half;
+        }
+
         return Rect.MinMaxRect(left, bottom, right, top);
     }
 
@@ -563,6 +581,14 @@ public class TranslationView : MonoBehaviour
     {
         for (int i = 0; i < _cardUis.Count; i++)
         {
+            if (_cardUis[i] == null)
+            {
+                continue;
+            }
+
+            // Destroy 는 이 프레임 끝에야 실제로 지워짐
+            // 카드를 꽂은 그 프레임에는 헌 카드가 남아서 손패가 두 배로 보임
+            _cardUis[i].gameObject.SetActive(false);
             Destroy(_cardUis[i].gameObject);
         }
         _cardUis.Clear();
@@ -587,6 +613,81 @@ public class TranslationView : MonoBehaviour
             WordCardUI cardUi = Instantiate(cardPrefab, cardParent);
             _cardUis.Add(cardUi);
             cardUi.Set(i, tc.cards[i]);
+        }
+
+        LayoutCards();
+    }
+
+    // 카드를 손패처럼 한 줄로 비스듬히 겹쳐 놓기
+    // 격자로 반듯하게 깔면 서류 뭉치 느낌이 안 남
+    void LayoutCards()
+    {
+        RectTransform parentRt = cardParent as RectTransform;
+        if (parentRt == null || _cardUis.Count == 0)
+        {
+            return;
+        }
+
+        RectTransform firstRt = _cardUis[0].GetComponent<RectTransform>();
+        if (firstRt == null)
+        {
+            return;
+        }
+
+        float cardWidth = firstRt.sizeDelta.x;
+        int count = _cardUis.Count;
+
+        float available = parentRt.rect.width;
+
+        // 자리에 맞춰 간격을 좁히되, 너무 좁히면 글자가 가려져서 하한을 둠
+        float step = cardWidth * cardStepMaxRate;
+        if (count > 1)
+        {
+            float fit = (available - cardWidth) / (count - 1);
+            if (fit < step)
+            {
+                step = fit;
+            }
+        }
+
+        // 하한까지 좁혀도 안 들어가면 카드를 통째로 줄임 (화면 밖으로 나가는 것보다 나음)
+        float minStep = cardWidth * cardStepMinRate;
+        float scale = 1f;
+        if (step < minStep)
+        {
+            step = minStep;
+            float total = minStep * (count - 1) + cardWidth;
+            if (total > available && total > 0f)
+            {
+                scale = available / total;
+            }
+        }
+
+        float startX = -step * scale * (count - 1) * 0.5f;
+
+        for (int i = 0; i < count; i++)
+        {
+            RectTransform rt = _cardUis[i].GetComponent<RectTransform>();
+            if (rt == null)
+            {
+                continue;
+            }
+
+            rt.anchorMin = new Vector2(0.5f, 0.5f);
+            rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.pivot = new Vector2(0.5f, 0.5f);
+            rt.localScale = new Vector3(scale, scale, 1f);
+            rt.anchoredPosition = new Vector2(startX + step * scale * i, cardDropY * scale * i);
+            rt.localRotation = Quaternion.Euler(0f, 0f, cardTilt);
+
+            // 뒤 카드가 이 카드의 오른쪽을 덮으니 글자는 안 덮이는 폭 안에만
+            // 맨 끝 카드는 덮는 게 없어서 카드 폭을 다 씀
+            float visible = step;
+            if (i == count - 1)
+            {
+                visible = cardWidth;
+            }
+            _cardUis[i].FitTextWidth(visible);
         }
     }
 

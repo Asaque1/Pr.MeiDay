@@ -23,10 +23,26 @@ public class HudView : MonoBehaviour
         suspicionText.text = "의심도 " + Mathf.RoundToInt(gm.suspicion.current)
             + " / " + Mathf.RoundToInt(gm.config.maxSuspicion);
 
-        // 민원인 칸은 오늘 몇 명 보냈는지 (아직 안 꽂아뒀으면 그냥 건너뜀)
+        // 지금 몇 번째 민원인지 (1/3 -> 2/3 식). 아직 안 꽂아뒀으면 그냥 건너뜀
         if (complaintText != null)
         {
-            complaintText.text = gm.complaint.currentIndex + " / " + gm.complaint.todayComplaints.Count;
+            int total = gm.complaint.todayComplaints.Count;
+
+            // 다 끝났으면 마지막 번호에 멈춤 (4/3 처럼 넘어가지 않게)
+            int now = gm.complaint.currentIndex + 1;
+            if (now > total)
+            {
+                now = total;
+            }
+
+            if (total <= 0)
+            {
+                complaintText.text = "";
+            }
+            else
+            {
+                complaintText.text = now + " / " + total;
+            }
         }
     }
 }

@@ -9,11 +9,15 @@ public class WordSlotUI : MonoBehaviour, IDropHandler, IPointerClickHandler
     [SerializeField] TMP_Text wordText; // 놓인 단어 (비어있으면 사투리 보여줌)
     [SerializeField] Image background;  // 종류별 색 넣을 배경
 
-    // 종류별 상자 색 (인스펙터에서 바꿀 수 있음)
-    [SerializeField] Color documentColor = new Color(1f, 0.9f, 0.4f);   // 문서 (노랑)
-    [SerializeField] Color targetColor = new Color(0.5f, 0.9f, 0.5f);   // 대상 (초록)
-    [SerializeField] Color quantityColor = new Color(0.5f, 0.7f, 1f);   // 수량 (파랑)
-    [SerializeField] Color departmentColor = new Color(1f, 0.5f, 0.5f); // 부서 (빨강)
+    // 종류별 빈칸 그림 (Art/WordCards 의 word_box_*)
+    // 테두리 색이 그림에 박혀 있어서 색칠이 아니라 그림을 갈아끼움
+    // 문서만 노랑, 나머지(대상/수량/부서)는 전부 초록
+    [SerializeField] Sprite documentSprite;
+    [SerializeField] Sprite otherSprite;
+
+    // 그림을 안 꽂아뒀을 때 쓰는 색 (예전 방식)
+    [SerializeField] Color documentColor = new Color(1f, 0.9f, 0.4f); // 문서 (노랑)
+    [SerializeField] Color otherColor = new Color(0.5f, 0.9f, 0.5f);  // 나머지 (초록)
 
     // 칸 테두리랑 글자 사이 여백 (칸이 작아서 조금만 줘도 글자가 확 줄어듦)
     [SerializeField] float textPadding = 1f;
@@ -61,7 +65,7 @@ public class WordSlotUI : MonoBehaviour, IDropHandler, IPointerClickHandler
             wordText.text = "";
         }
 
-        background.color = ColorOf(slot.category);
+        ApplyLook(slot.category);
 
         FitTextToBox();
     }
@@ -140,22 +144,26 @@ public class WordSlotUI : MonoBehaviour, IDropHandler, IPointerClickHandler
         _view.OnSlotClicked(_slotIndex);
     }
 
-    // 종류별 상자 색 (기획서: 문서 노랑 / 대상 초록 / 수량 파랑 / 부서 빨강)
-    Color ColorOf(WordCategory category)
+    // 종류에 맞는 그림/색 입히기 (문서만 노랑, 나머지는 전부 초록)
+    void ApplyLook(WordCategory category)
     {
-        if (category == WordCategory.Document)
+        if (background == null)
         {
-            return documentColor;
-        }
-        if (category == WordCategory.Target)
-        {
-            return targetColor;
-        }
-        if (category == WordCategory.Quantity)
-        {
-            return quantityColor;
+            return;
         }
 
-        return departmentColor;
+        bool isDoc = (category == WordCategory.Document);
+        Sprite sp = isDoc ? documentSprite : otherSprite;
+
+        if (sp != null)
+        {
+            // 테두리 색이 그림에 들어있으니 색은 흰색으로 두고 그림만 바꿈
+            background.sprite = sp;
+            background.color = Color.white;
+            return;
+        }
+
+        // 그림을 안 꽂아뒀으면 예전처럼 색만
+        background.color = isDoc ? documentColor : otherColor;
     }
 }

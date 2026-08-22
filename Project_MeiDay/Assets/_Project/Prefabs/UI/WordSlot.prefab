@@ -61,15 +61,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.75, g: 0.75, b: 0.75, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 2788109880331180216, guid: c17a948ae49f6da4fab84c82f8e59385, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -112,10 +112,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WordSlotUI
   wordText: {fileID: 7129735080678367135}
   background: {fileID: 7190002234408368792}
+  documentSprite: {fileID: 2788109880331180216, guid: c17a948ae49f6da4fab84c82f8e59385, type: 3}
+  otherSprite: {fileID: 7925970092235061211, guid: 8efb50f579570f741a2e5bbcf9608446, type: 3}
   documentColor: {r: 1, g: 0.9, b: 0.4, a: 1}
-  targetColor: {r: 0.5, g: 0.9, b: 0.5, a: 1}
-  quantityColor: {r: 0.5, g: 0.7, b: 1, a: 1}
-  departmentColor: {r: 1, g: 0.5, b: 0.5, a: 1}
+  otherColor: {r: 0.5, g: 0.9, b: 0.5, a: 1}
+  textPadding: 1
+  minFontSize: 6
+  maxFontSizeOverride: 0
 --- !u!1 &7087213723992653933
 GameObject:
   m_ObjectHideFlags: 0
@@ -191,7 +194,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 0.08, g: 0.1, b: 0.14, a: 1}
+  m_fontColor: {r: 0.11, g: 0.13, b: 0.19, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
