@@ -14,17 +14,23 @@ public class BookSortGame
     public bool currentGolden = false; // 지금 책이 황금 책인지
     public float goldenPerGame = 1f; // 한 판에 나올 황금 책 기대 개수 (기획: 한 판에 한 번 정도)
 
+    // 제한 시간 (다른 알바랑 똑같이 시간 안에 최대한 많이 꽂는 규칙)
+    public float timeLeft = 0f;
+    public float duration = 20f;
+
     List<int> _queue = new List<int>();          // 아직 안 나온 책들
     List<bool> _queueGolden = new List<bool>();  // 그 책이 황금인지
 
     // 게임 준비 (책 큐 만들어서 첫 책 꺼냄)
-    public void StartGame(int books, int genres)
+    public void StartGame(int books, int genres, float seconds)
     {
         totalBooks = books;
         genreCount = genres;
         sortedCount = 0;
         goldenCount = 0;
         missCount = 0;
+        duration = seconds;
+        timeLeft = seconds;
 
         // 책마다 한 번씩 굴리니까 책 수로 나눠야 한 판에 한 개쯤 나옴
         float goldenChance = 0f;
@@ -94,10 +100,25 @@ public class BookSortGame
         NextBook();
     }
 
-    // 책 다 나왔는지
+    // 시간 흘리기 (화면이 매 프레임 불러줌)
+    public void Tick(float dt)
+    {
+        if (timeLeft <= 0f)
+        {
+            return;
+        }
+
+        timeLeft -= dt;
+        if (timeLeft < 0f)
+        {
+            timeLeft = 0f;
+        }
+    }
+
+    // 책을 다 꽂았거나 시간이 다 됐는지
     public bool IsDone()
     {
-        return currentGenre < 0;
+        return currentGenre < 0 || timeLeft <= 0f;
     }
 
     // 수행률 (맞게 꽂은 비율. 황금 책은 순수 보너스라 넘칠 수 있음)

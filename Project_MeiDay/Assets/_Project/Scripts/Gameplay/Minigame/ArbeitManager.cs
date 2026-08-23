@@ -68,7 +68,7 @@ public class ArbeitManager : MonoBehaviour
         if (arbeit.kind == MinigameKind.BookSort)
         {
             bookSort = new BookSortGame();
-            bookSort.StartGame(arbeit.bookCount, arbeit.genreCount);
+            bookSort.StartGame(arbeit.bookCount, arbeit.genreCount, arbeit.playSeconds);
         }
 
         // 조명 연출 알바면 게임 규칙 준비

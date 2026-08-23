@@ -12,12 +12,17 @@ public class ArbeitView : MonoBehaviour
     [SerializeField] ArbeitItemUI itemPrefab; // 알바 버튼 프리팹
     [SerializeField] TMP_Text leftText;       // 남은 횟수
     [SerializeField] TMP_Text emptyText;      // 할 수 있는 알바가 없을 때 문구
-    [SerializeField] TMP_Text resultText;     // 결과 문구
+    [SerializeField] TMP_Text resultText;     // 결과 문구 (한 줄로 쓸 때. 아래 둘을 쓰면 안 꽂아도 됨)
+    [SerializeField] TMP_Text rateText;       // 수행률
+    [SerializeField] TMP_Text payText;        // 받은 크레딧
 
     // 미니게임 화면들 (안 넣어두면 그 종목은 못 함)
     [SerializeField] BookSortView bookSortView;
     [SerializeField] SpotlightView spotlightView;
     [SerializeField] PromoView promoView;
+
+    // 미니게임 도는 동안 가려둘 것들 (밤 화면 버튼이 게임 위에 떠 있으면 가림)
+    [SerializeField] GameObject[] hideWhilePlaying;
 
     List<ArbeitItemUI> _itemUis = new List<ArbeitItemUI>();
 
@@ -38,6 +43,27 @@ public class ArbeitView : MonoBehaviour
         {
             GameManager.instance.arbeit.AbortArbeit();
         }
+
+        ShowNightButtons(true); // 가려둔 채로 탭을 나가면 다시 못 켜짐
+    }
+
+    // 밤 화면 버튼(취침, 상점 탭) 보이기/숨기기
+    // 미니게임 판이 화면을 거의 다 덮는데 이 버튼들이 그 위에 그려져서 숫자를 가림
+    void ShowNightButtons(bool show)
+    {
+        if (hideWhilePlaying == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < hideWhilePlaying.Length; i++)
+        {
+            if (hideWhilePlaying[i] == null)
+            {
+                continue;
+            }
+            hideWhilePlaying[i].SetActive(show);
+        }
     }
 
     // 목록 화면으로 돌아오기 (미니게임이랑 결과는 닫음)
@@ -50,6 +76,7 @@ public class ArbeitView : MonoBehaviour
         }
 
         HideAllGames();
+        ShowNightButtons(true);
 
         if (resultPart != null)
         {
@@ -120,6 +147,8 @@ public class ArbeitView : MonoBehaviour
             return; // 횟수가 없거나 이미 하는 중
         }
 
+        ShowNightButtons(false); // 게임 판이 화면을 덮으니 밤 버튼은 잠깐 치움
+
         if (listPart != null)
         {
             listPart.SetActive(false);
@@ -173,6 +202,14 @@ public class ArbeitView : MonoBehaviour
         {
             resultText.text = "수행률 " + Mathf.RoundToInt(rate * 100) + "%\n"
                 + "받은 크레딧 " + earned;
+        }
+        if (rateText != null)
+        {
+            rateText.text = Mathf.RoundToInt(rate * 100) + "%";
+        }
+        if (payText != null)
+        {
+            payText.text = earned + " cr";
         }
     }
 
