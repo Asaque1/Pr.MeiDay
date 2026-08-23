@@ -21,6 +21,11 @@ public class WordSlotUI : MonoBehaviour, IDropHandler, IPointerClickHandler
 
     // 칸 테두리랑 글자 사이 여백 (칸이 작아서 조금만 줘도 글자가 확 줄어듦)
     [SerializeField] float textPadding = 1f;
+
+    // 그림(word_box_*)에 테두리가 그려져 있어서, 그 두께만큼은 비워둬야 글자가 안 물림
+    // 칸 크기는 대사가 정해서 매번 달라지니까 픽셀이 아니라 비율로 둠
+    [SerializeField] float borderRateX = 0.055f;
+    [SerializeField] float borderRateY = 0.113f;
     // 이보다 작아지면 못 읽으니 여기서 멈춤 (그래도 안 들어가면 칸을 넓혀야 함)
     [SerializeField] float minFontSize = 6f;
     // 칸 안 글자가 대사보다 커지면 어색해서 대사 크기까지만 (0 이면 프리팹 값 그대로)
@@ -81,13 +86,18 @@ public class WordSlotUI : MonoBehaviour, IDropHandler, IPointerClickHandler
             return;
         }
 
-        // 글자칸을 빈칸에 꽉 맞춤 (빈칸 크기는 대사가 정하니까 거기 따라감)
+        // 글자칸을 빈칸 안쪽 면에 맞춤 (빈칸 크기는 대사가 정하니까 거기 따라감)
+        // 그림 테두리 두께를 빼둬야 글자가 테두리 위로 올라타지 않음
+        Rect box = ((RectTransform)transform).rect;
+        float padX = box.width * borderRateX + textPadding;
+        float padY = box.height * borderRateY + textPadding;
+
         RectTransform rt = wordText.rectTransform;
         rt.anchorMin = Vector2.zero;
         rt.anchorMax = Vector2.one;
         rt.pivot = new Vector2(0.5f, 0.5f);
-        rt.offsetMin = new Vector2(textPadding, textPadding);
-        rt.offsetMax = new Vector2(-textPadding, -textPadding);
+        rt.offsetMin = new Vector2(padX, padY);
+        rt.offsetMax = new Vector2(-padX, -padY);
 
         // 한 줄로만 (칸 안에서 줄이 바뀌면 안 됨)
         wordText.textWrappingMode = TextWrappingModes.NoWrap;

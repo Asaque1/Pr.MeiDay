@@ -38,7 +38,10 @@ public class TranslationView : MonoBehaviour
 
     // 위아래 줄 빈칸 사이에 남기는 틈
     // 줄 높이를 꽉 채우면 윗줄 빈칸 바닥이랑 아랫줄 빈칸 천장이 딱 맞닿아서 겹쳐 보임
-    [SerializeField] float blankLineGap = 7f;
+    [SerializeField] float blankLineGap = 11f;
+
+    // 빈칸 좌우에 남기는 틈 - 안 두면 빈칸 테두리가 바로 옆 글자를 물어버림
+    [SerializeField] float blankSideGap = 5f;
 
     [Header("카드 배치 (손패처럼 겹쳐서)")]
     [SerializeField] float cardTilt = -6f;          // 카드 기울기 (도)
@@ -503,6 +506,14 @@ public class TranslationView : MonoBehaviour
             bottom += half;
         }
 
+        // 좌우도 깎아둠 - 안 그러면 빈칸 테두리가 바로 옆 글자에 딱 붙어서 글자를 물어버림
+        float side = blankSideGap;
+        if (right - left > blankSideGap * 2f + 10f)
+        {
+            left += side;
+            right -= side;
+        }
+
         return Rect.MinMaxRect(left, bottom, right, top);
     }
 
@@ -665,6 +676,10 @@ public class TranslationView : MonoBehaviour
 
         float startX = -step * scale * (count - 1) * 0.5f;
 
+        // 처짐도 가운데를 기준으로 나눔
+        // 첫 장을 0 으로 두면 카드가 많을수록 오른쪽 끝이 자꾸 내려가서 화면 밖으로 나감
+        float middle = (count - 1) * 0.5f;
+
         for (int i = 0; i < count; i++)
         {
             RectTransform rt = _cardUis[i].GetComponent<RectTransform>();
@@ -677,7 +692,7 @@ public class TranslationView : MonoBehaviour
             rt.anchorMax = new Vector2(0.5f, 0.5f);
             rt.pivot = new Vector2(0.5f, 0.5f);
             rt.localScale = new Vector3(scale, scale, 1f);
-            rt.anchoredPosition = new Vector2(startX + step * scale * i, cardDropY * scale * i);
+            rt.anchoredPosition = new Vector2(startX + step * scale * i, cardDropY * scale * (i - middle));
             rt.localRotation = Quaternion.Euler(0f, 0f, cardTilt);
 
             // 뒤 카드가 이 카드의 오른쪽을 덮으니 글자는 안 덮이는 폭 안에만

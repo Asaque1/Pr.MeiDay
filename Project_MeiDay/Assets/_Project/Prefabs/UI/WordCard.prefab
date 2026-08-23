@@ -32,10 +32,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 83322010500182221}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -12, y: -6}
+  m_AnchorMin: {x: 0.062, y: 0.043}
+  m_AnchorMax: {x: 0.938, y: 0.957}
+  m_AnchoredPosition: {x: 0, y: 0.0000038146973}
+  m_SizeDelta: {x: -2, y: -2.0000038}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1369854773002847229
 CanvasRenderer:
@@ -268,4 +268,4 @@ MonoBehaviour:
   otherSprite: {fileID: -8266722570745091654, guid: d36a98f7b13620d4d8ffccc2be3944ad, type: 3}
   documentColor: {r: 1, g: 0.9, b: 0.4, a: 1}
   otherColor: {r: 0.5, g: 0.9, b: 0.5, a: 1}
-  textPadding: 5
+  textPadding: 7
