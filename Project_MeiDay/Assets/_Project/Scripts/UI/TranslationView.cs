@@ -28,6 +28,11 @@ public class TranslationView : MonoBehaviour
     [SerializeField] GameObject pdaPanel;      // PDA 창 (다음 민원으로 넘어가면 닫아줌)
     [SerializeField] GameObject declareButton; // 신고 여는 버튼
 
+    [Header("서류 발급 화면 (PDA 안에서 열림)")]
+    [SerializeField] GameObject printPart;   // 서류 발급 화면 묶음
+    [SerializeField] GameObject pdaTextPart; // 민원 내용 스크롤 (발급 화면 열면 가림)
+    [SerializeField] GameObject declarePanel; // 수배자 신고 창 (발급 화면의 신고 버튼이 엶)
+
     [Header("대사 나오는 속도")]
     [SerializeField] float charDelay = 0.045f; // 글자 하나 나오는 간격
 
@@ -69,6 +74,7 @@ public class TranslationView : MonoBehaviour
 
     Coroutine _typeRoutine; // 대사 한 글자씩 찍는 연출
     int _typedFor = -1;     // 몇 번째 민원 대사를 이미 찍었는지
+    bool _printOpen = false; // 서류 발급 화면이 열려있는지 (열려있으면 아래 버튼줄을 안 되돌림)
                             // 카드를 꽂을 때마다 화면을 다시 그리는데, 이게 없으면 그때마다 대사가 처음부터 다시 나옴
 
     void OnEnable()
@@ -186,10 +192,11 @@ public class TranslationView : MonoBehaviour
         bool resolving = (cm.stage == ComplaintStage.Resolve);
         SetPart(pdaButton, resolving);
         SetPart(declareButton, resolving);
-        SetPart(resolvePart, resolving);
+        SetPart(resolvePart, resolving == true && _printOpen == false);
         if (resolving == false)
         {
             SetPart(pdaPanel, false); // 열어둔 채로 다음 민원으로 넘어가는 것 방지
+            ClosePrintPart();
         }
 
         RebuildSlots(cm.translation);
@@ -200,6 +207,7 @@ public class TranslationView : MonoBehaviour
     // 처리 쪽(PDA / 신고 / 처리 버튼)을 전부 닫아둠
     void LockResolveUi()
     {
+        ClosePrintPart();
         SetPart(resolvePart, false);
         SetPart(pdaButton, false);
         SetPart(pdaPanel, false);
@@ -751,9 +759,42 @@ public class TranslationView : MonoBehaviour
         GameManager.instance.complaint.SelectResolution(ComplaintResolution.CallSecurity);
     }
 
-    // 처리: 문서 출력
+    // 처리: 서류 발급 - 바로 끝내지 않고 PDA 안에 발급 화면을 엶
     public void OnClickPrint()
     {
+        ShowPrintPart(true);
+    }
+
+    // 발급 화면의 '문서 접수' - 여기서 민원이 끝남
+    public void OnClickPrintAccept()
+    {
+        ShowPrintPart(false);
         GameManager.instance.complaint.SelectResolution(ComplaintResolution.DocumentPrint);
+    }
+
+    // 발급 화면의 '신고' - 수배자 신고 창을 엶 (발급 화면은 뒤에 그대로 둠)
+    public void OnClickPrintDeclare()
+    {
+        if (declarePanel != null)
+        {
+            declarePanel.SetActive(true);
+        }
+    }
+
+    // 발급 화면 열고 닫기 (열면 민원 내용이랑 아래 버튼줄은 가림)
+    void ShowPrintPart(bool show)
+    {
+        _printOpen = show;
+        SetPart(printPart, show);
+        SetPart(pdaTextPart, show == false);
+        SetPart(resolvePart, show == false);
+    }
+
+    // 민원이 끝나거나 넘어갈 때 - 발급 화면만 닫고 나머지는 Refresh 가 알아서 함
+    void ClosePrintPart()
+    {
+        _printOpen = false;
+        SetPart(printPart, false);
+        SetPart(pdaTextPart, true);
     }
 }
