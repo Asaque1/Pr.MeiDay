@@ -11,14 +11,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cb6d72b7c7b3014ca1ab66772d3686a, type: 3}
   m_Name: Item_Bookmark
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: item_bookmark
-  itemName: 책갈피
+  itemName: "\uCC45\uAC08\uD53C"
   shopType: 0
   kind: 0
   effect: 1
-  description: 상자에 깔리는 오답 카드가 한 장씩 줄어든다.
-  icon: {fileID: 0}
+  description: "\uC0C1\uC790\uC5D0 \uAE54\uB9AC\uB294 \uC624\uB2F5 \uCE74\uB4DC\uAC00
+    \uD55C \uC7A5\uC529 \uC904\uC5B4\uB4E0\uB2E4."
+  icon: {fileID: -875650538392210537, guid: 6f6138d7dc553114fa4af252313fef0b, type: 3}
   levelIcons: []
   levelDescriptions: []
   price: 360

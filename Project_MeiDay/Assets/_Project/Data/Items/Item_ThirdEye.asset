@@ -11,14 +11,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cb6d72b7c7b3014ca1ab66772d3686a, type: 3}
   m_Name: Item_ThirdEye
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: item_third_eye
-  itemName: 제3의 눈 스티커
+  itemName: "\uC81C3\uC758 \uB208 \uC2A4\uD2F0\uCEE4"
   shopType: 1
   kind: 0
   effect: 2
-  description: 이마에 붙이면 의심도가 오르는 양이 줄어든다.
-  icon: {fileID: 0}
+  description: "\uC774\uB9C8\uC5D0 \uBD99\uC774\uBA74 \uC758\uC2EC\uB3C4\uAC00 \uC624\uB974\uB294
+    \uC591\uC774 \uC904\uC5B4\uB4E0\uB2E4."
+  icon: {fileID: -9005156763815613920, guid: 414e50f85573d1740b6dcb37aa0db2ec, type: 3}
   levelIcons: []
   levelDescriptions: []
   price: 600

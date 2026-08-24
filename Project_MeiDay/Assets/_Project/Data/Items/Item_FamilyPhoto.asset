@@ -11,14 +11,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cb6d72b7c7b3014ca1ab66772d3686a, type: 3}
   m_Name: Item_FamilyPhoto
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: item_family_photo
-  itemName: 가족 사진 소품
+  itemName: "\uAC00\uC871 \uC0AC\uC9C4 \uC18C\uD488"
   shopType: 1
   kind: 1
   effect: 5
-  description: 책상에 올려두면 사람들이 조금 덜 의심한다.
-  icon: {fileID: 0}
+  description: "\uCC45\uC0C1\uC5D0 \uC62C\uB824\uB450\uBA74 \uC0AC\uB78C\uB4E4\uC774
+    \uC870\uAE08 \uB35C \uC758\uC2EC\uD55C\uB2E4."
+  icon: {fileID: -1162488061241110008, guid: 595bd82e85a97c2458d2e177ff46382d, type: 3}
   levelIcons: []
   levelDescriptions: []
   price: 420

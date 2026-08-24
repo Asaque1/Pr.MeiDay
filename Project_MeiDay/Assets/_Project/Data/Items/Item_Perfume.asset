@@ -11,14 +11,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cb6d72b7c7b3014ca1ab66772d3686a, type: 3}
   m_Name: Item_Perfume
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: item_perfume
-  itemName: 안드로메다향 향수
+  itemName: "\uC548\uB4DC\uB85C\uBA54\uB2E4\uD5A5 \uD5A5\uC218"
   shopType: 1
   kind: 1
   effect: 5
-  description: 뿌리면 그 자리에서 의심이 가라앉는다.
-  icon: {fileID: 0}
+  description: "\uBFCC\uB9AC\uBA74 \uADF8 \uC790\uB9AC\uC5D0\uC11C \uC758\uC2EC\uC774
+    \uAC00\uB77C\uC549\uB294\uB2E4."
+  icon: {fileID: 3270823110461714825, guid: d454034c6064bca4c9f9fc417b3b9953, type: 3}
   levelIcons: []
   levelDescriptions: []
   price: 420

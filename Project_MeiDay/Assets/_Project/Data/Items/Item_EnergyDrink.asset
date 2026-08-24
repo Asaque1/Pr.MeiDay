@@ -11,14 +11,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cb6d72b7c7b3014ca1ab66772d3686a, type: 3}
   m_Name: Item_EnergyDrink
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: item_energy_drink
-  itemName: 에너지 드링크
+  itemName: "\uC5D0\uB108\uC9C0 \uB4DC\uB9C1\uD06C"
   shopType: 2
   kind: 0
   effect: 6
-  description: 밤에 알바를 한 번 더 할 수 있다.
-  icon: {fileID: 0}
+  description: "\uBC24\uC5D0 \uC54C\uBC14\uB97C \uD55C \uBC88 \uB354 \uD560 \uC218
+    \uC788\uB2E4."
+  icon: {fileID: -5322791013597953924, guid: 27827d28ddcc0974ca005d3afd31233a, type: 3}
   levelIcons: []
   levelDescriptions: []
   price: 600
