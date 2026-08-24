@@ -33,6 +33,9 @@ public class TranslationView : MonoBehaviour
     [SerializeField] GameObject pdaTextPart; // 민원 내용 스크롤 (발급 화면 열면 가림)
     [SerializeField] GameObject declarePanel; // 수배자 신고 창 (발급 화면의 신고 버튼이 엶)
 
+    // PDA 를 열면 대사판이 가려져서, 무슨 민원이었는지 여기 다시 적어줌
+    [SerializeField] TMP_Text pdaComplaintText;
+
     [Header("대사 나오는 속도")]
     [SerializeField] float charDelay = 0.045f; // 글자 하나 나오는 간격
 
@@ -146,6 +149,7 @@ public class TranslationView : MonoBehaviour
         // 여기부터는 말하는 중이거나 말이 끝난 상태
         SetObject(complaintLineText, true);
         complaintLineText.text = BuildComplaintLine(c, cm.translation);
+        RefreshPdaText(c, cm.translation);
 
         if (cm.stage == ComplaintStage.Translate)
         {
@@ -349,6 +353,39 @@ public class TranslationView : MonoBehaviour
         }
 
         return line;
+    }
+
+    // PDA 안에 적어줄 민원 요약
+    // 처리 단계엔 PDA 가 대사판을 덮어버려서, 여기서 다시 못 읽으면 뭘 골라야 할지 알 수가 없음
+    void RefreshPdaText(ComplaintDefinition c, TranslationController tc)
+    {
+        if (pdaComplaintText == null)
+        {
+            return;
+        }
+
+        string who = "민원인 미상";
+        if (c.complainant != null && string.IsNullOrEmpty(c.complainant.displayName) == false)
+        {
+            who = c.complainant.displayName;
+        }
+
+        // 꽂아둔 단어를 문장에 그대로 끼워넣음 (아직 빈 칸은 밑줄로)
+        string line = c.complaintLine;
+        for (int i = 0; i < tc.slots.Count; i++)
+        {
+            string word = "____";
+            if (tc.slots[i].placedWord != null)
+            {
+                word = tc.slots[i].placedWord.meaning;
+            }
+            line = line.Replace("[단어" + (i + 1) + "]", "<b><color=#F2941F>" + word + "</color></b>");
+        }
+
+        // PDA 화면이 진남색이라 글자는 밝은 쪽
+        pdaComplaintText.text = "<size=90%><color=#7FA3C6>민원인</color></size>  <b>" + who + "</b>\n"
+            + "<color=#31578C>────────────────────</color>\n"
+            + line;
     }
 
     // 빈칸 하나가 차지할 자리 (안 보이는 글자)
