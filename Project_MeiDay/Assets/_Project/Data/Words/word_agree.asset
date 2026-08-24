@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5544fca1a217ce4f9716fa7a7ec0901, type: 3}
+  m_Name: word_agree
+  m_EditorClassIdentifier: 
+  id: word_agree
+  category: 1
+  meaning: 합의
+  dialectText: 상호 타협, 서로 물러나기, 서로 인정하기
+  hint: 서로의 의견을 절충하는 행위

@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: char_fphya
   displayName: fphyatncqdfta
-  nickname: "\uD344#! \uACF5\uC791"
+  nickname: 퍄#! 공작
   role: 4
-  gender: "\uC5EC"
-  job: "\uC815\uCE58\uC778"
-  species: "\uD760\uD314\uB77C"
+  gender: 여
+  job: 정치인
+  species: 흠팔라
   bio: 
   portrait: {fileID: -1390241267255581330, guid: 3185eff40c40e5344ae993bc08ad7a79, type: 3}

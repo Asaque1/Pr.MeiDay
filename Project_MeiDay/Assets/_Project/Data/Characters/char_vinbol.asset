@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: char_vinbol
   m_EditorClassIdentifier: 
   id: char_vinbol
-  displayName: "\uBB34 \uBE59-\uBCFC"
-  nickname: "\uBE59-\uBCFC"
+  displayName: 무 빙-볼
+  nickname: 빙-볼
   role: 2
-  gender: "\uC5EC"
-  job: "\uACF5\uC7A5 \uB178\uB3D9\uC790"
-  species: "\uC090\uB9AC\uD321"
+  gender: 여
+  job: 공장 노동자
+  species: 삐리팡
   bio: 
   portrait: {fileID: 4855874265331751222, guid: 5a5e1f57c57ffb643a208d8561752c0e, type: 3}

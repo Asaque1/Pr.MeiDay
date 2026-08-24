@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5544fca1a217ce4f9716fa7a7ec0901, type: 3}
+  m_Name: word_inci_report
+  m_EditorClassIdentifier: 
+  id: word_inci_report
+  category: 0
+  meaning: 사건경위서
+  dialectText: 난장판 기록, 기억 설명서, 일 순서 목록
+  hint: 사건의 순서와 배경을 기록

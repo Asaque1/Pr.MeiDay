@@ -15,5 +15,5 @@ MonoBehaviour:
   id: word_space_cert
   category: 0
   meaning: 우주선등록증명서
-  dialectText: 배 소유서, 내 우주선
-  hint: 우주선의 소유 등록을 증명하는 문서
+  dialectText: 배 소유서, 내 우주선 종이
+  hint: 우주선의 소유를 증명하다

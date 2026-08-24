@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5544fca1a217ce4f9716fa7a7ec0901, type: 3}
+  m_Name: word_perf_auth
+  m_EditorClassIdentifier: 
+  id: word_perf_auth
+  category: 0
+  meaning: 공연허가서
+  dialectText: 음파 쏘기 허가, 공개 재현 허락, 소리 보여주기 요구
+  hint: 공연활동의 허가를 요구

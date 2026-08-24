@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: char_Nyatwo
   m_EditorClassIdentifier: 
   id: char_Nyatwo
-  displayName: '냐무냐&냐냐오'
-  nickname: '냐무냐&냐냐오'
+  displayName: 냐무냐&냐냐오
+  nickname: 냐무냐&냐냐오
   role: 4
   gender: 남
   job: 직원

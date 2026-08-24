@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: word_1
   m_EditorClassIdentifier: 
   id: word_1
-  category: 2
+  category: 1
   meaning: 1개
-  dialectText: 나, 존재, 참
-  hint: 숫자 1
+  dialectText: 유일, 존재, 참
+  hint: 오직, 유일

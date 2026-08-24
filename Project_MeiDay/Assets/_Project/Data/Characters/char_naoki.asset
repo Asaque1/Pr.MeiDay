@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: char_naoki
   m_EditorClassIdentifier: 
   id: char_naoki
-  displayName: "\uC544\uC790\uBBF8 \uB098\uC624\uD0A4"
-  nickname: "\uB098\uC624\uD0A4"
+  displayName: 아자미 나오키
+  nickname: 나오키
   role: 2
-  gender: "\uC5EC"
-  job: "\uD559\uC0DD"
-  species: "\uB93C\uBA54\uB9AC\uC559"
+  gender: 여
+  job: 학생
+  species: 뤼메리앙
   bio: 
   portrait: {fileID: -7872188943032179156, guid: 00dc1e85e0ee42642971679b2dc81c02, type: 3}

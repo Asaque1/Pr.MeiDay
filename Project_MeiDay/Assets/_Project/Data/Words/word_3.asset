@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: word_3
   m_EditorClassIdentifier: 
   id: word_3
-  category: 2
+  category: 1
   meaning: 3개
   dialectText: 무리, 균형, 갈림길
-  hint: 숫자 3
+  hint: 삼각형

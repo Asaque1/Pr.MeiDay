@@ -15,5 +15,5 @@ MonoBehaviour:
   id: word_tribe_id
   category: 0
   meaning: 종족신분증
-  dialectText: 뿌리 상징
-  hint: 
+  dialectText: 뿌리 상징, 첫 가지, 몸 종류
+  hint: 자신의 종을 설명하다
