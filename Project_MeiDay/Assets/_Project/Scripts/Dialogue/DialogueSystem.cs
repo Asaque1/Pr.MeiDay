@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class DialogueSystem : MonoBehaviour
@@ -30,6 +31,7 @@ public class DialogueSystem : MonoBehaviour
     private bool isWaitingForChoice;
     private string fullText;
     private Coroutine typingCoroutine;
+    private System.Action onDialogueEnd; // 대화 끝나면 부를 곳 (이벤트가 이어서 굴러가야 함)
 
     private void Awake()
     {
@@ -55,23 +57,50 @@ public class DialogueSystem : MonoBehaviour
         if (!dialoguePanel.activeSelf)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Space) ||
-            Input.GetMouseButtonDown(0))
+        // 선택지가 떠 있는 동안은 버튼만 받음 (아무 데나 눌러서 넘어가면 선택이 씹힘)
+        if (choiceParent != null && choiceParent.childCount > 0)
+            return;
+
+        if (WasAdvancePressed())
         {
             AdvanceDialogue();
         }
     }
 
+    // 이 프로젝트는 새 Input System 이라 Input.GetKeyDown 은 못 씀
+    private static bool WasAdvancePressed()
+    {
+        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
+            return true;
+
+        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+            return true;
+
+        return false;
+    }
+
     public void StartDialogue(DialogueData dialogueData)
+    {
+        StartDialogue(dialogueData, null);
+    }
+
+    // onEnd: 대화가 끝나면 불러줌 (이벤트가 끝나야 게임이 다시 굴러가서 필요함)
+    public void StartDialogue(DialogueData dialogueData, System.Action onEnd)
     {
         if (dialogueData == null ||
             dialogueData.dialogueLines == null ||
             dialogueData.dialogueLines.Length == 0)
         {
             Debug.LogWarning("대화 데이터가 없습니다.");
+
+            // 여기서 그냥 돌아가면 부른 쪽이 계속 기다리다가 게임이 멈춤
+            if (onEnd != null)
+                onEnd();
+
             return;
         }
 
+        onDialogueEnd = onEnd;
         currentDialogueData = dialogueData;
         currentLineIndex = 0;
 
@@ -253,7 +282,7 @@ public class DialogueSystem : MonoBehaviour
         // 숨김 대상 다시 표시
         SetHideTargetActive(true);
 
-        ExecuteChoiceEvent(choice.eventId);
+        ExecuteChoiceEvent(choice.eventId, choice.eventValue);
 
         if (choice.nextLineIndex == -1)
         {
@@ -266,24 +295,35 @@ public class DialogueSystem : MonoBehaviour
         }
     }
 
-    private void ExecuteChoiceEvent(int eventId)
+    // 선택지 효과를 실제 게임에 먹임 (번호 뜻은 DialogueChoiceData 주석 참고)
+    private void ExecuteChoiceEvent(int eventId, int eventValue)
     {
         if (eventId == -1)
             return;
 
+        if (GameManager.instance == null)
+        {
+            Debug.LogWarning("게임이 아직 준비 전이라 선택지 효과를 못 먹임: " + eventId);
+            return;
+        }
+
         switch (eventId)
         {
             case 0:
-                Debug.Log("eventId 0: 보상 0 지급");
+                GameManager.instance.economy.AddCredits(eventValue);
                 break;
             case 1:
-                Debug.Log("eventId 1: 보상 1 지급");
+                if (eventValue > 0)
+                {
+                    GameManager.instance.suspicion.AddSuspicion(eventValue);
+                }
+                else if (eventValue < 0)
+                {
+                    GameManager.instance.suspicion.ReduceSuspicion(-eventValue);
+                }
                 break;
             case 2:
-                Debug.Log("eventId 2: 호감도 증가");
-                break;
-            case 3:
-                Debug.Log("eventId 3: 보상 사이클 시작");
+                GameManager.instance.UnlockShop();
                 break;
             default:
                 Debug.LogWarning("등록되지 않은 eventId: " + eventId);
@@ -301,6 +341,13 @@ public class DialogueSystem : MonoBehaviour
         isTyping = false;
         isWaitingForChoice = false;
         currentDialogueData = null;
+
+        // 부를 곳을 먼저 비워둠 - 이어서 다음 대화가 시작돼도 안 꼬이게
+        System.Action callback = onDialogueEnd;
+        onDialogueEnd = null;
+
+        if (callback != null)
+            callback();
     }
 
     // hideOnChoiceTarget 가 있으면 그걸, 없으면 dialogueText 를 제어

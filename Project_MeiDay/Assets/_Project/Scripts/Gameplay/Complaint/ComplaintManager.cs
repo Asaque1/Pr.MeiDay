@@ -343,6 +343,25 @@ public class ComplaintManager : MonoBehaviour
         }
 
         currentIndex++;
+
+        // 민원 하나 끝날 때마다 끼는 이벤트
+        // 오늘 민원이 다 끝났으면 안 봄 - 그 자리는 하루 마무리 이벤트 몫
+        if (currentIndex < todayComplaints.Count)
+        {
+            EventDefinition ev = GameManager.instance.events.PickEvent(EventSlot.AfterComplaint);
+            if (ev != null)
+            {
+                GameManager.instance.events.StartEvent(ev);
+                return; // 대사 끝나면 ContinueAfterEvent 가 이어감
+            }
+        }
+
+        StartCurrent();
+    }
+
+    // 민원 사이 이벤트가 끝났을 때 (EventManager 가 불러줌)
+    public void ContinueAfterEvent()
+    {
         StartCurrent();
     }
 }

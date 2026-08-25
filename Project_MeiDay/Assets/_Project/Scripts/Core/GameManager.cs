@@ -222,6 +222,24 @@ public class GameManager : MonoBehaviour
     // 낮 일 다 끝남 (민원 다 처리) -> 결산 화면으로
     public void OnDayWorkDone()
     {
+        // 하루 마무리 이벤트가 있으면 결산 전에 먼저 보여줌 (게임오버면 건너뜀)
+        EventDefinition endEvent = null;
+        if (phase != GamePhase.GameOver)
+        {
+            endEvent = events.PickEvent(EventSlot.DayEnd);
+        }
+        if (endEvent != null)
+        {
+            events.StartEvent(endEvent);
+            return; // 대사 끝나면 ContinueDayEnd 가 이어감
+        }
+
+        ContinueDayEnd();
+    }
+
+    // 하루 마무리 이벤트까지 끝난 뒤 실제 정산 (EventManager 도 여기로 이어줌)
+    public void ContinueDayEnd()
+    {
         // 하루 다 맞췄으면 무실수 보너스
         if (complaint.mistakeCount == 0 && complaint.successCount > 0)
         {

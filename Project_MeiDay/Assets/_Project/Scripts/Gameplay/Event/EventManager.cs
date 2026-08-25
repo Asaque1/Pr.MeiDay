@@ -17,6 +17,13 @@ public class EventManager : MonoBehaviour
     // 오늘 아침에 볼 이벤트 고르기 (없으면 null)
     public EventDefinition PickTodayEvent()
     {
+        return PickEvent(EventSlot.DayStart);
+    }
+
+    // 그 자리에서 볼 이벤트 고르기 (없으면 null)
+    // 고정 -> 조건 -> 랜덤 순으로 보고, 자리가 다른 이벤트는 건너뜀
+    public EventDefinition PickEvent(EventSlot slot)
+    {
         int day = GameManager.instance.calendar.day;
         List<EventDefinition> all = GameManager.instance.content.events;
 
@@ -25,7 +32,7 @@ public class EventManager : MonoBehaviour
         for (int i = 0; i < all.Count; i++)
         {
             EventDefinition ev = all[i];
-            if (ev == null || ev.timing != EventTiming.FixedDay || HasSeen(ev.id) == true)
+            if (ev == null || ev.slot != slot || ev.timing != EventTiming.FixedDay || HasSeen(ev.id) == true)
             {
                 continue;
             }
@@ -48,7 +55,7 @@ public class EventManager : MonoBehaviour
         for (int i = 0; i < all.Count; i++)
         {
             EventDefinition ev = all[i];
-            if (ev == null || ev.timing != EventTiming.Trigger || HasSeen(ev.id) == true)
+            if (ev == null || ev.slot != slot || ev.timing != EventTiming.Trigger || HasSeen(ev.id) == true)
             {
                 continue;
             }
@@ -64,7 +71,7 @@ public class EventManager : MonoBehaviour
             for (int i = 0; i < all.Count; i++)
             {
                 EventDefinition ev = all[i];
-                if (ev != null && ev.timing == EventTiming.Random && HasSeen(ev.id) == false)
+                if (ev != null && ev.slot == slot && ev.timing == EventTiming.Random && HasSeen(ev.id) == false)
                 {
                     return ev;
                 }
@@ -77,7 +84,7 @@ public class EventManager : MonoBehaviour
         for (int i = 0; i < all.Count; i++)
         {
             EventDefinition ev = all[i];
-            if (ev != null && ev.timing == EventTiming.Random && HasSeen(ev.id) == false)
+            if (ev != null && ev.slot == slot && ev.timing == EventTiming.Random && HasSeen(ev.id) == false)
             {
                 candidates.Add(ev);
             }
@@ -144,6 +151,20 @@ public class EventManager : MonoBehaviour
     {
         currentEvent = ev;
         lineIndex = 0;
+
+        // 선택지가 있는 대화는 DialogueSystem 이 재생함 (끝나면 FinishEvent 를 불러줌)
+        if (ev.dialogue != null)
+        {
+            if (DialogueSystem.Instance == null)
+            {
+                Debug.LogWarning("씬에 DialogueSystem 이 없어서 대화를 못 띄움: " + ev.id);
+                FinishEvent();
+                return;
+            }
+
+            DialogueSystem.Instance.StartDialogue(ev.dialogue, FinishEvent);
+            return;
+        }
 
         // 대사가 하나도 없는 이벤트면 바로 끝냄 (데이터 실수 대비)
         if (ev.lines.Count == 0)
@@ -217,6 +238,19 @@ public class EventManager : MonoBehaviour
         }
 
         NotifyUpdated();
+
+        // 자리마다 이어갈 곳이 다름 (이벤트가 끝나야 멈춰뒀던 게 다시 굴러감)
+        if (done.slot == EventSlot.AfterComplaint)
+        {
+            GameManager.instance.complaint.ContinueAfterEvent();
+            return;
+        }
+        if (done.slot == EventSlot.DayEnd)
+        {
+            GameManager.instance.ContinueDayEnd();
+            return;
+        }
+
         GameManager.instance.OnMorningEventDone(done);
     }
 

@@ -16,8 +16,9 @@ public class EventLine
 public class EventDefinition : ScriptableObject
 {
     public string id;
-    public EventTiming timing;        // 언제 나오는지
-    public int fixedDay = 1;          // FixedDay 면 며칠째 아침인지
+    public EventTiming timing;        // 어떻게 뽑히는지 (고정 / 랜덤 / 조건)
+    public EventSlot slot;            // 하루 중 어느 자리에 끼는지 (기본은 아침)
+    public int fixedDay = 1;          // FixedDay 면 며칠째인지
 
     [Range(0f, 1f)]
     public float randomChance = 0.3f; // Random 이면 아침에 나올 확률
@@ -26,6 +27,10 @@ public class EventDefinition : ScriptableObject
     public float conditionValue = 0;  // 조건에 쓰는 숫자 (며칠차, 크레딧 등)
 
     public List<EventLine> lines = new List<EventLine>(); // 대사들 (순서대로)
+
+    // 선택지가 있는 대화는 여기에 꽂음 (꽂으면 위 lines 대신 이걸 씀)
+    // 선택지 없는 그냥 대사는 lines 만 채우면 됨
+    public DialogueData dialogue;
 
     public ComplaintDefinition linkedComplaint; // 대사 끝나고 이어지는 민원 (없으면 대사만 하고 끝)
     public float suspicionChange = 0;           // 이벤트 보고 나면 오르내리는 의심도 (음수면 내려감)
