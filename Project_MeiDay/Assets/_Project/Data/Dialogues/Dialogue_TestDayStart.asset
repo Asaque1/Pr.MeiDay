@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 567fa180cbeff0043a09c0e520bf426e, type: 3}
+  m_Name: Dialogue_TestDayStart
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  dialogueLines:
+  - speakerFace: {fileID: 7653647602564662122, guid: 09b061203187b824d88f5eecb96ae375, type: 3}
+    speakerName: "\uB3D9\uB8CC"
+    text: "\uC624\uB298\uB3C4 \uC654\uB124. \uCC3D\uAD6C \uC5F4 \uC2DC\uAC04\uC774\uC57C."
+    choices: []
+    nextLineIndex: 1
+  - speakerFace: {fileID: 7653647602564662122, guid: 09b061203187b824d88f5eecb96ae375, type: 3}
+    speakerName: "\uB3D9\uB8CC"
+    text: "\uCEE4\uD53C\uB77C\uB3C4 \uD55C \uC794 \uD558\uACE0 \uC2DC\uC791\uD560\uB798?"
+    choices:
+    - choiceText: "\uC88B\uC9C0. \uD55C \uC794 \uC0AC\uC918."
+      nextLineIndex: -1
+      eventId: 0
+      eventValue: 20
+    - choiceText: "\uB410\uC5B4. \uADF8\uB0E5 \uC77C\uD560\uB798."
+      nextLineIndex: -1
+      eventId: -1
+      eventValue: 0
+    nextLineIndex: -1
