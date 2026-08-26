@@ -1,10 +1,11 @@
-﻿using TMPro;
+﻿using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 // 단어 카드 한 장 UI (드래그해서 상자에 넣는 거)
-public class WordCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class WordCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public int cardIndex; // 몇 번째 카드인지 (상자가 드롭 판정할 때 씀)
 
@@ -23,9 +24,23 @@ public class WordCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     [SerializeField] float textPadding = 5f; // 카드 테두리랑 글자 사이 여백
 
+    [Header("손 올렸을 때")]
+    // "이거 집어서 끌 수 있겠는데" 싶게, 카드를 집으려고 살짝 뽑아든 모양으로 만듦
+    [SerializeField] float hoverRise = 14f;   // 위로 얼마나 뜨는지
+    [SerializeField] float hoverGrow = 0.07f; // 얼마나 커지는지 (1 = 두 배)
+    [SerializeField] float hoverSpeed = 12f;  // 얼마나 빨리 뜨고 가라앉는지
+
     bool _canDrag = true;    // 이미 상자에 놓은 카드는 못 끎
     Vector3 _homePos;        // 드래그 시작 전 원래 자리
     float _maxFontSize = 0f; // 프리팹에 적어둔 글자 크기 상한 (이보다 커지진 않음)
+
+    // 손 올렸을 때 되돌릴 원래 모습 (LayoutCards 가 잡아준 자리)
+    bool _hover = false;
+    bool _poseSaved = false;
+    float _amount = 0f;      // 0 = 제자리, 1 = 다 뜬 상태
+    Vector2 _restPos;
+    Quaternion _restRot;
+    Vector3 _restScale;
 
     void Awake()
     {
@@ -187,6 +202,155 @@ public class WordCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         background.color = isDoc ? documentColor : otherColor;
     }
 
+    // ---- 손 올렸을 때 ----
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (CanPickUp() == false)
+        {
+            return; // 못 끄는 카드가 반응하면 거짓말이 됨
+        }
+
+        SavePose();
+        _hover = true;
+
+        // 오른쪽 카드가 이 카드를 덮고 있어서, 안 올리면 뜬 게 반쯤 가려짐
+        // 자리는 LayoutCards 가 좌표로 직접 잡아주고 CardParent 의 격자는 꺼져 있어서
+        // 순서를 바꿔도 카드가 밀리지 않음 (뗄 때 RestoreOrder 로 다시 세움)
+        transform.SetAsLastSibling();
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        _hover = false;
+    }
+
+    // 지금 손이 올라가 있는 카드인지 (순서 다시 세울 때 씀)
+    public bool IsLifted()
+    {
+        return _hover;
+    }
+
+    // 손패 순서를 카드 번호대로 다시 세움
+    // 뜰 때 저장해둔 형제 번호로 되돌리면, 그 사이에 옆 카드가 움직였을 때 순서가 엉킴
+    // (예전에 이 순서를 건드렸다가 카드가 겹쳐 보이는 문제가 있었음)
+    void RestoreOrder()
+    {
+        Transform parent = transform.parent;
+        if (parent == null)
+        {
+            return;
+        }
+
+        List<WordCardUI> cards = new List<WordCardUI>();
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            WordCardUI card = parent.GetChild(i).GetComponent<WordCardUI>();
+            if (card != null)
+            {
+                cards.Add(card);
+            }
+        }
+
+        cards.Sort(delegate (WordCardUI a, WordCardUI b)
+        {
+            // 아직 떠 있는 카드는 맨 위에 둠 (한 장에서 옆 장으로 손이 넘어가는 중)
+            if (a.IsLifted() != b.IsLifted())
+            {
+                return a.IsLifted() == true ? 1 : -1;
+            }
+            return a.cardIndex.CompareTo(b.cardIndex);
+        });
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            cards[i].transform.SetSiblingIndex(i);
+        }
+    }
+
+    // 지금 이 카드를 집을 수 있는 상태인지
+    bool CanPickUp()
+    {
+        if (_canDrag == false)
+        {
+            return false;
+        }
+        if (GameManager.instance == null)
+        {
+            return false;
+        }
+
+        // 손님이 아직 말하는 중이거나 처리 단계면 못 만짐
+        return GameManager.instance.complaint.CanUseCards();
+    }
+
+    void SavePose()
+    {
+        if (_poseSaved == true)
+        {
+            return;
+        }
+
+        RectTransform rt = (RectTransform)transform;
+        _restPos = rt.anchoredPosition;
+        _restRot = rt.localRotation;
+        _restScale = rt.localScale;
+        _poseSaved = true;
+    }
+
+    // 뜬 걸 그 자리에서 바로 내려놓기 (드래그 시작할 때)
+    void PutBack()
+    {
+        if (_poseSaved == false)
+        {
+            return;
+        }
+
+        RectTransform rt = (RectTransform)transform;
+        rt.anchoredPosition = _restPos;
+        rt.localRotation = _restRot;
+        rt.localScale = _restScale;
+
+        _hover = false;
+        _amount = 0f;
+        _poseSaved = false;
+
+        RestoreOrder();
+    }
+
+    void Update()
+    {
+        if (_poseSaved == false)
+        {
+            return; // 아직 손이 안 닿은 카드
+        }
+
+        // 손을 올린 뒤에 말이 끝나거나 단계가 바뀌면 도로 내려놓음
+        float want = 0f;
+        if (_hover == true && CanPickUp() == true)
+        {
+            want = 1f;
+        }
+
+        if (Mathf.Approximately(_amount, want) == true)
+        {
+            if (want == 0f)
+            {
+                PutBack(); // 다 내려왔으면 순서까지 되돌리고 손 뗌
+            }
+            return;
+        }
+
+        _amount = Mathf.MoveTowards(_amount, want, Time.deltaTime * hoverSpeed);
+
+        RectTransform rt = (RectTransform)transform;
+        rt.anchoredPosition = _restPos + new Vector2(0f, hoverRise * _amount);
+        rt.localRotation = Quaternion.Slerp(_restRot, Quaternion.identity, _amount); // 비뚤어진 걸 펴줌
+        rt.localScale = _restScale * (1f + hoverGrow * _amount);
+    }
+
+    // ---- 드래그 ----
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (_canDrag == false)
@@ -194,7 +358,13 @@ public class WordCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             return;
         }
 
+        PutBack(); // 뜬 자리로 돌아가면 안 되니까 먼저 내려놓고 시작
         _homePos = transform.position;
+
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySfx(SoundManager.instance.cardPick);
+        }
 
         // 형제 순서는 절대 건드리지 않음
         // 예전엔 SetAsLastSibling 으로 맨 위에 올렸는데, 카드들이 격자(Grid Layout) 안에 있어서
