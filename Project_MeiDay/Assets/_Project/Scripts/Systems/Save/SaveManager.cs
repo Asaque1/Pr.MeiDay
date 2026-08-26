@@ -54,6 +54,12 @@ public class SaveManager : MonoBehaviour
         }
         PlayerPrefs.SetInt("hasSpaceship", shipValue);
 
+        // 튜토리얼 어디까지 봤는지
+        if (TutorialManager.instance != null)
+        {
+            PlayerPrefs.SetInt("tutorialStep", TutorialManager.instance.currentStep);
+        }
+
         // 밤 상점이 열렸는지 (우주선이랑 같은 방식)
         int shopValue = 0;
         if (gm.shopUnlocked == true)
@@ -140,6 +146,12 @@ public class SaveManager : MonoBehaviour
         // 밤 상점 해금 (1이면 열렸던 거)
         gm.shopUnlocked = (PlayerPrefs.GetInt("shopUnlocked", 0) == 1);
 
+        // 튜토리얼 이어보기
+        if (TutorialManager.instance != null)
+        {
+            TutorialManager.instance.SetStep(PlayerPrefs.GetInt("tutorialStep", 0));
+        }
+
         // 아이템들 (저장했던 개수만큼 다시 꺼내서 리스트에 넣기)
         gm.inventory.ownedItems.Clear();
         int itemCount = PlayerPrefs.GetInt("itemCount", 0);
@@ -201,7 +213,14 @@ public class SaveManager : MonoBehaviour
 
         PlayerPrefs.DeleteKey("saveExists");
         PlayerPrefs.DeleteKey("day"); // 이거 안 지우면 HasSave() 가 계속 true 나옴
+        PlayerPrefs.DeleteKey("tutorialStep"); // 새 게임이면 튜토리얼도 처음부터
         PlayerPrefs.Save();
+
+        if (TutorialManager.instance != null)
+        {
+            TutorialManager.instance.SetStep(0);
+        }
+
         Debug.Log("저장 지움");
     }
 }
