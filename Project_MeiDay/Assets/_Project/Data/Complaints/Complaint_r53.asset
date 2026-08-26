@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4300ae952e722344d96918a470db9590, type: 3}
+  m_Name: Complaint_r53
+  m_EditorClassIdentifier:
+  id: complaint_r53
+  complainant: {fileID: 0}
+  eventOnly: 0
+  complaintLine: 쯉쯉, 털빙구가 내 민원을 받다니. 됬고, [단어1] 하게 [단어2]장 내놔쯉.
+  slots:
+  - category: 0
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 9e0344d64b45526ca95f67901a335d08, type: 2}
+    - {fileID: 11400000, guid: 9467671bf7605141bb909f0cd91d0fee, type: 2}
+    - {fileID: 11400000, guid: 151bd79c80aa5c10a23fa32c3246f708, type: 2}
+    - {fileID: 11400000, guid: a8ea97bd05695a0d84d2260387fea7b9, type: 2}
+    - {fileID: 11400000, guid: cee5504e210056da97a897d3b923c2ac, type: 2}
+    - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+    - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}
+    - {fileID: 11400000, guid: 583f5c2609745e2a97e33e68b37b926c, type: 2}
+    - {fileID: 11400000, guid: 5682116dd5605478b7cd29b6d44ba7cb, type: 2}
+  wrongWords: []
+  correctResolution: 2
+  reward: 30

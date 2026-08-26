@@ -15,17 +15,21 @@ MonoBehaviour:
   id: complaint_r23
   complainant: {fileID: 11400000, guid: dcc52281f9175b0eafc7a2f104e3f241, type: 2}
   eventOnly: 0
-  complaintLine: 흐에엥... 나나 또 실수했어요... [단어1] 잘못 써버렸어요... [단어1] [단어2] 장 다시 받을 수 있죠...?
+  complaintLine: 흐에엥... [단어1] 또 실수했어요... [단어2] 잘못 써버렸어요... [단어2] [단어3] 장 다시 받을 수 있죠 질문..?
   slots:
+  - category: 1
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 42dbc74d132452149496fd2d812f320f, type: 2}
   - category: 0
-    correctWord: {fileID: 11400000, guid: 0c11c7dcff8a5b0c88a3f3629e9a82b3, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: 0c11c7dcff8a5b0c88a3f3629e9a82b3, type: 2}
     - {fileID: 11400000, guid: 059172576b395878938213c04fbab593, type: 2}
     - {fileID: 11400000, guid: 15983d4137285ed19ba43ca783fb6fe0, type: 2}
     - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
-  - category: 2
-    correctWord: {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
     - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}

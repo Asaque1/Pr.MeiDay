@@ -15,10 +15,14 @@ MonoBehaviour:
   id: complaint_r18
   complainant: {fileID: 11400000, guid: ba32b299989758f3873d5e1bcdf7b243, type: 2}
   eventOnly: 0
-  complaintLine: 내 위가 시켰다! [단어1] [단어2] 장 쓰고 오라했다!
+  complaintLine: '[단어1]가 시켰다! [단어2] [단어3] 장 쓰고 오라했다!'
   slots:
+  - category: 1
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: e58be570442b5b8ea539aeb2e4ed34d8, type: 2}
   - category: 0
-    correctWord: {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
     - {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
@@ -27,8 +31,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 15983d4137285ed19ba43ca783fb6fe0, type: 2}
     - {fileID: 11400000, guid: cd676a31c4f55469bd331505cf3d38ee, type: 2}
     - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
-  - category: 2
-    correctWord: {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
     - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}

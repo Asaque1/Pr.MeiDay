@@ -10,30 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4300ae952e722344d96918a470db9590, type: 3}
-  m_Name: Complaint_YJS_1
+  m_Name: Complaint_r57
   m_EditorClassIdentifier:
-  id: complaint_YJS_1
-  complainant: {fileID: 11400000, guid: 7f164cb9fef956b8ab21bcec962c9944, type: 2}
+  id: complaint_r57
+  complainant: {fileID: 0}
   eventOnly: 0
-  complaintLine: 저, 그, [단어1], [단어2] 걸로 [단어3] 주세요.
+  complaintLine: '[단어1] 오늘부터 새로운 [단어1] 산다. [단어2] [단어3]장 빨리.'
   slots:
-  - category: 0
-    correctWord: {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
-    candidateWords:
-    - {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
   - category: 1
-    correctWord: {fileID: 11400000, guid: 42dbc74d132452149496fd2d812f320f, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
-    - {fileID: 11400000, guid: 42dbc74d132452149496fd2d812f320f, type: 2}
     - {fileID: 11400000, guid: e58be570442b5b8ea539aeb2e4ed34d8, type: 2}
     - {fileID: 11400000, guid: 0917cc5718bb5209a05a9eb550db5c6c, type: 2}
-  - category: 2
-    correctWord: {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+    - {fileID: 11400000, guid: 42dbc74d132452149496fd2d812f320f, type: 2}
+  - category: 0
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: cee5504e210056da97a897d3b923c2ac, type: 2}
+    - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
     - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}
     - {fileID: 11400000, guid: 583f5c2609745e2a97e33e68b37b926c, type: 2}
-    - {fileID: 11400000, guid: 5682116dd5605478b7cd29b6d44ba7cb, type: 2}
   wrongWords: []
   correctResolution: 2
   reward: 30

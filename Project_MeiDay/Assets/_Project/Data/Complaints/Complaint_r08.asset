@@ -15,10 +15,18 @@ MonoBehaviour:
   id: complaint_r08
   complainant: {fileID: 11400000, guid: 5be2d07abd1f550ba718a2c3063ff5ad, type: 2}
   eventOnly: 0
-  complaintLine: 나나 내 아래가 세상에 첫발을 내디뎠습니다. 첫 기록 [단어1] 장 신청이 가능한가요 질문?
+  complaintLine: '[단어1]가 세상에 첫발을 내디뎠습니다. [단어2] [단어3] 장 신청이 가능한가요 질문?'
   slots:
-  - category: 2
-    correctWord: {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 0917cc5718bb5209a05a9eb550db5c6c, type: 2}
+  - category: 0
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 0c11c7dcff8a5b0c88a3f3629e9a82b3, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
     - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}

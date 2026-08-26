@@ -15,21 +15,21 @@ MonoBehaviour:
   id: complaint_r29
   complainant: {fileID: 11400000, guid: 09fd3a51a63b5dafb3c4e55c4598b70d, type: 2}
   eventOnly: 0
-  complaintLine: 야, 나나 급하거든? [단어1]하게 [단어2] [단어3]장 내와 빨리!
+  complaintLine: 야, 지금 되게 급하거든? [단어1]하게 [단어2] [단어3]장 내와 빨리!
   slots:
   - category: 0
-    correctWord: {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
     - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
   - category: 0
-    correctWord: {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
     - {fileID: 11400000, guid: 3bd23550d41257ac88480337e68913fe, type: 2}
     - {fileID: 11400000, guid: cd676a31c4f55469bd331505cf3d38ee, type: 2}
-  - category: 2
-    correctWord: {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
     - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}

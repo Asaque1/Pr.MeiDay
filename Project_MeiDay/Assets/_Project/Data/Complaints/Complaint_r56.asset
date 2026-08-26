@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4300ae952e722344d96918a470db9590, type: 3}
+  m_Name: Complaint_r56
+  m_EditorClassIdentifier:
+  id: complaint_r56
+  complainant: {fileID: 0}
+  eventOnly: 0
+  complaintLine: '[단어1]가 자꾸 [단어2] 이상하게 부른다. 그래서 그냥 [단어3] 써버리려고 왔다.'
+  slots:
+  - category: 1
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: d46437f8a0a15e9f9d27dfc512d54343, type: 2}
+    - {fileID: 11400000, guid: e58be570442b5b8ea539aeb2e4ed34d8, type: 2}
+    - {fileID: 11400000, guid: 0917cc5718bb5209a05a9eb550db5c6c, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 42dbc74d132452149496fd2d812f320f, type: 2}
+  - category: 0
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: cee5504e210056da97a897d3b923c2ac, type: 2}
+  wrongWords: []
+  correctResolution: 2
+  reward: 30

@@ -18,7 +18,7 @@ MonoBehaviour:
   complaintLine: 어머어머 들었어요? 옆 둥지 사는 애가 그러는데 [단어1] 하면 [단어2]를 떼야 한대요. 맞아요 질문? 그럼 [단어3]장 주세요~
   slots:
   - category: 0
-    correctWord: {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
     - {fileID: 11400000, guid: 0c11c7dcff8a5b0c88a3f3629e9a82b3, type: 2}
@@ -27,13 +27,13 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 15983d4137285ed19ba43ca783fb6fe0, type: 2}
     - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
   - category: 0
-    correctWord: {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
     - {fileID: 11400000, guid: 3bd23550d41257ac88480337e68913fe, type: 2}
     - {fileID: 11400000, guid: cd676a31c4f55469bd331505cf3d38ee, type: 2}
-  - category: 2
-    correctWord: {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
     - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}

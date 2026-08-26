@@ -18,7 +18,7 @@ MonoBehaviour:
   complaintLine: 차렷. [단어1] 신청한다. [단어2] 장 즉시 제출한다. 질문 안 받는다.
   slots:
   - category: 0
-    correctWord: {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
     - {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
@@ -29,8 +29,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 15983d4137285ed19ba43ca783fb6fe0, type: 2}
     - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
     - {fileID: 11400000, guid: cd676a31c4f55469bd331505cf3d38ee, type: 2}
-  - category: 2
-    correctWord: {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
     - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}

@@ -15,14 +15,18 @@ MonoBehaviour:
   id: complaint_r12
   complainant: {fileID: 11400000, guid: dcc52281f9175b0eafc7a2f104e3f241, type: 2}
   eventOnly: 0
-  complaintLine: 꾸릉... 아까 [단어1] 썼는데... 다시 생각해보니 화풀림 기재 해야 할 것 같아요...
+  complaintLine: 꾸릉... 아까 [단어1] 썼는데... 다시 생각해보니 [단어2] 해야 할 것 같아요...
   slots:
   - category: 0
-    correctWord: {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
-    - {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
     - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
     - {fileID: 11400000, guid: 15983d4137285ed19ba43ca783fb6fe0, type: 2}
+    - {fileID: 11400000, guid: cee5504e210056da97a897d3b923c2ac, type: 2}
+  - category: 0
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: a8ea97bd05695a0d84d2260387fea7b9, type: 2}
   wrongWords: []
   correctResolution: 2
   reward: 30

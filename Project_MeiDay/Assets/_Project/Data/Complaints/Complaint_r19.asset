@@ -15,10 +15,10 @@ MonoBehaviour:
   id: complaint_r19
   complainant: {fileID: 11400000, guid: b98877978bd9531fb786e87c609db0f6, type: 2}
   eventOnly: 0
-  complaintLine: 시간 낭비 싫다. 설명 생략. [단어1]. 하나하나 장. 끝.
+  complaintLine: 시간 낭비 싫다. 설명 생략. [단어1]. [단어2]장. 끝.
   slots:
   - category: 0
-    correctWord: {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
     - {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
@@ -29,6 +29,13 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 15983d4137285ed19ba43ca783fb6fe0, type: 2}
     - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
     - {fileID: 11400000, guid: cd676a31c4f55469bd331505cf3d38ee, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+    - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}
+    - {fileID: 11400000, guid: 583f5c2609745e2a97e33e68b37b926c, type: 2}
+    - {fileID: 11400000, guid: 5682116dd5605478b7cd29b6d44ba7cb, type: 2}
   wrongWords: []
   correctResolution: 2
   reward: 30

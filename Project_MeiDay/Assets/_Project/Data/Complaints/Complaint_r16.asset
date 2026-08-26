@@ -18,21 +18,22 @@ MonoBehaviour:
   complaintLine: 늦으면 [단어1] 화난다. [단어2] [단어3] 장 빨리.
   slots:
   - category: 1
-    correctWord: {fileID: 11400000, guid: 42dbc74d132452149496fd2d812f320f, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: 42dbc74d132452149496fd2d812f320f, type: 2}
     - {fileID: 11400000, guid: e58be570442b5b8ea539aeb2e4ed34d8, type: 2}
     - {fileID: 11400000, guid: 0917cc5718bb5209a05a9eb550db5c6c, type: 2}
+    - {fileID: 11400000, guid: d46437f8a0a15e9f9d27dfc512d54343, type: 2}
   - category: 0
-    correctWord: {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
     - {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
     - {fileID: 11400000, guid: 3bd23550d41257ac88480337e68913fe, type: 2}
     - {fileID: 11400000, guid: 0c11c7dcff8a5b0c88a3f3629e9a82b3, type: 2}
     - {fileID: 11400000, guid: cd676a31c4f55469bd331505cf3d38ee, type: 2}
-  - category: 2
-    correctWord: {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
     - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}

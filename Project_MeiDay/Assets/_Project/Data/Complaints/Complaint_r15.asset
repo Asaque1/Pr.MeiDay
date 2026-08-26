@@ -15,10 +15,14 @@ MonoBehaviour:
   id: complaint_r15
   complainant: {fileID: 11400000, guid: 07dd1f5f486654c9aeddc76349e9e891, type: 2}
   eventOnly: 0
-  complaintLine: 이상하다... 나나의 [단어1] 어디 갔나... 어제까지 있었는데... [단어1] [단어2] 장 다시 받을 수 있나 질문?
+  complaintLine: 이상하다... [단어1]의 [단어2] 어디 갔나... 어제까지 있었는데... [단어2] [단어3] 장 다시 받을 수 있나 질문?
   slots:
+  - category: 1
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 42dbc74d132452149496fd2d812f320f, type: 2}
   - category: 0
-    correctWord: {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
     - {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
@@ -26,8 +30,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 059172576b395878938213c04fbab593, type: 2}
     - {fileID: 11400000, guid: cd676a31c4f55469bd331505cf3d38ee, type: 2}
     - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
-  - category: 2
-    correctWord: {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
     - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}

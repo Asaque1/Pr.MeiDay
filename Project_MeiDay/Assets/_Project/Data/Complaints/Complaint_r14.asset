@@ -15,18 +15,18 @@ MonoBehaviour:
   id: complaint_r14
   complainant: {fileID: 11400000, guid: 26170f65a8935ff39009a32dedf27a98, type: 2}
   eventOnly: 0
-  complaintLine: 에구구... 나나의 [단어1] 너무 오래됐는지 글자가 다 흐려졌구먼... 늙은 눈으로는 영 안 보인다네. [단어1] [단어2] 장만 새로 부탁하네.
+  complaintLine: 에구구... 이 [단어1] 너무 오래됐는지 글자가 다 흐려졌구먼... 늙은 눈으로는 영 안 보인다네. [단어2] 장만 새로 부탁하네.
   slots:
   - category: 0
-    correctWord: {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
     - {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
     - {fileID: 11400000, guid: 3bd23550d41257ac88480337e68913fe, type: 2}
     - {fileID: 11400000, guid: 059172576b395878938213c04fbab593, type: 2}
     - {fileID: 11400000, guid: cd676a31c4f55469bd331505cf3d38ee, type: 2}
-  - category: 2
-    correctWord: {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
     - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}

@@ -15,10 +15,15 @@ MonoBehaviour:
   id: complaint_r11
   complainant: {fileID: 11400000, guid: 2854418d7ea45790b719b0866ef835a4, type: 2}
   eventOnly: 0
-  complaintLine: 너의 비효율적인 업무 속도는 나나를 분노하게 만든다. 나나의 [단어1], 빨리 갱신해라.
+  complaintLine: 너의 비효율적인 업무 속도는 [단어1] 분노하게 만든다. [단어1] [단어2], 빨리 갱신해라.
   slots:
+  - category: 1
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: d46437f8a0a15e9f9d27dfc512d54343, type: 2}
+    - {fileID: 11400000, guid: 42dbc74d132452149496fd2d812f320f, type: 2}
   - category: 0
-    correctWord: {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: ebab6f454c12529789bceccbae379c29, type: 2}
     - {fileID: 11400000, guid: 3bd23550d41257ac88480337e68913fe, type: 2}

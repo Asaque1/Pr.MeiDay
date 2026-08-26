@@ -18,20 +18,20 @@ MonoBehaviour:
   complaintLine: 쉿!! 작은 소리로 말해! 이거 몰래 하는거라고! 조용히 [단어1] [단어2] 장만 건네줘!!
   slots:
   - category: 0
-    correctWord: {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: bd85fed3cfe75cfab817fb5ac652690f, type: 2}
     - {fileID: 11400000, guid: 3bd23550d41257ac88480337e68913fe, type: 2}
     - {fileID: 11400000, guid: 059172576b395878938213c04fbab593, type: 2}
     - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
     - {fileID: 11400000, guid: cd676a31c4f55469bd331505cf3d38ee, type: 2}
-  - category: 2
-    correctWord: {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
+    - {fileID: 11400000, guid: 9467671bf7605141bb909f0cd91d0fee, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
     candidateWords:
     - {fileID: 11400000, guid: 53d92baba82d5e5e83beec95e4feeed7, type: 2}
     - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}
     - {fileID: 11400000, guid: 583f5c2609745e2a97e33e68b37b926c, type: 2}
-    - {fileID: 11400000, guid: 5682116dd5605478b7cd29b6d44ba7cb, type: 2}
   wrongWords: []
   correctResolution: 2
   reward: 30

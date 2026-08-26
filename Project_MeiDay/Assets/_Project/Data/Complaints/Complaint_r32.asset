@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4300ae952e722344d96918a470db9590, type: 3}
+  m_Name: Complaint_r32
+  m_EditorClassIdentifier:
+  id: complaint_r32
+  complainant: {fileID: 11400000, guid: 04b6a659a4325e38ad683b5a76225efb, type: 2}
+  eventOnly: 0
+  complaintLine: 에이~ 설마 [단어1]도 줄을 서는 거야 질문? 농담이지~? [단어2] 빨리 해주면 안 돼 질문?
+  slots:
+  - category: 1
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 42dbc74d132452149496fd2d812f320f, type: 2}
+  - category: 0
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 0c11c7dcff8a5b0c88a3f3629e9a82b3, type: 2}
+    - {fileID: 11400000, guid: 059172576b395878938213c04fbab593, type: 2}
+    - {fileID: 11400000, guid: f5128463e7c75a3ba44426cb00218890, type: 2}
+  wrongWords: []
+  correctResolution: 2
+  reward: 30

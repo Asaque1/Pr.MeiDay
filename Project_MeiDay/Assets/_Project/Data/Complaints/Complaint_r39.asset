@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4300ae952e722344d96918a470db9590, type: 3}
+  m_Name: Complaint_r39
+  m_EditorClassIdentifier:
+  id: complaint_r39
+  complainant: {fileID: 11400000, guid: 1c4a5d717af25584ae9dc0420171115a, type: 2}
+  eventOnly: 0
+  complaintLine: 삐용~ [단어1] 어제 축제에서 신나게 흔들었는데, 정신 차려보니 남의 둥지가 반쯤 없어졌어요. 그래서 [단어2] 쓰러 왔지요!
+  slots:
+  - category: 1
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 42dbc74d132452149496fd2d812f320f, type: 2}
+  - category: 0
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 151bd79c80aa5c10a23fa32c3246f708, type: 2}
+  wrongWords: []
+  correctResolution: 2
+  reward: 30

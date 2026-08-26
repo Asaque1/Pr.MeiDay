@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4300ae952e722344d96918a470db9590, type: 3}
+  m_Name: Complaint_r41
+  m_EditorClassIdentifier:
+  id: complaint_r41
+  complainant: {fileID: 11400000, guid: 07dd1f5f486654c9aeddc76349e9e891, type: 2}
+  eventOnly: 0
+  complaintLine: 쿠르르... [단어1] [단어2] 사라졌다. [단어2] 없이도 [단어1]는 [단어1]인가 질문? 불안하니 [단어3]장 주면 좋겠다..
+  slots:
+  - category: 1
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 42dbc74d132452149496fd2d812f320f, type: 2}
+  - category: 0
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 0c11c7dcff8a5b0c88a3f3629e9a82b3, type: 2}
+    - {fileID: 11400000, guid: 3bd23550d41257ac88480337e68913fe, type: 2}
+  - category: 1
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 8d2849b0da0658da92b29dffa72ae912, type: 2}
+    - {fileID: 11400000, guid: 583f5c2609745e2a97e33e68b37b926c, type: 2}
+    - {fileID: 11400000, guid: 5682116dd5605478b7cd29b6d44ba7cb, type: 2}
+  wrongWords: []
+  correctResolution: 2
+  reward: 30

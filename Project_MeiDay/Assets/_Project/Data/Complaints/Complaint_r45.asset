@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4300ae952e722344d96918a470db9590, type: 3}
+  m_Name: Complaint_r45
+  m_EditorClassIdentifier:
+  id: complaint_r45
+  complainant: {fileID: 0}
+  eventOnly: 0
+  complaintLine: 뭐라느냐! [단어1] 이 행성에서 산 세월이 얼마인데! [단어2] 서류 빨리 안 꺼내 질문?!
+  slots:
+  - category: 1
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 42dbc74d132452149496fd2d812f320f, type: 2}
+  - category: 0
+    correctWord: {fileID: 0}
+    candidateWords:
+    - {fileID: 11400000, guid: 3bd23550d41257ac88480337e68913fe, type: 2}
+    - {fileID: 11400000, guid: cd676a31c4f55469bd331505cf3d38ee, type: 2}
+  wrongWords: []
+  correctResolution: 2
+  reward: 30
