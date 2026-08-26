@@ -192,10 +192,10 @@ public class TranslationView : MonoBehaviour
         // 확인 버튼은 빈칸을 다 채워야 나옴
         SetPart(translatePart, translating == true && cm.translation.IsAllFilled() == true);
 
-        // 처리 단계가 되어야 PDA 와 신고가 열림
+        // 처리 단계가 되어야 PDA 가 열림
         bool resolving = (cm.stage == ComplaintStage.Resolve);
         SetPart(pdaButton, resolving);
-        SetPart(declareButton, resolving);
+        SetPart(declareButton, false); // 민원인 신고는 빼기로 함 (되살리려면 resolving 으로)
         SetPart(resolvePart, resolving == true && _printOpen == false);
         if (resolving == false)
         {
@@ -810,6 +810,7 @@ public class TranslationView : MonoBehaviour
     }
 
     // 발급 화면의 '신고' - 수배자 신고 창을 엶 (발급 화면은 뒤에 그대로 둠)
+    // 민원인 신고를 빼기로 해서 지금은 부르는 데가 없음 (버튼째 숨겨둠)
     public void OnClickPrintDeclare()
     {
         if (declarePanel != null)
