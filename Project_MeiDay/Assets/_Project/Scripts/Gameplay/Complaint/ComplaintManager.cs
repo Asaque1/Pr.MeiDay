@@ -273,6 +273,12 @@ public class ComplaintManager : MonoBehaviour
 
         if (choice == c.correctResolution)
         {
+            // 서류 확인 도장 찍는 소리 (틀렸을 때 나는 찢는 소리랑 짝)
+            if (SoundManager.instance != null)
+            {
+                SoundManager.instance.PlaySfx(SoundManager.instance.docAccept);
+            }
+
             // 맞게 처리 -> 돈 받음 (파티 버프 있으면 % 만큼 더)
             int pay = c.reward;
             if (GameManager.instance.payoutBuffToday > 0)

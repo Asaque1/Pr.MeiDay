@@ -50,6 +50,11 @@ public class QuickButton : MonoBehaviour, IPointerClickHandler, ISubmitHandler
 
     public void DoClick()
     {
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySfx(SoundManager.instance.uiClick);
+        }
+
         switch (bType)
         { //버튼 타입에 따라서 변경되는 방식.
             case "Close":

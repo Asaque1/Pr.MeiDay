@@ -102,6 +102,13 @@ public class ShopItemUI : MonoBehaviour
             return; // 빈 칸
         }
 
+        // 지금 못 사는 물건이면 잠긴 소리로 알려줌
+        if (SoundManager.instance != null
+            && GameManager.instance.shop.BuyBlockReason(_item).Length > 0)
+        {
+            SoundManager.instance.PlaySfx(SoundManager.instance.lockedClick);
+        }
+
         _view.OnClickItem(_item);
     }
 }

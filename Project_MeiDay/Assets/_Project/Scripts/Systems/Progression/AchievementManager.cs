@@ -161,6 +161,11 @@ public class AchievementManager : MonoBehaviour
         unlockedIds.Add(ach.id);
         Debug.Log("업적 달성! " + ach.title);
 
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySfx(SoundManager.instance.achieveGet);
+        }
+
         if (OnUnlocked != null)
         {
             OnUnlocked(ach);

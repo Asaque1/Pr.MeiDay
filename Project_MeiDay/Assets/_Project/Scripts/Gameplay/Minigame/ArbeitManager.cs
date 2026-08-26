@@ -85,6 +85,12 @@ public class ArbeitManager : MonoBehaviour
             promo.StartGame(arbeit.playSeconds);
         }
 
+        // 알바마다 깔리는 곡이 따로 있음
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlayArbeitBgm(arbeit.kind);
+        }
+
         return true;
     }
 
@@ -102,6 +108,8 @@ public class ArbeitManager : MonoBehaviour
         bookSort = null;
         spotlight = null;
         promo = null;
+
+        BackToPhaseBgm();
     }
 
     // 알바 끝 - 수행률 구간에 따라 보수랑 상점 경험치를 받음
@@ -145,5 +153,16 @@ public class ArbeitManager : MonoBehaviour
         bookSort = null;
         spotlight = null;
         promo = null;
+
+        BackToPhaseBgm();
+    }
+
+    // 알바 판을 닫았으니 원래 밤 음악으로
+    void BackToPhaseBgm()
+    {
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.RefreshBgm();
+        }
     }
 }

@@ -337,6 +337,7 @@ public class ShopView : MonoBehaviour
         if (reason.Length > 0)
         {
             SetInfo(item.itemName + " - " + reason);
+            PlayLocked();
             ClosePopup();
             return;
         }
@@ -348,10 +349,20 @@ public class ShopView : MonoBehaviour
         else
         {
             SetInfo("크레딧이 부족함");
+            PlayLocked();
         }
 
         ClosePopup();
         Rebuild(); // 레벨이랑 품절 표시 갱신
+    }
+
+    // 지금 못 사는 걸 눌렀을 때 나는 소리
+    void PlayLocked()
+    {
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySfx(SoundManager.instance.lockedClick);
+        }
     }
 
     // 상세 창: 취소

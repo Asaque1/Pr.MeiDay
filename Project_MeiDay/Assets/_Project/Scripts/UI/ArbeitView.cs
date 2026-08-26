@@ -144,7 +144,12 @@ public class ArbeitView : MonoBehaviour
     {
         if (GameManager.instance.arbeit.StartArbeit(arbeit) == false)
         {
-            return; // 횟수가 없거나 이미 하는 중
+            // 횟수가 없거나 이미 하는 중 - 왜 안 되는지 소리로 알려줌
+            if (SoundManager.instance != null)
+            {
+                SoundManager.instance.PlaySfx(SoundManager.instance.lockedClick);
+            }
+            return;
         }
 
         ShowNightButtons(false); // 게임 판이 화면을 덮으니 밤 버튼은 잠깐 치움
