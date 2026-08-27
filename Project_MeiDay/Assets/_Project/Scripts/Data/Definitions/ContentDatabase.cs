@@ -12,5 +12,8 @@ public class ContentDatabase : ScriptableObject
     public List<ItemDefinition> items = new List<ItemDefinition>();
     public List<MinigameDefinition> minigames = new List<MinigameDefinition>();
     public List<EventDefinition> events = new List<EventDefinition>();
+
+    // 일차 고정 이벤트는 이 표에서 관리함 (며칠에 뭐가 나오는지 한눈에)
+    public EventSchedule eventSchedule;
     public List<AchievementDefinition> achievements = new List<AchievementDefinition>();
 }

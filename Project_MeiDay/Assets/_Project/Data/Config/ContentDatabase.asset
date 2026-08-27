@@ -126,6 +126,7 @@ MonoBehaviour:
   events:
   - {fileID: 11400000, guid: 787e3e8648565ba8b5efcbfe422e3ebd, type: 2}
   - {fileID: 11400000, guid: b2fe03e3b82d5726b6e42cb02fc83427, type: 2}
+  eventSchedule: {fileID: 11400000, guid: 9b8f9338a67f9034d97f7f350c4b5c71, type: 2}
   achievements:
   - {fileID: 11400000, guid: f85358aed38d50f9bbc2130567e83722, type: 2}
   - {fileID: 11400000, guid: 9354cc0b189657c7b854be6c04b98a64, type: 2}

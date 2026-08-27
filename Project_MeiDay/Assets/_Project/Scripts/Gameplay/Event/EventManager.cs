@@ -26,8 +26,20 @@ public class EventManager : MonoBehaviour
     {
         int day = GameManager.instance.calendar.day;
         List<EventDefinition> all = GameManager.instance.content.events;
+        EventSchedule schedule = GameManager.instance.content.eventSchedule;
 
-        // 1순위: 날짜 고정 이벤트 (같은 날 겹치거나 밀린 게 있으면 이른 날짜 것부터 하나씩)
+        // 1순위: 일차 고정 이벤트 - 먼저 표를 봄
+        if (schedule != null)
+        {
+            EventDefinition fromTable = schedule.Pick(day, slot, this);
+            if (fromTable != null)
+            {
+                return fromTable;
+            }
+        }
+
+        // 표를 안 쓰고 이벤트 파일에 직접 FixedDay 로 적어둔 것도 계속 받아줌
+        // (표에 이미 적어둔 이벤트면 두 번 나오지 않게 건너뜀)
         EventDefinition fixedPick = null;
         for (int i = 0; i < all.Count; i++)
         {
@@ -39,6 +51,10 @@ public class EventManager : MonoBehaviour
             if (ev.fixedDay > day)
             {
                 continue; // 아직 날짜 안 됨
+            }
+            if (schedule != null && schedule.Contains(ev) == true)
+            {
+                continue; // 표가 관리하는 이벤트
             }
             if (fixedPick == null || ev.fixedDay < fixedPick.fixedDay)
             {
