@@ -9745,7 +9745,7 @@ MonoBehaviour:
   dayBgm: {fileID: 0}
   nightBgm: {fileID: 0}
   endingBgm: {fileID: 0}
-  gameOverBgm: {fileID: 8300000, guid: 7b9ab0bf92fa5ce44b988b7c1140e5c1, type: 3}
+  gameOverBgm: {fileID: 8300000, guid: 9f0cc652f5a1328498877ac85b84993e, type: 3}
 --- !u!82 &586768435
 AudioSource:
   m_ObjectHideFlags: 0
