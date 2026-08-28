@@ -38,6 +38,7 @@ public class DialogueTestRunner : MonoBehaviour
     }
 
     // 지금 꽂힌 대화 재생
+    [ContextMenu("재시작")]
     public void Play()
     {
         if (dialogue == null)
