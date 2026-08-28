@@ -170,6 +170,9 @@ public class GameManager : MonoBehaviour
         EventDefinition todayEvent = events.PickTodayEvent();
         if (todayEvent != null)
         {
+            // 어제 민원 숫자가 상단바에 그대로 남아서, 오늘 목록이 잡히기 전엔 비워둠
+            complaint.todayComplaints.Clear();
+            complaint.currentIndex = 0;
             events.StartEvent(todayEvent);
             return;
         }

@@ -53,6 +53,12 @@ public class ResultView : MonoBehaviour
             lines.Add("무실수 보너스!");
             goods.Add(true);
         }
+        else if (cm.mistakeCount > 0)
+        {
+            // 왜 무실수 보너스를 못 받았는지 보이게
+            lines.Add("실수: " + cm.mistakeCount + "회");
+            goods.Add(false);
+        }
 
         lines.Add("식비: -" + economy.foodPaidToday + " cr");
         goods.Add(false);

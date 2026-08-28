@@ -9,6 +9,9 @@ public class HudView : MonoBehaviour
     [SerializeField] TMP_Text suspicionText; // 의심도
     [SerializeField] TMP_Text complaintText; // 오늘 민원 처리한 수
 
+    // 민원 칩 알약 (셀 게 없을 때 글자랑 같이 접음)
+    [SerializeField] GameObject complaintChip;
+
     void Update()
     {
         GameManager gm = GameManager.instance;
@@ -17,7 +20,23 @@ public class HudView : MonoBehaviour
             return;
         }
 
-        dayText.text = gm.calendar.day + "일차";
+        // 타이틀에선 게임 정보가 아직 의미가 없어서 통째로 숨김
+        bool show = (gm.phase != GamePhase.Intro);
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            Transform child = transform.GetChild(i);
+            if (child.gameObject.activeSelf != show)
+            {
+                child.gameObject.SetActive(show);
+            }
+        }
+        GetComponent<UnityEngine.UI.Image>().enabled = false; // 옛 반투명 띠는 안 씀
+        if (show == false)
+        {
+            return;
+        }
+
+        dayText.text = gm.calendar.day + " Day";
         creditsText.text = gm.economy.credits + " cr";
         // 기획서상 의심도는 0~100 정수라서 소수점은 안 보여줌
         suspicionText.text = "의심도 " + Mathf.RoundToInt(gm.suspicion.current)
@@ -35,13 +54,20 @@ public class HudView : MonoBehaviour
                 now = total;
             }
 
-            if (total <= 0)
+            // 아침 대사 중처럼 아직 셀 게 없으면 칸째로 접음 (빈 알약만 남으면 이상함)
+            bool hasCount = (total > 0);
+            if (complaintChip != null && complaintChip.activeSelf != hasCount)
+            {
+                complaintChip.SetActive(hasCount);
+            }
+
+            if (hasCount == false)
             {
                 complaintText.text = "";
             }
             else
             {
-                complaintText.text = now + " / " + total;
+                complaintText.text = now + "/" + total;
             }
         }
     }

@@ -23,6 +23,7 @@ public class TutorialManager : MonoBehaviour
     [Header("조건 확인에 쓰는 것들")]
     [SerializeField] GameObject pdaPanel;  // PdaOpened 확인용
     [SerializeField] GameObject printPart; // PrintOpened 확인용
+    [SerializeField] GameObject achieveWindow; // AchieveOpened 확인용 (업적 목록 창)
 
     // 안내가 여기는 안 가리게 피해줌 (대사판, PDA 버튼줄)
     [SerializeField] RectTransform[] avoid;
@@ -131,6 +132,13 @@ public class TutorialManager : MonoBehaviour
 
         FollowTarget();
 
+        // 결산 전용 단계는 결산에 들어가기 전엔 조건도 안 봄
+        // (업적 창을 낮에 미리 열어봤다고 단계가 조용히 넘어가면 안 됨)
+        if (steps[_step].resultOnly == true && phase != GamePhase.DayResult)
+        {
+            return;
+        }
+
         _shownFor += Time.deltaTime;
         if (_shownFor < MinShowTime)
         {
@@ -194,6 +202,10 @@ public class TutorialManager : MonoBehaviour
         {
             return gm.phase == GamePhase.DayResult;
         }
+        if (step.doneWhen == TutorialCheck.AchieveOpened)
+        {
+            return achieveWindow != null && achieveWindow.activeInHierarchy == true;
+        }
 
         return false;
     }
@@ -233,6 +245,15 @@ public class TutorialManager : MonoBehaviour
     {
         if (_step >= steps.Count || ring == null)
         {
+            return;
+        }
+
+        // 결산에서 할 단계는 결산에 들어가기 전까지 테두리를 접어둠
+        if (steps[_step].resultOnly == true && GameManager.instance != null
+            && GameManager.instance.phase != GamePhase.DayResult)
+        {
+            SetObject(hintBox, false);
+            SetObject(ring.gameObject, false);
             return;
         }
 
