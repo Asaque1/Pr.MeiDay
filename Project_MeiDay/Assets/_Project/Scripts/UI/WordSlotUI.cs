@@ -31,9 +31,13 @@ public class WordSlotUI : MonoBehaviour, IDropHandler, IPointerClickHandler
     // 칸 안 글자가 대사보다 커지면 어색해서 대사 크기까지만 (0 이면 프리팹 값 그대로)
     [SerializeField] float maxFontSizeOverride = 0f;
 
+    // 힌트(사투리)는 진짜 단어랑 헷갈리면 안 돼서 흐리게 보여줌
+    [SerializeField] float hintAlpha = 0.45f;
+
     TranslationView _view;
     int _slotIndex;
     float _maxFontSize = 0f; // 프리팹에 적혀있던 원래 크기 (이보다 커지진 않음)
+    Color _normalTextColor;  // 단어가 놓였을 때 원래 글자색
 
     void Awake()
     {
@@ -41,6 +45,8 @@ public class WordSlotUI : MonoBehaviour, IDropHandler, IPointerClickHandler
         {
             return;
         }
+
+        _normalTextColor = wordText.color;
 
         // 자동 크기를 켜면 fontSize 가 계산값으로 바뀌어서, 켜기 전에 원래 값을 챙겨둬야 함
         if (wordText.enableAutoSizing == true)
@@ -60,14 +66,17 @@ public class WordSlotUI : MonoBehaviour, IDropHandler, IPointerClickHandler
         _slotIndex = slotIndex;
 
         // 카드 자체가 아니라 카드에 쓰인 글자만 넘어옴
-        // 아직 아무것도 안 꽂았으면 진짜로 비워둠 (미리 뭘 써두면 힌트가 됨)
+        // 빈칸엔 정답 단어의 외계 사투리를 흐리게 깔아둠 (뭘 넣을지 힌트가 됨)
         if (slot.placedWord != null)
         {
             wordText.text = slot.placedWord.meaning;
+            wordText.color = _normalTextColor;
         }
         else
         {
-            wordText.text = "";
+            wordText.text = slot.hintDialect;
+            Color c = _normalTextColor;
+            wordText.color = new Color(c.r, c.g, c.b, c.a * hintAlpha);
         }
 
         ApplyLook(slot.category);

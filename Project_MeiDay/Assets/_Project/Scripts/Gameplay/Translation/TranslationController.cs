@@ -27,6 +27,7 @@ public class TranslationController : MonoBehaviour
             slot.category = complaint.slots[i].category;
             slot.correctWord = complaint.slots[i].PickAnswer();
             slot.placedWord = null;
+            slot.hintDialect = PickDialect(slot.correctWord);
             slots.Add(slot);
             _slotCardIndex.Add(-1);
         }
@@ -59,6 +60,34 @@ public class TranslationController : MonoBehaviour
         {
             RevealOneAnswer();
         }
+    }
+
+    // 사투리 힌트 하나 뽑기
+    // 사투리는 "유일, 존재, 참" 처럼 쉼표로 여러 개라 그중 하나를 랜덤으로 씀
+    string PickDialect(WordDefinition word)
+    {
+        if (word == null || string.IsNullOrEmpty(word.dialectText) == true)
+        {
+            return "";
+        }
+
+        string[] raw = word.dialectText.Split(',');
+        List<string> tokens = new List<string>();
+        for (int i = 0; i < raw.Length; i++)
+        {
+            string t = raw[i].Trim();
+            if (t.Length > 0)
+            {
+                tokens.Add(t); // "반려, 완전 내편," 처럼 끝에 쉼표가 남은 데이터 대비
+            }
+        }
+
+        if (tokens.Count == 0)
+        {
+            return "";
+        }
+
+        return tokens[Random.Range(0, tokens.Count)];
     }
 
     // 랜덤 상자 하나에 정답 카드를 미리 꽂아줌
