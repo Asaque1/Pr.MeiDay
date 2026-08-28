@@ -11,6 +11,7 @@ public class DialogueSystem : MonoBehaviour
     [Header("대화 UI")]
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private Image speakerFaceImage;
+    [SerializeField] private GameObject portraitFrameRoot; // 얼굴 뒤에 깔리는 배경틀 (얼굴이랑 같이 켜지고 꺼짐)
     [SerializeField] private TMP_Text speakerNameText;
     [SerializeField] private TMP_Text dialogueText;
 
@@ -121,6 +122,13 @@ public class DialogueSystem : MonoBehaviour
         DialogueLine line = currentDialogueData.dialogueLines[currentLineIndex];
 
         speakerFaceImage.sprite = line.speakerFace;
+        // 얼굴 없는 대사는 스프라이트 빈 이미지가 흰 네모로 떠서, 있을 때만 켬
+        // 배경틀도 얼굴이랑 같이 - 얼굴 없는데 틀만 떠 있으면 빈 남색 상자가 됨
+        speakerFaceImage.enabled = (line.speakerFace != null);
+        if (portraitFrameRoot != null)
+        {
+            portraitFrameRoot.SetActive(line.speakerFace != null);
+        }
         speakerNameText.text = line.speakerName;
 
         ClearChoiceButtons();

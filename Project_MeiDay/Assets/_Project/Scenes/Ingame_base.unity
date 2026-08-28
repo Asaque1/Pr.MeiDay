@@ -11548,6 +11548,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSystem
   dialoguePanel: {fileID: 649192526}
   speakerFaceImage: {fileID: 2145466342}
+  portraitFrameRoot: {fileID: 2141646548}
   speakerNameText: {fileID: 1033834198}
   dialogueText: {fileID: 503299559}
   choiceParent: {fileID: 1432821954}
@@ -13293,7 +13294,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -4450740439813251099, guid: c7fe9a06129e7ca4c94a22f61c8de30a, type: 3}
+  m_Sprite: {fileID: -4450740439813251099, guid: 7270ba2e6c809924690696bc664b6c32, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -33324,7 +33325,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -274, y: 4}
+  m_AnchoredPosition: {x: -180, y: 171}
   m_SizeDelta: {x: 132, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2141646550
@@ -33413,7 +33414,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 94, y: 167}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 124, y: 142}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2145466341
