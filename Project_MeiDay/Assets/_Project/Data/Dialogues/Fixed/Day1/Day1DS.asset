@@ -68,4 +68,15 @@ MonoBehaviour:
     speakerName: "\uD5EC\uB80C"
     text: "\uCBE7. \uC544\uBB34\uB9AC \uC778\uB825\uB09C\uC774\uB77C\uB3C4 \uADF8\uB807\uC9C0."
     choices: []
+    nextLineIndex: 9
+  - speakerFace: {fileID: 0}
+    speakerName: "\uC8FC\uC778\uACF5"
+    text: ...
+    choices: []
+    nextLineIndex: 10
+  - speakerFace: {fileID: 0}
+    speakerName: "\uC8FC\uC778\uACF5"
+    text: "\uADF8\uB798\uB3C4 \uCCAB\uB0A0\uC774\uB2C8\uAE4C..! \uC0DD\uD65C\uD558\uB2E4\uBCF4\uBA74
+      \uAD1C\uCC2E\uC544\uC9C8\uAC70\uC57C!"
+    choices: []
     nextLineIndex: -1

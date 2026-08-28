@@ -33,10 +33,14 @@ MonoBehaviour:
       nextLineIndex: 3
       eventId: 0
       eventValue: 0
+    - choiceText: "\uC544\uB2C8, \uADF8\uAC8C \uC544\uB2C8\uB77C.."
+      nextLineIndex: 3
+      eventId: 0
+      eventValue: 0
     nextLineIndex: 2
   - speakerFace: {fileID: 533347179103727038, guid: 90c5cc9267e526a418d62b40bd6f2a96, type: 3}
     speakerName: "\uD5EC\uB80C"
-    text: "\uC544, \uC0AC\uD22C\uB9AC\uB77C \uADF8\uB798. \uACE7 \uC788\uC73C\uBA74
+    text: "\uB410\uC5B4. \uC0AC\uD22C\uB9AC\uB77C \uADF8\uB798. \uACE7 \uC788\uC73C\uBA74
       \uC120\uAC70\uAC70\uB4E0."
     choices: []
     nextLineIndex: 4

@@ -12,4 +12,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 567fa180cbeff0043a09c0e520bf426e, type: 3}
   m_Name: Day2DS
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
-  dialogueLines: []
+  dialogueLines:
+  - speakerFace: {fileID: -9174565791234594843, guid: 8bad1c3663043b24f80cd497b6d32068, type: 3}
+    speakerName: "\uB178\uBA5C\uB77C"
+    text: "\uC548\uB155\uD558\uC138\uC694. \uC800\uB294 \uC5EC\uAE30 \uADFC\uCC98\uC5D0\uC11C
+      \uC11C\uC810\uC744 \uD558\uACE0 \uC788\uB294 \uB178\uBA5C\uB77C\uB77C\uACE0
+      \uD574\uC694."
+    choices:
+    - choiceText: "\uC8C4\uC1A1\uD569\uB2C8\uB2E4. \uC544\uC9C1 \uC5C5\uBB34 \uC2DC\uC791
+        \uC804\uC785\uB2C8\uB2E4."
+      nextLineIndex: 1
+      eventId: 0
+      eventValue: 0
+    - choiceText: "\uC548\uB155\uD558\uC138\uC694. \uBB34\uC2A8 \uC77C\uC778\uAC00\uC694?"
+      nextLineIndex: 2
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: 0
+  - speakerFace: {fileID: -9174565791234594843, guid: 8bad1c3663043b24f80cd497b6d32068, type: 3}
+    speakerName: "\uB178\uBA5C\uB77C"
+    text: "\uC544, \uADF8\uB807\uAD70\uC694.. \uADFC\uB370 \uBBFC\uC6D0\uC740 \uC544\uB2C8\uACE0,
+      \uC5B4\uB5A4 \uBD84\uAF10 \uC804\uD560 \uAC8C \uC788\uC5B4\uC11C\uC694."
+    choices: []
+    nextLineIndex: 3
+  - speakerFace: {fileID: -9174565791234594843, guid: 8bad1c3663043b24f80cd497b6d32068, type: 3}
+    speakerName: "\uB178\uBA5C\uB77C"
+    text: "\uB124,\uD070\uC77C\uC740 \uC544\uB2CC\uB370 \uB9D0\uC774\uC8E0. \uC800\uD76C
+      \uC11C\uC810 \uAD00\uB828\uB41C \uC77C\uC774\uC5D0\uC694."
+    choices: []
+    nextLineIndex: 3
+  - speakerFace: {fileID: -9174565791234594843, guid: 8bad1c3663043b24f80cd497b6d32068, type: 3}
+    speakerName: "\uB178\uBA5C\uB77C"
+    text: "\uC5EC\uAE30 \uC9C1\uC6D0 \uD55C\uBD84\uC774 \uB300\uCD9C\uC774 \uB9CE\uC774
+      \uBC00\uB824\uC11C\uC694. \uD55C 2\uAC1C\uC6D4 \uC815\uB3C4?"
+    choices:
+    - choiceText: "\uADF8\uAC8C \uB204\uAD6C\uC778\uAC00\uC694? \uC804\uB2EC\uD574\uB4DC\uB9B4\uAC8C\uC694."
+      nextLineIndex: 4
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: 4
+  - speakerFace: {fileID: -9174565791234594843, guid: 8bad1c3663043b24f80cd497b6d32068, type: 3}
+    speakerName: "\uB178\uBA5C\uB77C"
+    text: "'\uD5EC\uB80C \uBA38\uD540'\uC774\uB77C\uB294 \uBD84\uC774\uC5D0\uC694.
+      \uACE7 \uD68C\uC6D0 \uB4F1\uAE09\uC774 \uB0B4\uB824\uAC08 \uC218\uC900\uC774\uB77C..
+      \uAF2D \uC804\uB2EC\uD574\uC8FC\uC138\uC694!"
+    choices:
+    - choiceText: "\uB124 \uC54C\uACA0\uC2B5\uB2C8\uB2E4."
+      nextLineIndex: -1
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: 0

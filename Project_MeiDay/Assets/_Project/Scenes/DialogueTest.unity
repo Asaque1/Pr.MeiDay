@@ -397,7 +397,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b4b85dacd3a67440a73492b997b5ad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DialogueTestRunner
-  dialogue: {fileID: 11400000, guid: 04db3436bce1380418be8164b2f5c598, type: 2}
+  dialogue: {fileID: 11400000, guid: 095cf2b2713c85d48aae0caf9c2b055e, type: 2}
   playOnStart: 1
 --- !u!4 &455828080
 Transform:
