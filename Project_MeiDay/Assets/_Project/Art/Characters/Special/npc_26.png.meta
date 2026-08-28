@@ -5,18 +5,6 @@ TextureImporter:
   - first:
       213: 533347179103727038
     second: npc_26_0
-  - first:
-      213: -7658444979658103695
-    second: npc_26_1
-  - first:
-      213: -3802168411051911969
-    second: npc_26_2
-  - first:
-      213: -1973002549479159616
-    second: npc_26_3
-  - first:
-      213: 9067203912334577289
-    second: npc_26_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -128,10 +116,10 @@ TextureImporter:
       name: npc_26_0
       rect:
         serializedVersion: 2
-        x: 692
-        y: 428
-        width: 452
-        height: 504
+        x: 684
+        y: 0
+        width: 579
+        height: 1075
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -142,94 +130,6 @@ TextureImporter:
       bones: []
       spriteID: ebd2f600f64d66700800000000000000
       internalID: 533347179103727038
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: npc_26_1
-      rect:
-        serializedVersion: 2
-        x: 807
-        y: 875
-        width: 203
-        height: 201
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 174ea9ffddcb7b590800000000000000
-      internalID: -7658444979658103695
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: npc_26_2
-      rect:
-        serializedVersion: 2
-        x: 683
-        y: 481
-        width: 39
-        height: 102
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: fd41a0399fbfb3bc0800000000000000
-      internalID: -3802168411051911969
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: npc_26_3
-      rect:
-        serializedVersion: 2
-        x: 1125
-        y: 510
-        width: 35
-        height: 102
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 0c8ca5972ac7e94e0800000000000000
-      internalID: -1973002549479159616
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: npc_26_4
-      rect:
-        serializedVersion: 2
-        x: 779
-        y: 0
-        width: 485
-        height: 490
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 98e0cbc0bed25dd70800000000000000
-      internalID: 9067203912334577289
       vertices: []
       indices: 
       edges: []
@@ -249,10 +149,6 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       npc_26_0: 533347179103727038
-      npc_26_1: -7658444979658103695
-      npc_26_2: -3802168411051911969
-      npc_26_3: -1973002549479159616
-      npc_26_4: 9067203912334577289
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

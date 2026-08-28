@@ -22,6 +22,12 @@ public class DialogueSystem : MonoBehaviour
     [Header("대사 출력 설정")]
     [SerializeField] private float typingSpeed = 0.04f;
 
+    [Header("초상화 표시 설정")]
+    [Tooltip("인물 그림을 위에서부터 세로로 얼마나 보여줄지 (0.75 = 머리부터 몸까지, 1 = 전신)")]
+    [SerializeField, Range(0.3f, 1f)] private float portraitShowRatio = 0.75f;
+    [Tooltip("초상화 틀 안쪽 여백")]
+    [SerializeField] private float portraitPadding = 6f;
+
     [Header("선택지 설정")]
     [Tooltip("선택지 표시 시 숨길 GameObject (null 이면 dialogueText 사용)")]
     [SerializeField] private GameObject hideOnChoiceTarget;
@@ -129,6 +135,7 @@ public class DialogueSystem : MonoBehaviour
         {
             portraitFrameRoot.SetActive(line.speakerFace != null);
         }
+        FitPortrait(line.speakerFace);
         speakerNameText.text = line.speakerName;
 
         ClearChoiceButtons();
@@ -140,6 +147,52 @@ public class DialogueSystem : MonoBehaviour
             StopCoroutine(typingCoroutine);
 
         typingCoroutine = StartCoroutine(TypeDialogue(line.text));
+    }
+
+    // 인물 그림을 초상화 틀에 앉히기
+    // 전신 그림을 틀에 통째로 넣으면 사람이 콩알만 해짐 - 얼굴이 안 보임
+    // 그래서 머리를 틀 위에 붙이고 위에서 portraitShowRatio 만큼만 보여줌
+    // 아래로 넘치는 만큼은 틀(RectMask2D)이 잘라내서 "머리부터 몸까지"로 끊김
+    // 단, 가로로 넘칠 것 같으면 가로에 맞춰 줄임 - 팔이 잘려나가면 안 되니까
+    private void FitPortrait(Sprite face)
+    {
+        if (face == null || speakerFaceImage == null)
+            return;
+
+        RectTransform portrait = speakerFaceImage.rectTransform;
+        RectTransform frame = portrait.parent as RectTransform;
+        if (frame == null)
+            return;
+
+        float drawWidth = frame.rect.width - portraitPadding * 2f; // 좌우는 여백을 둠
+        float drawHeight = frame.rect.height - portraitPadding;    // 위만 여백, 아래는 잘리는 쪽
+        float faceWidth = face.rect.width;
+        float faceHeight = face.rect.height;
+
+        if (drawWidth <= 0f || drawHeight <= 0f || faceWidth <= 0f || faceHeight <= 0f)
+            return; // 틀이나 그림이 이상하면 건드리지 않음
+
+        // 그림의 위쪽 portraitShowRatio 만큼이 틀 높이를 채우도록 키움
+        float scale = drawHeight / (faceHeight * portraitShowRatio);
+
+        if (faceWidth * scale > drawWidth)
+        {
+            scale = drawWidth / faceWidth; // 가로가 넘치면 팔 안 잘리게 줄임
+        }
+
+        // 키가 작아서 다 들어가는 그림은 바닥에 세움 (위에 붙이면 공중에 뜬 것처럼 보임)
+        float drawn = faceHeight * scale;
+        float gap = drawHeight - drawn;
+        if (gap < 0f)
+        {
+            gap = 0f;
+        }
+
+        portrait.anchorMin = new Vector2(0.5f, 1f);
+        portrait.anchorMax = new Vector2(0.5f, 1f);
+        portrait.pivot = new Vector2(0.5f, 1f); // 머리 꼭대기가 기준점
+        portrait.sizeDelta = new Vector2(faceWidth * scale, drawn);
+        portrait.anchoredPosition = new Vector2(0f, -(portraitPadding + gap));
     }
 
     private IEnumerator TypeDialogue(string text)

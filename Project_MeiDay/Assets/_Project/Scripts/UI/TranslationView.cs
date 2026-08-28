@@ -21,6 +21,13 @@ public class TranslationView : MonoBehaviour
     [SerializeField] UnityEngine.UI.Image complainantImage;
     [SerializeField] NpcPortrait complainantParts;
 
+    // 민원인 창 안쪽 여백 (그림이 틀에 딱 붙으면 답답해 보임)
+    [SerializeField] float complainantPadding = 8f;
+
+    // 민원인을 위에서부터 세로로 얼마나 보여줄지 (0.75 = 머리부터 몸까지, 1 = 전신)
+    [Range(0.3f, 1f)]
+    [SerializeField] float complainantShowRatio = 0.75f;
+
     [Header("처리 단계에만 열리는 것들")]
     // 카드를 다 꽂고 해석이 맞아야 여기 버튼들이 나옴
     // 잠글 때는 아예 숨김 - 눌리지도 않는데 보이면 고장난 걸로 오해함
@@ -321,6 +328,7 @@ public class TranslationView : MonoBehaviour
                 complainantImage.sprite = portrait;
                 complainantImage.color = Color.white; // 자리만 잡아둔 검은색이 남아있으면 그림이 안 보임
                 complainantImage.preserveAspect = true;
+                FitComplainant(portrait);
             }
             return;
         }
@@ -335,6 +343,57 @@ public class TranslationView : MonoBehaviour
             complainantParts.gameObject.SetActive(true);
             complainantParts.Build(seed);
         }
+    }
+
+    // 전용 그림을 민원인 창에 앉히기
+    // 전신 그림을 창에 통째로 넣으면 사람이 콩알만 해져서 얼굴이 안 보임
+    // 그래서 머리를 창 위에 붙이고 위에서 complainantShowRatio 만큼만 보여줌
+    // 아래로 넘치는 만큼은 창(RectMask2D)이 잘라내서 "머리부터 몸까지"로 끊김
+    // 단, 가로로 넘칠 것 같으면 가로에 맞춰 줄임 - 팔이 잘려나가면 안 되니까
+    void FitComplainant(Sprite portrait)
+    {
+        if (portrait == null || complainantImage == null)
+        {
+            return;
+        }
+
+        RectTransform image = complainantImage.rectTransform;
+        RectTransform frame = image.parent as RectTransform;
+        if (frame == null)
+        {
+            return;
+        }
+
+        float drawWidth = frame.rect.width - complainantPadding * 2f; // 좌우는 여백
+        float drawHeight = frame.rect.height - complainantPadding;    // 위만 여백, 아래는 잘리는 쪽
+        float artWidth = portrait.rect.width;
+        float artHeight = portrait.rect.height;
+
+        if (drawWidth <= 0f || drawHeight <= 0f || artWidth <= 0f || artHeight <= 0f)
+        {
+            return; // 틀이나 그림이 이상하면 건드리지 않음
+        }
+
+        float scale = drawHeight / (artHeight * complainantShowRatio);
+
+        if (artWidth * scale > drawWidth)
+        {
+            scale = drawWidth / artWidth; // 가로가 넘치면 팔 안 잘리게 줄임
+        }
+
+        // 키가 작아서 다 들어가는 그림은 바닥에 세움 (위에 붙이면 공중에 뜬 것처럼 보임)
+        float drawn = artHeight * scale;
+        float gap = drawHeight - drawn;
+        if (gap < 0f)
+        {
+            gap = 0f;
+        }
+
+        image.anchorMin = new Vector2(0.5f, 1f);
+        image.anchorMax = new Vector2(0.5f, 1f);
+        image.pivot = new Vector2(0.5f, 1f); // 머리 꼭대기가 기준점
+        image.sizeDelta = new Vector2(artWidth * scale, drawn);
+        image.anchoredPosition = new Vector2(0f, -(complainantPadding + gap));
     }
 
     // 민원인이 하는 말 만들기
