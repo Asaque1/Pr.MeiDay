@@ -12,4 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5be3fc5d0a7853a40b48be07cce3ac8d, type: 3}
   m_Name: EventSchedule
   m_EditorClassIdentifier: Assembly-CSharp::EventSchedule
-  days: []
+  days:
+  - day: 1
+    slot: 0
+    eventDef: {fileID: 11400000, guid: 001b836e3bdd82c41a0035a2588179f7, type: 2}
+  - day: 1
+    slot: 1
+    eventDef: {fileID: 11400000, guid: 0f4f2adbe61c1374bad66245eb244aa8, type: 2}
+  - day: 1
+    slot: 2
+    eventDef: {fileID: 11400000, guid: bfddbef9903332848aa6a35f7a070c9c, type: 2}
