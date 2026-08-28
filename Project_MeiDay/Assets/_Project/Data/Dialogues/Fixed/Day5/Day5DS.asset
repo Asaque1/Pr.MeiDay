@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 567fa180cbeff0043a09c0e520bf426e, type: 3}
+  m_Name: Day5DS
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  dialogueLines:
+  - speakerFace: {fileID: 0}
+    speakerName: "\uC8FC\uC778\uACF5"
+    text: "\uD750\uC554.. \uC7A0\uC774 \uC548 \uAE68\uB124.."
+    choices: []
+    nextLineIndex: 1
+  - speakerFace: {fileID: 533347179103727038, guid: 90c5cc9267e526a418d62b40bd6f2a96, type: 3}
+    speakerName: "\uD5EC\uB80C"
+    text: "\uC2E0\uC785! \uBCF4\uB2C8\uAE4C \uB108 \uC55E\uC73C\uB85C \uBB34\uC2A8
+      \uD3B8\uC9C0\uAC00 \uD558\uB098 \uC654\uB294\uB370?"
+    choices:
+    - choiceText: "(\uD3B8\uC9C0\uAC00 \uC62C \uACF3\uC774 \uC5C6\uB294\uB370..?)"
+      nextLineIndex: 2
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: 2
+  - speakerFace: {fileID: 0}
+    speakerName: "\uD3B8\uC9C0"
+    text: "\uB2F9\uC2E0\uC774 \uC6D0\uD558\uB294 \uAC83\uC774 \uB2E4\uB978 \uC0AC\uB78C\uB4E4\uACFC
+      \uB2E4\uB974\uB2E4\uB294 \uAC83\uC744 \uC54C\uACE0 \uC788\uC2B5\uB2C8\uB2E4."
+    choices: []
+    nextLineIndex: 3
+  - speakerFace: {fileID: 0}
+    speakerName: "\uD3B8\uC9C0"
+    text: "\uC544\uB798\uC758 \uC88C\uD45C\uB85C \uC624\uB298 \uB9CC\uB098\uACE0
+      \uC2F6\uC2B5\uB2C8\uB2E4.\t"
+    choices: []
+    nextLineIndex: 4
+  - speakerFace: {fileID: 0}
+    speakerName: "\uC8FC\uC778\uACF5"
+    text: "\uC774 \uD3B8\uC9C0.. (\uC124\uB9C8 \uB0B4 \uC815\uCCB4\uB97C \uB4E4\uCF30\uB098?
+      \uC2E0\uACE0 \uB2F9\uD558\uBA74 \uBB34\uC870\uAC74 \uB2E4\uC2DC \uADF8 \uC5F0\uAD6C\uC18C\uB85C
+      \uB3CC\uC544\uAC00\uAC8C \uB420 \uAC70\uC57C..)"
+    choices: []
+    nextLineIndex: 5
+  - speakerFace: {fileID: 533347179103727038, guid: 90c5cc9267e526a418d62b40bd6f2a96, type: 3}
+    speakerName: "\uD5EC\uB80C"
+    text: "\uC2E0\uC785! \uBB34\uC2A8 \uB0B4\uC6A9\uC774\uAE30\uC5D0 \uADF8\uB807\uAC8C
+      \uC2EC\uAC01\uD55C \uD45C\uC815\uC774\uC57C? \uD070\uC77C\uC774\uB77C\uB3C4
+      \uC788\uB294 \uAC70\uC57C?"
+    choices:
+    - choiceText: "\uC544\uB2C8\uC694? \uC544\uBB34 \uBB38\uC81C \uC5C6\uC5B4\uC694."
+      nextLineIndex: 6
+      eventId: 0
+      eventValue: 0
+    - choiceText: "\uBCC4 \uAC70 \uC544\uB2CC \uB0B4\uC6A9\uC774\uB124\uC694."
+      nextLineIndex: 6
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: 6
+  - speakerFace: {fileID: 533347179103727038, guid: 90c5cc9267e526a418d62b40bd6f2a96, type: 3}
+    speakerName: "\uD5EC\uB80C"
+    text: "\uADF8\uB798? \uADF8\uB7FC \uBB50 \uB410\uACE0. \uACE7 \uC5C5\uBB34 \uC2DC\uC791\uC774\uB2C8\uAE4C
+      \uC5B4\uC11C \uC77C \uC900\uBE44\uD574."
+    choices: []
+    nextLineIndex: -1

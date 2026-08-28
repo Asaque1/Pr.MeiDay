@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 567fa180cbeff0043a09c0e520bf426e, type: 3}
+  m_Name: Day3DE
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  dialogueLines:
+  - speakerFace: {fileID: 0}
+    speakerName: "\uC8FC\uC778\uACF5"
+    text: "\uC624\uB298\uB3C4 \uC5C5\uBB34 \uB05D! \uBB54\uAC00 \uC774\uC0C1\uD558\uC9C0\uB9CC,
+      \uADF8\uB798\uB3C4 \uD3C9\uBC94\uD588\uC5B4."
+    choices: []
+    nextLineIndex: 1
+  - speakerFace: {fileID: -9077174886096068995, guid: 66b02e9ee45c827428874ee60a03b86e, type: 3}
+    speakerName: "\uB808\uC628"
+    text: "\uBAA8\uB450 \uC9D1\uC911\uBC14\uB78D\uB2C8\uB2E4! \uC800\uB294 \uBCF4\uC548\uACFC
+      5\uD300 \uD300\uC7A5 \uB808\uC628 \uB0D0\uBB38\uC785\uB2C8\uB2E4."
+    choices: []
+    nextLineIndex: 2
+  - speakerFace: {fileID: -9077174886096068995, guid: 66b02e9ee45c827428874ee60a03b86e, type: 3}
+    speakerName: "\uB808\uC628"
+    text: "\uC624\uB298,\uC774\uACF3\uC744 \uCD9C\uC785\uD558\uB294 \uBB3C\uB958\uD488\uB4E4
+      \uC911\uC5D0\uC11C, \uC911\uB300 \uC81C\uD55C \uBB3C\uD488\uB4E4\uC774 \uBC1C\uACAC\uB418\uC5C8\uC2B5\uB2C8\uB2E4.
+      \uC800\uD76C\uB294 \uC774\uC5D0 \uB300\uD574 \uC218\uC0AC \uC911\uC774\uBA70
+      \uACE7 \uC120\uAC70\uC778 \uB9CC\uD07C, \uCCA0\uC800\uD55C \uC870\uC0AC\uB97C
+      \uD560 \uC608\uC815\uC785\uB2C8\uB2E4."
+    choices: []
+    nextLineIndex: 3
+  - speakerFace: {fileID: -9077174886096068995, guid: 66b02e9ee45c827428874ee60a03b86e, type: 3}
+    speakerName: "\uB808\uC628"
+    text: "\uB610\uD55C \uD604\uC7AC \uC774 \uC815\uAC70\uC7A5\uC5D0 \uBC00\uC785\uAD6D\uC758
+      \uC99D\uAC00\uAC00 \uD655\uC778\uB41C \uBC14, \uBAA8\uB4E0 \uC9C1\uC6D0\uBD84\uB4E4\uC740
+      \uC55E\uC73C\uB85C \uC788\uC744 '\uC870\uC0AC'\uC5D0\uC11C, \uCD5C\uB300\uD55C
+      \uB9CE\uC740 \uD611\uC870 \uBD80\uD0C1\uBC14\uB78D\uB2C8\uB2E4."
+    choices: []
+    nextLineIndex: 4
+  - speakerFace: {fileID: -9077174886096068995, guid: 66b02e9ee45c827428874ee60a03b86e, type: 3}
+    speakerName: "\uB808\uC628"
+    text: "\uD589\uC815\uC5D0 \uBB38\uC81C\uAC00 \uC0DD\uAE30\uC9C0 \uC54A\uB3C4\uB85D
+      \uD0D0\uC815\uC744 \uACE0\uC6A9\uD574 \uC218\uC0AC\uD560 \uC608\uC815\uC785\uB2C8\uB2E4.
+      \uC5EC\uB7EC\uBD84\uC740 \uD589\uC815\uC5D0 \uACF5\uBC31\uC774 \uC5C6\uB3C4\uB85D
+      \uC870\uCE58 \uBD80\uD0C1\uB4DC\uB9BD\uB2C8\uB2E4. \uC774\uC0C1."
+    choices: []
+    nextLineIndex: -1
