@@ -18,11 +18,7 @@ MonoBehaviour:
   randomChance: 0.3
   condition: 1
   conditionValue: 2
-  lines:
-  - speaker: {fileID: 0}
-    text: 어젯밤 퇴근길에 처음 보는 골목이 있었다. 낮에는 분명 벽이었는데.
-  - speaker: {fileID: 0}
-    text: 간판이 하나둘 켜져 있었다. 밤에만 여는 가게들인 모양이다.
+  lines: []
   linkedComplaint: {fileID: 0}
   suspicionChange: 0
   unlocksShop: 1
