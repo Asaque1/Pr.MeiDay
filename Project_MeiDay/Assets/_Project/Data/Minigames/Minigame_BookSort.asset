@@ -21,6 +21,6 @@ MonoBehaviour:
   basePay: 40
   expReward: 30
   kind: 1
-  bookCount: 6
+  bookCount: 22
   genreCount: 3
-  playSeconds: 20
+  playSeconds: 17

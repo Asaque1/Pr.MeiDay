@@ -589,18 +589,21 @@ public class DebugLoopDriver : MonoBehaviour
             return;
         }
 
-        string bookLabel = "카트에서 나온 책: " + (game.currentGenre + 1) + "번 장르";
-        if (game.currentGolden == true)
+        // 카트에 실린 책들을 줄줄이 보여주고, 맨 앞 책을 골라 꽂아봄
+        string cart = "카트: ";
+        for (int i = 0; i < game.cartGenre.Count; i++)
         {
-            bookLabel += " (황금 책!)";
+            cart += (game.cartGenre[i] + 1) + "번" + (game.cartGolden[i] ? "(황금) " : " ");
         }
-        GUILayout.Label(bookLabel);
+        GUILayout.Label(cart);
+        GUILayout.Label("맨 앞 책을 어느 칸에 꽂을지 고르기 (진짜 판은 끌어다 놓음)");
+
         GUILayout.BeginHorizontal();
         for (int i = 0; i < game.genreCount; i++)
         {
             if (GUILayout.Button((i + 1) + "번 칸"))
             {
-                game.PlaceBook(i);
+                game.PlaceBook(0, i);
             }
         }
         GUILayout.EndHorizontal();
@@ -692,11 +695,16 @@ public class DebugLoopDriver : MonoBehaviour
 
         GUILayout.Label("남은 시간: " + Mathf.CeilToInt(game.timeLeft) + "초  줌 " + game.handedCount + " / 헛손질 " + game.missCount);
         GUILayout.Label("길거리: " + StreetBar(game));
-        GUILayout.Label("P = 손님, G = 황금 손님, = 구간일 때 던질 것");
+        GUILayout.Label("P = 손님, G = 황금 손님 (진짜 판은 눌러서 겨눔)");
 
-        if (GUILayout.Button("홍보물 던지기!"))
+        // 여기선 겨눌 수가 없으니 맨 앞 손님이 갈 자리로 대신 던져줌
+        if (GUILayout.Button("맨 앞 손님한테 던지기!"))
         {
-            game.Throw();
+            if (game.people.Count > 0)
+            {
+                PromoPerson target = game.people[0];
+                game.Throw(target.pos + target.dir * target.speed * game.flyTime);
+            }
         }
 
         // OnGUI 는 한 프레임에 여러 번 불려서 그리기 단계에서만 진행시킴
@@ -706,33 +714,26 @@ public class DebugLoopDriver : MonoBehaviour
         }
     }
 
-    // 손님 위치를 글자 줄로 그려줌 (= 구간이 던질 타이밍)
+    // 손님 위치를 글자 줄로 그려줌 (가로 자리만. 세로는 글자로 못 그리니 생략)
     string StreetBar(PromoGame game)
     {
         char[] bar = new char[25];
         for (int i = 0; i < bar.Length; i++)
         {
-            float t = (float)i / (bar.Length - 1);
-            if (t >= 0.35f && t <= 0.65f)
-            {
-                bar[i] = '=';
-            }
-            else
-            {
-                bar[i] = '-';
-            }
+            bar[i] = '-';
         }
 
-        for (int i = 0; i < game.peoplePos.Count; i++)
+        for (int i = 0; i < game.people.Count; i++)
         {
-            int p = Mathf.RoundToInt(game.peoplePos[i] * (bar.Length - 1));
-            if (game.peopleGolden[i] == true)
+            PromoPerson p = game.people[i];
+            int at = Mathf.RoundToInt(Mathf.Clamp01(p.pos.x) * (bar.Length - 1));
+            if (p.golden == true)
             {
-                bar[p] = 'G';
+                bar[at] = 'G';
             }
             else
             {
-                bar[p] = 'P';
+                bar[at] = 'P';
             }
         }
 

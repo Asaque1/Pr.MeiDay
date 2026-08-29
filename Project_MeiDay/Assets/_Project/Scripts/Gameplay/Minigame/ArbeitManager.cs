@@ -6,6 +6,7 @@ using UnityEngine;
 public class ArbeitManager : MonoBehaviour
 {
     public int arbeitLeftToday = 0;          // 오늘 남은 알바 횟수
+    public int arbeitMaxToday = 0;           // 오늘 받은 총 횟수 (화면에 "2/5" 로 보여줄 때 씀)
     public MinigameDefinition currentArbeit; // 지금 하는 알바 (없으면 null)
     public BookSortGame bookSort;            // 책 정리 하는 중이면 여기 들어있음 (아니면 null)
     public SpotlightGame spotlight;          // 조명 연출 하는 중이면 여기 들어있음 (아니면 null)
@@ -41,10 +42,23 @@ public class ArbeitManager : MonoBehaviour
         }
 
         arbeitLeftToday = count + carried;
+        arbeitMaxToday = arbeitLeftToday; // 오늘 몫은 여기까지
         currentArbeit = null;
         bookSort = null;
         spotlight = null;
         promo = null;
+    }
+
+    // 화면에 보여줄 오늘 총 횟수
+    // 이월이나 아이템으로 상한 위로 붙는 경우가 있어서 config.arbeitMax 를 쓰면 "6/3" 같은 게 나옴
+    // 저장에서 불러온 판은 총량이 안 남아 있어서 남은 횟수를 총량으로 봄
+    public int MaxToday()
+    {
+        if (arbeitMaxToday < arbeitLeftToday)
+        {
+            return arbeitLeftToday;
+        }
+        return arbeitMaxToday;
     }
 
     // 오늘 알바 더 할 수 있는지
@@ -112,6 +126,49 @@ public class ArbeitManager : MonoBehaviour
         BackToPhaseBgm();
     }
 
+    // 수행률이 어느 구간인지 (기획서 계단: 맨 위 전부, 60% 이상 3/4, 40% 이상 절반, 그 밑은 실패)
+    //
+    // 맨 위 칸만 기획서의 80% 에서 88% 로 올림
+    // 80 이면 보통 실력(70~85)도 그냥 만점이 나와서 "잘했다" 가 아니라 참가상이 됐음
+    // 아래 두 칸(60/40)은 그대로 - 20초 꼬박 하고 0원이 되는 구간을 넓히면 의욕만 꺾임
+    public const float TopRate = 0.88f;
+
+    // 결과 화면에서도 같은 기준을 써야 해서 밖에서 부를 수 있게 빼둠
+    public static float TierOf(float rate)
+    {
+        if (rate >= TopRate)
+        {
+            return 1f;
+        }
+        if (rate >= 0.6f)
+        {
+            return 0.75f;
+        }
+        if (rate >= 0.4f)
+        {
+            return 0.5f;
+        }
+        return 0f;
+    }
+
+    // 그 구간을 사람 말로 (결과 화면에 띄움)
+    public static string TierName(float rate)
+    {
+        if (rate >= TopRate)
+        {
+            return "아주 잘함";
+        }
+        if (rate >= 0.6f)
+        {
+            return "괜찮음";
+        }
+        if (rate >= 0.4f)
+        {
+            return "그럭저럭";
+        }
+        return "실패";
+    }
+
     // 알바 끝 - 수행률 구간에 따라 보수랑 상점 경험치를 받음
     public void FinishArbeit(float rate)
     {
@@ -120,20 +177,7 @@ public class ArbeitManager : MonoBehaviour
             return;
         }
 
-        // 기획서 계단: 80% 이상 전부, 60% 이상 3/4, 40% 이상 절반, 그 밑은 실패
-        float tier = 0f;
-        if (rate >= 0.8f)
-        {
-            tier = 1f;
-        }
-        else if (rate >= 0.6f)
-        {
-            tier = 0.75f;
-        }
-        else if (rate >= 0.4f)
-        {
-            tier = 0.5f;
-        }
+        float tier = TierOf(rate);
 
         int pay = Mathf.RoundToInt(currentArbeit.basePay * tier);
         int exp = Mathf.RoundToInt(currentArbeit.expReward * tier);
@@ -147,6 +191,13 @@ public class ArbeitManager : MonoBehaviour
         {
             GameManager.instance.achievements.AddArbeit();
             GameManager.instance.achievements.Check();
+        }
+
+        // 밤에 한 알바는 다음 아침 저장까지 안 남아서, 여기서 바로 저장해둠
+        // (밤에 끄고 이어하면 그날 밤 알바가 통째로 사라졌음)
+        if (GameManager.instance.save != null)
+        {
+            GameManager.instance.save.Save();
         }
 
         currentArbeit = null;

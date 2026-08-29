@@ -1,58 +1,74 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// 서점 알바 화면 - 카트에서 나온 책을 장르 칸에 넣음
-// 장르 버튼은 인스펙터에 장르 수만큼 넣어두면 됨 (누르는 건 코드가 연결해줌)
+// 서점 알바 화면 - 위에 나온 책을 끌어내려 아래 카트의 맞는 칸에 담음
+// 카트가 다 차면(위 책을 다 치우면) 다음 책들이 나옴
 public class BookSortView : MonoBehaviour
 {
-    [Header("장르")]
-    [SerializeField] Button[] genreButtons; // 장르 칸 버튼들
-    // 장르별 색 - 버튼이랑 책이 같은 색이라야 눈으로 짝지을 수 있음
-    [SerializeField] Color[] genreColors = new Color[] {
-        new Color(0.96f, 0.62f, 0.19f), // 주황
-        new Color(0.16f, 0.60f, 0.93f), // 파랑
-        new Color(0.27f, 0.70f, 0.60f), // 청록
-    };
+    [Header("카트 칸")]
+    [SerializeField] RectTransform[] shelves;  // 장르 순서대로 (0번 칸 = 장르 0)
+    [SerializeField] TMP_Text[] shelfLabels;   // 칸 이름 (없어도 됨)
 
-    [Header("책 더미")]
-    // 맨 앞 책이 지금 꽂아야 할 책 (뒤엣것들은 다음 책이 쌓여있는 느낌만 냄)
-    [SerializeField] Image frontBook;
-    [SerializeField] Image[] backBooks;
-    [SerializeField] TMP_Text bookText; // 책에 적히는 글 (황금 표시 등)
+    [Header("카트")]
+    [SerializeField] RectTransform cartArea;   // 책이 놓이는 자리
+    [SerializeField] BookCardUI bookPrefab;    // 책 카드 하나 (꺼둔 채로 두면 됨)
+    [SerializeField] RectTransform dragLayer;  // 끄는 동안 책이 올라앉을 곳 (없으면 이 화면)
 
     [Header("위/아래 줄")]
-    [SerializeField] Image timerFill;      // 남은 시간 막대 (Filled 이미지)
-    [SerializeField] TMP_Text limitText;   // "제한 시간: N초"
-    [SerializeField] TMP_Text progressText; // "0/6"
-    [SerializeField] TMP_Text countText;   // 황금/실수 (안 꽂아둬도 됨)
+    [SerializeField] Image timerFill;
+    [SerializeField] TMP_Text limitText;
+    [SerializeField] TMP_Text progressText;
+    [SerializeField] TMP_Text countText;
+    [SerializeField] TMP_Text guideText;
+
+    [Header("모양")]
+    [SerializeField] float cardGap = 12f; // 카트에 놓인 책 사이 간격
+    [SerializeField] Color[] genreColors = new Color[] {
+        new Color(0.85f, 0.35f, 0.35f),
+        new Color(0.35f, 0.55f, 0.85f),
+        new Color(0.40f, 0.75f, 0.45f),
+        new Color(0.80f, 0.65f, 0.30f),
+    };
+    [SerializeField] Color goldenColor = new Color(0.98f, 0.80f, 0.28f);
+    [SerializeField] float guideShowTime = 3f;
 
     ArbeitView _owner;
-    bool _wired = false; // 버튼 연결을 한 번만 하려고
+    List<BookCardUI> _cards = new List<BookCardUI>();
+    float _elapsed = 0f;
 
     // 알바 화면이 불러줌
     public void Play(ArbeitView owner)
     {
         _owner = owner;
+        _elapsed = 0f;
         gameObject.SetActive(true);
 
-        BookSortGame game = GetGame();
-        if (genreButtons == null || genreButtons.Length == 0)
+        if (cartArea == null || bookPrefab == null || shelves == null || shelves.Length == 0)
         {
-            // 버튼이 아예 없으면 책을 꽂을 방법이 없음
-            Debug.LogWarning("책 정리 화면에 장르 버튼이 하나도 연결 안 됨");
-            Finish(game);
-            return;
-        }
-        if (game != null && genreButtons.Length < game.genreCount)
-        {
-            Debug.LogWarning("장르 버튼이 " + genreButtons.Length + "개뿐인데 장르는 "
-                + game.genreCount + "개 - 못 꽂는 책이 생겨서 수행률이 안 나옴");
+            Debug.LogWarning("책 정리 화면에 책 놓는 자리나 카트 칸이 연결 안 됨");
         }
 
-        WireButtons();
-        PaintButtons();
-        Refresh();
+        BookSortGame game = GetGame();
+        if (game != null && limitText != null)
+        {
+            limitText.text = "제한 시간: " + Mathf.RoundToInt(game.duration) + "초";
+        }
+
+        ShowShelfLabels(game);
+        RebuildCards();
+
+        if (guideText != null)
+        {
+            guideText.text = "위의 책을 아래 같은 색 카트 칸에 끌어다 놓으세요";
+            guideText.gameObject.SetActive(true);
+        }
+    }
+
+    void OnDisable()
+    {
+        ClearCards();
     }
 
     void Update()
@@ -63,183 +79,210 @@ public class BookSortView : MonoBehaviour
             return;
         }
 
+        _elapsed += Time.deltaTime;
         game.Tick(Time.deltaTime);
-        RefreshTimer(game);
+        RefreshTexts(game);
 
-        // 시간이 다 되면 거기까지 한 만큼으로 끝냄
+        if (guideText != null && _elapsed >= guideShowTime && guideText.gameObject.activeSelf == true)
+        {
+            guideText.gameObject.SetActive(false);
+        }
+
         if (game.IsDone() == true)
         {
             Finish(game);
         }
     }
 
-    // 그만두기 버튼 OnClick 에 연결 (알바 횟수는 돌려받음)
-    public void OnClickQuit()
+    // 끄는 동안 책이 올라앉을 곳
+    public Transform DragLayer()
     {
-        gameObject.SetActive(false);
-
-        if (_owner != null)
+        if (dragLayer != null)
         {
-            _owner.ShowList();
+            return dragLayer;
         }
+        return transform;
     }
 
-    // 장르 버튼에 누르는 동작 붙이기
-    void WireButtons()
+    // 책을 놓았을 때 - 어느 카트 칸에 놓였는지 보고 처리 (놓은 데가 칸이면 true)
+    public bool OnDropBook(BookCardUI card, UnityEngine.EventSystems.PointerEventData eventData)
     {
-        if (_wired == true)
+        BookSortGame game = GetGame();
+        if (game == null || shelves == null)
+        {
+            return false;
+        }
+
+        int shelf = ShelfUnder(eventData);
+        if (shelf < 0)
+        {
+            return false; // 엉뚱한 데 놓음 - 카드가 제자리로 돌아감
+        }
+
+        bool right = (card.cartIndex >= 0 && card.cartIndex < game.cartGenre.Count
+            && game.cartGenre[card.cartIndex] == shelf);
+
+        game.PlaceBook(card.cartIndex, shelf);
+
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySfx(right ? SoundManager.instance.cardPlace : SoundManager.instance.wrongAnswer);
+        }
+
+        RebuildCards(); // 번호가 밀리니까 통째로 다시 그림
+        return true;
+    }
+
+    // 지금 마우스가 어느 카트 칸 위인지 (-1이면 칸 밖)
+    int ShelfUnder(UnityEngine.EventSystems.PointerEventData eventData)
+    {
+        for (int i = 0; i < shelves.Length; i++)
+        {
+            if (shelves[i] == null)
+            {
+                continue;
+            }
+
+            bool inside = RectTransformUtility.RectangleContainsScreenPoint(
+                shelves[i], eventData.position, eventData.pressEventCamera);
+            if (inside == true)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // 카트에 실린 책들을 다시 그림
+    void RebuildCards()
+    {
+        ClearCards();
+
+        BookSortGame game = GetGame();
+        if (game == null || cartArea == null || bookPrefab == null)
         {
             return;
         }
-        _wired = true;
 
-        for (int i = 0; i < genreButtons.Length; i++)
+        int count = game.cartGenre.Count;
+        if (count == 0)
         {
-            if (genreButtons[i] == null)
-            {
-                continue;
-            }
+            return;
+        }
 
-            int index = i; // 그냥 i 를 쓰면 마지막 값이 들어가서 복사해둠
-            genreButtons[i].onClick.AddListener(delegate { OnClickGenre(index); });
+        RectTransform pref = bookPrefab.transform as RectTransform;
+        float cardWidth = pref.sizeDelta.x;
+        float total = count * cardWidth + (count - 1) * cardGap;
+        float startX = -total / 2f + cardWidth / 2f;
+
+        for (int i = 0; i < count; i++)
+        {
+            BookCardUI card = Instantiate(bookPrefab, cartArea);
+            card.gameObject.SetActive(true);
+
+            RectTransform rt = card.transform as RectTransform;
+            rt.anchoredPosition = new Vector2(startX + i * (cardWidth + cardGap), 0f);
+
+            int genre = game.cartGenre[i];
+            bool golden = game.cartGolden[i];
+
+            // 황금 책도 장르 색은 그대로 둠 (노랗게 칠해버리면 어느 칸에 꽂을지 알 수가 없음)
+            // 대신 별을 붙이고 조금 크게 해서 티를 냄
+            string text = golden ? ("★ " + GenreName(genre)) : GenreName(genre);
+            card.Set(this, i, text, ColorOfGenre(genre), golden);
+
+            _cards.Add(card);
         }
     }
 
-    // 버튼을 장르 색으로 칠하기 (한 번만 해두면 됨)
-    void PaintButtons()
+    void ClearCards()
     {
-        for (int i = 0; i < genreButtons.Length; i++)
+        for (int i = 0; i < _cards.Count; i++)
         {
-            if (genreButtons[i] == null)
+            if (_cards[i] == null)
             {
                 continue;
             }
 
-            Image im = genreButtons[i].GetComponent<Image>();
-            if (im != null)
+            // Destroy 는 이 프레임 끝에야 실제로 지워짐
+            // 그 사이에 새 카드가 만들어지면 한 프레임 겹쳐 보이니까 먼저 꺼둠
+            _cards[i].gameObject.SetActive(false);
+            Destroy(_cards[i].gameObject);
+        }
+        _cards.Clear();
+    }
+
+    // 카트 칸에 장르 이름/색 넣기
+    void ShowShelfLabels(BookSortGame game)
+    {
+        if (shelves == null)
+        {
+            return;
+        }
+
+        int genres = (game != null) ? game.genreCount : shelves.Length;
+
+        for (int i = 0; i < shelves.Length; i++)
+        {
+            if (shelves[i] == null)
             {
-                im.color = ColorOfGenre(i);
+                continue;
             }
 
-            TMP_Text label = genreButtons[i].GetComponentInChildren<TMP_Text>(true);
-            if (label != null)
+            // 이번 판에 안 쓰는 칸은 숨김 (장르 수가 판마다 다를 수 있음)
+            bool use = (i < genres);
+            if (shelves[i].gameObject.activeSelf != use)
             {
-                label.text = "장르 " + (i + 1);
+                shelves[i].gameObject.SetActive(use);
+            }
+            if (use == false)
+            {
+                continue;
+            }
+
+            Image img = shelves[i].GetComponent<Image>();
+            if (img != null)
+            {
+                img.color = ColorOfGenre(i);
+            }
+            if (shelfLabels != null && i < shelfLabels.Length && shelfLabels[i] != null)
+            {
+                shelfLabels[i].text = GenreName(i);
             }
         }
     }
 
-    // 장르 색 (넣어둔 것보다 장르가 많으면 회색)
+    string GenreName(int genre)
+    {
+        return "장르 " + (genre + 1);
+    }
+
     Color ColorOfGenre(int genre)
     {
-        if (genreColors != null && genre >= 0 && genre < genreColors.Length)
+        if (genreColors == null || genreColors.Length == 0)
         {
-            return genreColors[genre];
+            return Color.white;
         }
-
-        return new Color(0.55f, 0.58f, 0.65f);
+        return genreColors[genre % genreColors.Length];
     }
 
-    // 장르 칸을 눌렀을 때
-    void OnClickGenre(int genre)
+    void RefreshTexts(BookSortGame game)
     {
-        BookSortGame game = GetGame();
-        if (game == null || game.IsDone() == true)
+        if (timerFill != null && game.duration > 0f)
         {
-            return;
-        }
-
-        game.PlaceBook(genre);
-
-        if (game.IsDone() == true)
-        {
-            Finish(game);
-            return;
-        }
-
-        Refresh();
-    }
-
-    // 남은 시간 막대만 갱신 (매 프레임)
-    void RefreshTimer(BookSortGame game)
-    {
-        if (timerFill == null || game.duration <= 0f)
-        {
-            return;
-        }
-
-        timerFill.fillAmount = Mathf.Clamp01(game.timeLeft / game.duration);
-    }
-
-    // 지금 상태대로 화면 갱신
-    void Refresh()
-    {
-        BookSortGame game = GetGame();
-        if (game == null)
-        {
-            return;
-        }
-
-        // 장르 수보다 많은 버튼은 숨김
-        for (int i = 0; i < genreButtons.Length; i++)
-        {
-            if (genreButtons[i] == null)
-            {
-                continue;
-            }
-            genreButtons[i].gameObject.SetActive(i < game.genreCount);
-        }
-
-        // 맨 앞 책을 지금 꽂아야 할 장르 색으로
-        if (frontBook != null)
-        {
-            frontBook.color = ColorOfGenre(game.currentGenre);
-        }
-
-        // 뒤에 쌓인 책들은 다음 책이 있다는 느낌만 (색은 조금씩 어둡게)
-        if (backBooks != null)
-        {
-            for (int i = 0; i < backBooks.Length; i++)
-            {
-                if (backBooks[i] == null)
-                {
-                    continue;
-                }
-                float dim = 0.75f - i * 0.12f;
-                Color c = ColorOfGenre((game.currentGenre + i + 1) % Mathf.Max(1, game.genreCount));
-                backBooks[i].color = new Color(c.r * dim, c.g * dim, c.b * dim, 1f);
-            }
-        }
-
-        if (bookText != null)
-        {
-            if (game.currentGolden == true)
-            {
-                bookText.text = "황금 책";
-            }
-            else
-            {
-                bookText.text = "";
-            }
-        }
-
-        if (limitText != null)
-        {
-            limitText.text = "제한 시간: " + Mathf.RoundToInt(game.duration) + "초";
+            timerFill.fillAmount = Mathf.Clamp01(game.timeLeft / game.duration);
         }
         if (progressText != null)
         {
-            progressText.text = game.sortedCount + "/" + game.totalBooks;
+            progressText.text = game.DoneCount() + "/" + game.totalBooks;
         }
         if (countText != null)
         {
             countText.text = "황금 " + game.goldenCount + "    실수 " + game.missCount;
         }
-
-        RefreshTimer(game);
     }
 
-    // 다 끝났으면 수행률 넘기고 화면 닫기
+    // 다 꽂았거나 시간이 다 됐으면 수행률 넘기고 화면 닫기
     void Finish(BookSortGame game)
     {
         float rate = 0f;
@@ -268,5 +311,19 @@ public class BookSortView : MonoBehaviour
         }
 
         return GameManager.instance.arbeit.bookSort;
+    }
+
+    // 그만두기 버튼 OnClick 에 연결 (알바 횟수는 돌려받음)
+    public void OnClickQuit()
+    {
+        ArbeitView owner = _owner;
+        _owner = null;
+
+        gameObject.SetActive(false);
+
+        if (owner != null)
+        {
+            owner.ShowList();
+        }
     }
 }
