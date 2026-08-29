@@ -105,7 +105,8 @@ public class TranslationController : MonoBehaviour
         {
             if (cards[i].word == answer && cards[i].isUsed == false)
             {
-                PlaceCard(i, slotIndex);
+                // 손님이 앉기도 전에 카드 소리가 나서, 미리 꽂아주는 건 조용히
+                PlaceCard(i, slotIndex, false);
                 return;
             }
         }
@@ -204,6 +205,12 @@ public class TranslationController : MonoBehaviour
     // 카드를 상자에 놓기
     public void PlaceCard(int cardIndex, int slotIndex)
     {
+        PlaceCard(cardIndex, slotIndex, true);
+    }
+
+    // withSound: 번역서처럼 게임이 알아서 꽂아줄 땐 소리를 안 냄
+    public void PlaceCard(int cardIndex, int slotIndex, bool withSound)
+    {
         if (cardIndex < 0 || cardIndex >= cards.Count)
         {
             return;
@@ -230,8 +237,8 @@ public class TranslationController : MonoBehaviour
         card.isUsed = true;
         _slotCardIndex[slotIndex] = cardIndex;
 
-        // 카드 놓는 소리
-        if (SoundManager.instance != null)
+        // 카드 놓는 소리 (사람이 놓았을 때만)
+        if (withSound == true && SoundManager.instance != null)
         {
             SoundManager.instance.PlaySfx(SoundManager.instance.cardPlace);
         }

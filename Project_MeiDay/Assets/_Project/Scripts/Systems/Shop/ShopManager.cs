@@ -229,15 +229,34 @@ public class ShopManager : MonoBehaviour
         }
 
         GameConfig config = GameManager.instance.config;
-        int price = item.price;
 
-        // 전 단계 값을 계속 물고 올라가야 해서 1레벨부터 차례로 계산함
+        // 설정값으로 만든 "기준 물건"의 값 곡선 (200 -> 275 -> 360 -> ...)
+        // 이 곡선이 몇 배로 뛰는지만 가져와서 물건 제 값에 곱함
+        //
+        // 예전엔 곡선 값을 그대로 값으로 썼는데, 그러면 물건 값이 곡선 시작값보다 비쌀 때
+        // 강화가 처음 사는 것보다 싸졌음 (360짜리 책갈피 2레벨이 307)
+        float first = BaseCurve(config, 1);
+        float now = BaseCurve(config, level);
+        if (first <= 0f)
+        {
+            return item.price;
+        }
+
+        return Mathf.RoundToInt(item.price * (now / first));
+    }
+
+    // 설정값만으로 만든 기준 값 곡선 (물건 값이랑 무관)
+    float BaseCurve(GameConfig config, int level)
+    {
+        float price = config.itemPriceBase;
+
+        // 전 단계 값을 물고 올라가는 식이라 1레벨부터 차례로 계산함
         for (int step = 2; step <= level; step++)
         {
-            int carry = 0;
+            float carry = 0f;
             if (config.itemPriceCarryDiv > 0)
             {
-                carry = Mathf.RoundToInt(price * (step - 1) / (float)config.itemPriceCarryDiv);
+                carry = price * (step - 1) / config.itemPriceCarryDiv;
             }
 
             price = config.itemPriceBase
@@ -265,9 +284,51 @@ public class ShopManager : MonoBehaviour
     }
 
     // 상점 경험치 주기 (구매나 알바로)
+    // 레벨이 오르면 알려줌 - 알바로 번 경험치가 어디로 갔는지 안 보이면 판이 헛돌아 보임
+    public event System.Action<ShopType, int> OnShopLevelUp;
+
     public void AddShopExp(ShopType type, int amount)
     {
+        if (amount <= 0)
+        {
+            return;
+        }
+
+        int before = GetShopLevel(type);
         shopExp[(int)type] += amount;
+        int after = GetShopLevel(type);
+
+        if (after > before && OnShopLevelUp != null)
+        {
+            OnShopLevelUp(type, after);
+        }
+    }
+
+    // 지금 레벨에서 다음 레벨까지 얼마나 왔는지 (모은 것 / 필요한 것)
+    // 만렙이면 둘 다 같은 값으로 돌려줘서 화면이 꽉 찬 걸로 그림
+    public void GetLevelProgress(ShopType type, out int have, out int need)
+    {
+        GameConfig config = GameManager.instance.config;
+        int left = shopExp[(int)type];
+        int level = 0;
+
+        while (level < 5)
+        {
+            int step = config.shopLevelExpBase + config.shopLevelExpStep * level;
+            if (step <= 0 || left < step)
+            {
+                have = left;
+                need = (step > 0) ? step : 1;
+                return;
+            }
+
+            left -= step;
+            level++;
+        }
+
+        // 만렙
+        have = 1;
+        need = 1;
     }
 
     // 상점 레벨 = 경험치로 계산 (0레벨 시작, 기획서상 최대 5레벨)

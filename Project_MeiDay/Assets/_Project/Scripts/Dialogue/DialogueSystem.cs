@@ -332,7 +332,20 @@ public class DialogueSystem : MonoBehaviour
 
         for (int i = choiceParent.childCount - 1; i >= 0; i--)
         {
-            Destroy(choiceParent.GetChild(i).gameObject);
+            GameObject old = choiceParent.GetChild(i).gameObject;
+
+            // Destroy 는 이 프레임 끝에야 실제로 지워짐
+            // 그동안 버튼이 그대로 눌려서, 빠르게 두 번 누르면 선택이 두 번 먹었음
+            // (다음 선택지가 같은 자리에 새로 깔리기도 함)
+            Button oldButton = old.GetComponent<Button>();
+            if (oldButton != null)
+            {
+                oldButton.onClick.RemoveAllListeners();
+                oldButton.interactable = false;
+            }
+            old.SetActive(false);
+
+            Destroy(old);
         }
     }
 

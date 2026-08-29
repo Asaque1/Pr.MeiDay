@@ -145,6 +145,11 @@ public class TranslationView : MonoBehaviour
             _typedFor = -1;
             SetObject(complaintLineText, true);
             complaintLineText.text = "";
+
+            // 빈칸은 대사 글자의 자식으로 붙어 있어서 여기서 안 지우면
+            // 앞 민원의 빈칸이 정답이 적힌 채로 빈 대사창 위에 잠깐 떠 있음
+            ClearSlotUis();
+
             SetObject(wrongText, false);
             SetObject(slotParent, false);
             SetObject(cardParent, false);
@@ -846,13 +851,13 @@ public class TranslationView : MonoBehaviour
     // 처리: 관련 부서로 연결
     public void OnClickTransfer()
     {
-        GameManager.instance.complaint.SelectResolution(ComplaintResolution.DepartmentTransfer);
+        SubmitResolution(ComplaintResolution.DepartmentTransfer);
     }
 
     // 처리: 경호원 부르기
     public void OnClickSecurity()
     {
-        GameManager.instance.complaint.SelectResolution(ComplaintResolution.CallSecurity);
+        SubmitResolution(ComplaintResolution.CallSecurity);
     }
 
     // 처리: 서류 발급 - 바로 끝내지 않고 PDA 안에 발급 화면을 엶
@@ -864,8 +869,21 @@ public class TranslationView : MonoBehaviour
     // 발급 화면의 '문서 접수' - 여기서 민원이 끝남
     public void OnClickPrintAccept()
     {
-        ShowPrintPart(false);
-        GameManager.instance.complaint.SelectResolution(ComplaintResolution.DocumentPrint);
+        SubmitResolution(ComplaintResolution.DocumentPrint);
+    }
+
+    // 처리 하나 제출하기
+    //
+    // 여기서 처리 버튼줄을 미리 닫아둠
+    // 안 닫으면 민원이 끝난 뒤에도 버튼이 화면에 남음 - 민원 사이 대사가 끼면
+    // Rebuild 가 대사 끝난 뒤에야 돌아서, 그동안 버튼줄이 떴다가 사라지는 걸로 보임
+    // 틀린 처리면 Rebuild 가 같은 프레임에 도로 켜주니까 깜빡이지 않음
+    void SubmitResolution(ComplaintResolution choice)
+    {
+        ClosePrintPart();
+        SetPart(resolvePart, false);
+
+        GameManager.instance.complaint.SelectResolution(choice);
     }
 
     // 발급 화면의 '신고' - 수배자 신고 창을 엶 (발급 화면은 뒤에 그대로 둠)
@@ -879,6 +897,27 @@ public class TranslationView : MonoBehaviour
     }
 
     // 발급 화면 열고 닫기 (열면 민원 내용이랑 아래 버튼줄은 가림)
+    // PDA 를 다시 열었을 때 (PdaResetOnOpen 이 불러줌)
+    //
+    // PDA 안의 손 모양 버튼은 PDA 오브젝트만 끄기 때문에, 발급 화면을 켜둔 채로 닫으면
+    // 그 상태가 그대로 남아서 다시 열었을 때 민원 내용이랑 처리 버튼이 안 보였음
+    public void OnPdaOpened()
+    {
+        if (GameManager.instance == null)
+        {
+            return;
+        }
+
+        ComplaintManager cm = GameManager.instance.complaint;
+        if (cm.stage != ComplaintStage.Resolve)
+        {
+            return; // 처리 단계가 아니면 건드릴 것 없음
+        }
+
+        ClosePrintPart();
+        SetPart(resolvePart, true);
+    }
+
     void ShowPrintPart(bool show)
     {
         _printOpen = show;

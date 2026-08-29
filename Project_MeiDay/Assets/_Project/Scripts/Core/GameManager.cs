@@ -303,6 +303,7 @@ public class GameManager : MonoBehaviour
 
         shopUnlocked = true;
         arbeit.arbeitLeftToday += 1; // 아침 충전은 이미 끝났으니 오늘 몫은 직접 넣어줌
+        arbeit.arbeitMaxToday += 1;
         Debug.Log("상점 해금됨");
     }
 
