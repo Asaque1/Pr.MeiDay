@@ -46,9 +46,65 @@ public class SoundManager : MonoBehaviour
     int _mainIndex = -1;       // 메인 곡 중 몇 번째를 트는 중인지
     float _mainHeard = 0f;     // 지금 곡이 어디까지 실제로 흘러갔는지
 
+    // 설정창에서 만지는 소리 크기 (0 ~ 1)
+    // 스피커에 원래 맞춰둔 크기(bgm 0.5 처럼)를 기억해뒀다가 거기에 곱함
+    // 그래야 설정을 최대로 올려도 원래 잡아둔 균형이 안 깨짐
+    const string BgmKey = "bgmVolume";
+    const string SfxKey = "sfxVolume";
+    float _bgmBase = 1f;
+    float _sfxBase = 1f;
+    float _bgmVolume = 1f;
+    float _sfxVolume = 1f;
+
+    public float BgmVolume { get { return _bgmVolume; } }
+    public float SfxVolume { get { return _sfxVolume; } }
+
     void Awake()
     {
         instance = this; // 게임 켜질 때 instance 에 나를 넣어줌
+
+        if (bgmSource != null)
+        {
+            _bgmBase = bgmSource.volume;
+        }
+        if (sfxSource != null)
+        {
+            _sfxBase = sfxSource.volume;
+        }
+
+        // 지난번에 맞춰둔 크기 불러오기 (처음 켠 사람은 둘 다 최대)
+        _bgmVolume = PlayerPrefs.GetFloat(BgmKey, 1f);
+        _sfxVolume = PlayerPrefs.GetFloat(SfxKey, 1f);
+        ApplyVolume();
+    }
+
+    // 배경음 크기 바꾸기 (설정창 슬라이더가 부름)
+    public void SetBgmVolume(float value)
+    {
+        _bgmVolume = Mathf.Clamp01(value);
+        ApplyVolume();
+        PlayerPrefs.SetFloat(BgmKey, _bgmVolume);
+    }
+
+    // 효과음 크기 바꾸기 (설정창 슬라이더가 부름)
+    public void SetSfxVolume(float value)
+    {
+        _sfxVolume = Mathf.Clamp01(value);
+        ApplyVolume();
+        PlayerPrefs.SetFloat(SfxKey, _sfxVolume);
+    }
+
+    // 지금 값들을 실제 스피커에 먹이기
+    void ApplyVolume()
+    {
+        if (bgmSource != null)
+        {
+            bgmSource.volume = _bgmBase * _bgmVolume;
+        }
+        if (sfxSource != null)
+        {
+            sfxSource.volume = _sfxBase * _sfxVolume;
+        }
     }
 
     void Start()
