@@ -46,6 +46,11 @@ public class SoundManager : MonoBehaviour
     int _mainIndex = -1;       // 메인 곡 중 몇 번째를 트는 중인지
     float _mainHeard = 0f;     // 지금 곡이 어디까지 실제로 흘러갔는지
 
+    // 배경음 파일은 흘려보내기(Streaming) + 백그라운드 로딩이라
+    // 아직 다 안 불러온 상태에서 Play() 를 부르면 소리 없이 그냥 지나감
+    // 그래서 못 튼 곡을 여기 적어뒀다가 다 불러오면 그때 틀어줌
+    AudioClip _bgmPending = null;
+
     // 설정창에서 만지는 소리 크기 (0 ~ 1)
     // 스피커에 원래 맞춰둔 크기(bgm 0.5 처럼)를 기억해뒀다가 거기에 곱함
     // 그래야 설정을 최대로 올려도 원래 잡아둔 균형이 안 깨짐
@@ -127,6 +132,8 @@ public class SoundManager : MonoBehaviour
 
     void Update()
     {
+        PlayPendingBgm();
+
         // 메인 곡 한 곡이 끝났으면 다음 곡으로 넘김
         if (_mainMode == false || bgmSource == null)
         {
@@ -264,12 +271,52 @@ public class SoundManager : MonoBehaviour
         {
             bgmSource.Stop();
             bgmSource.clip = null;
+            _bgmPending = null;
             return;
         }
 
         bgmSource.loop = true;
+        StartBgmClip(clip);
+    }
+
+    // 곡을 실제로 트는 자리
+    // 다 안 불러온 곡을 바로 Play() 하면 조용히 씹혀서, 그럴 땐 불러오라고 시켜두고 기다림
+    void StartBgmClip(AudioClip clip)
+    {
         bgmSource.clip = clip;
-        bgmSource.Play();
+        _mainHeard = 0f;
+
+        if (clip.loadState == AudioDataLoadState.Loaded)
+        {
+            _bgmPending = null;
+            bgmSource.Play();
+            return;
+        }
+
+        clip.LoadAudioData();
+        _bgmPending = clip;
+    }
+
+    // 기다리던 곡이 다 불러와졌으면 그때 틀기 (Update 가 매 프레임 물어봄)
+    void PlayPendingBgm()
+    {
+        if (_bgmPending == null || bgmSource == null)
+        {
+            return;
+        }
+
+        if (_bgmPending.loadState == AudioDataLoadState.Loading)
+        {
+            return; // 아직 불러오는 중
+        }
+
+        // 불러오기에 실패했으면 붙잡고 있어봐야 소용없음
+        if (_bgmPending.loadState == AudioDataLoadState.Loaded && bgmSource.clip == _bgmPending)
+        {
+            bgmSource.Play();
+        }
+
+        _bgmPending = null;
     }
 
     // ---- 메인 곡 돌려 틀기 ----
@@ -321,9 +368,7 @@ public class SoundManager : MonoBehaviour
 
         // 곡이 하나뿐이면 넘길 데가 없으니 그 곡을 반복시킴
         bgmSource.loop = (UsableMainCount() <= 1);
-        bgmSource.clip = next;
-        bgmSource.Play();
-        _mainHeard = 0f;
+        StartBgmClip(next);
     }
 
     // 실제로 틀 수 있는 메인 곡이 몇 개인지

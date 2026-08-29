@@ -19,6 +19,13 @@ public class SettingsView : MonoBehaviour
 
     bool _loading = false; // 슬라이더에 값 넣는 중 (넣자마자 콜백이 또 도는 걸 막음)
 
+    // 효과음 미리듣기는 슬라이더가 멈춘 뒤에 한 번만 냄
+    // 끄는 동안 값이 매 프레임 바뀌는데 그때마다 소리를 내면
+    // 같은 클립이 수십 개씩 겹쳐서 찢어지는 소리가 남
+    const float SfxPreviewWait = 0.12f; // 값이 안 바뀐 채로 이만큼 지나면 들려줌
+    bool _sfxPreviewWaiting = false;    // 들려줄 차례를 기다리는 중인지
+    float _sfxPreviewAt = 0f;           // 들려줄 시각
+
     void OnEnable()
     {
         // 창을 열 때마다 지금 값으로 맞춰줌
@@ -44,6 +51,8 @@ public class SettingsView : MonoBehaviour
         // 확인 칸은 항상 접어둔 채로 열기
         SetOn(quitConfirm, false);
         SetOn(quitButton, true);
+
+        _sfxPreviewWaiting = false; // 지난번에 기다리던 미리듣기는 버림
     }
 
     // 배경음 슬라이더 On Value Changed 에 연결
@@ -69,8 +78,27 @@ public class SettingsView : MonoBehaviour
         SoundManager.instance.SetSfxVolume(value);
         ShowLabels();
 
-        // 얼마나 커졌는지 바로 들려줌 (숫자만 보고는 감이 안 옴)
-        SoundManager.instance.PlaySfx(SoundManager.instance.uiClick);
+        // 얼마나 커졌는지 들려줌 (숫자만 보고는 감이 안 옴)
+        // 손을 뗄 때까지 미뤄뒀다가 한 번만 냄
+        // 설정창은 시간이 멈춘 데서도 열 수 있어서 unscaledTime 을 씀
+        _sfxPreviewWaiting = true;
+        _sfxPreviewAt = Time.unscaledTime + SfxPreviewWait;
+    }
+
+    void Update()
+    {
+        // 슬라이더가 멈췄으면 그제서야 미리듣기 한 번
+        if (_sfxPreviewWaiting == false || Time.unscaledTime < _sfxPreviewAt)
+        {
+            return;
+        }
+
+        _sfxPreviewWaiting = false;
+
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySfx(SoundManager.instance.uiClick);
+        }
     }
 
     // 종료 버튼 - 바로 끄지 않고 한 번 물어봄
