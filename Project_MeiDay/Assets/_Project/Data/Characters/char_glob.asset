@@ -20,4 +20,4 @@ MonoBehaviour:
   job: 직원
   species: 클라우도프
   bio: 
-  portrait: {fileID: 0}
+  portrait: {fileID: 1686665790258574575, guid: cdbe5f54123eee243af98e76ddeebcf8, type: 3}
