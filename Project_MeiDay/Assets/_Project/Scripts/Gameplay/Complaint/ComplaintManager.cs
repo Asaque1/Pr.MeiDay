@@ -246,6 +246,10 @@ public class ComplaintManager : MonoBehaviour
         // 너무 많이 틀리면 민원인 나감 (실패로 치고 다음 민원. 그 민원 보수를 못 받으니 성과금이 깎이는 셈)
         if (translation.IsOverLimit() == true)
         {
+            // 나가기 전에 마지막 실수까지 화면에 반영해줌
+            // 안 그러면 "해석 실수: 2 / 3" 인 채로 나가버려서 왜 나갔는지 알 수가 없음
+            NotifyUpdated();
+
             failCount++;
             NextComplaint();
             return;
@@ -357,6 +361,13 @@ public class ComplaintManager : MonoBehaviour
             EventDefinition ev = GameManager.instance.events.PickEvent(EventSlot.AfterComplaint);
             if (ev != null)
             {
+                // 이벤트 대사창은 반투명이라 뒤가 비침
+                // 창구를 비워놓고 화면을 한 번 다시 그려야, 방금 나간 민원인이랑
+                // 정답 채워진 빈칸이 대사 뒤에 그대로 앉아 있지 않음
+                entry = ComplaintEntry.Waiting;
+                stage = ComplaintStage.Translate;
+                NotifyUpdated();
+
                 GameManager.instance.events.StartEvent(ev);
                 return; // 대사 끝나면 ContinueAfterEvent 가 이어감
             }

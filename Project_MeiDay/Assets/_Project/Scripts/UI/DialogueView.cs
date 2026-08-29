@@ -57,13 +57,18 @@ public class DialogueView : MonoBehaviour
         dialogueBox.SetActive(true);
 
         speakerText.text = "";
+
+        // 화자가 없는 줄(혼잣말/지문)이면 초상화 칸을 아예 숨김
+        // 안 그러면 그림 없는 흰 사각형이 뜨거나 직전 인물 얼굴이 그대로 남았음
+        Sprite face = (line.speaker != null) ? line.speaker.portrait : null;
         if (line.speaker != null)
         {
             speakerText.text = line.speaker.displayName;
-            if (portraitImage != null)
-            {
-                portraitImage.sprite = line.speaker.portrait;
-            }
+        }
+        if (portraitImage != null)
+        {
+            portraitImage.sprite = face;
+            portraitImage.enabled = (face != null);
         }
 
         _fullLine = line.text;

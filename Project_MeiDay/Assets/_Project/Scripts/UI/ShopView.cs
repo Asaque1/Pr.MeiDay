@@ -104,7 +104,20 @@ public class ShopView : MonoBehaviour
 
         if (shopNameText != null)
         {
-            shopNameText.text = "상점 LV: " + shop.GetShopLevel(currentShop);
+            // 알바로 번 경험치가 어디까지 찼는지 같이 보여줌 (숫자만 있으면 알바가 헛일로 보임)
+            int have;
+            int need;
+            shop.GetLevelProgress(currentShop, out have, out need);
+
+            int level = shop.GetShopLevel(currentShop);
+            if (level >= 5)
+            {
+                shopNameText.text = "상점 LV: " + level + " (최대)";
+            }
+            else
+            {
+                shopNameText.text = "상점 LV: " + level + "   " + have + " / " + need;
+            }
         }
         if (npcImage != null)
         {
@@ -182,7 +195,7 @@ public class ShopView : MonoBehaviour
         if (arbeitLeftText != null && GameManager.instance.arbeit != null)
         {
             arbeitLeftText.text = "남은 횟수  " + GameManager.instance.arbeit.arbeitLeftToday
-                + "/" + GameManager.instance.config.arbeitMax;
+                + "/" + GameManager.instance.arbeit.MaxToday();
         }
 
         if (show == false)
