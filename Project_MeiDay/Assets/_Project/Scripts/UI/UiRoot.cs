@@ -14,6 +14,11 @@ public class UiRoot : MonoBehaviour
     [SerializeField] GameObject endingPanel; // 엔딩 / 게임오버
     [SerializeField] GameObject hardChoicePanel; // 하드모드 첫 아침에 뜨는 브로커 선택창
     [SerializeField] Button continueButton; // 저장 없으면 못 누르는 이어하기 버튼
+    [SerializeField] GameObject cutscenePopup; // 새 게임 누르면 뜨는 "컷신 볼래?" 창
+
+    // 컷신을 보고 돌아왔는지
+    // 씬을 갈아끼우고 오면 여기 값들이 다 초기화돼서, 정적으로 들고 있어야 살아남음
+    public static bool startAfterCutscene = false;
 
     void Start()
     {
@@ -27,6 +32,14 @@ public class UiRoot : MonoBehaviour
 
         ShowPanelFor(GameManager.instance.phase); // 시작할 때 한 번 맞춰줌
         RefreshContinueButton();
+        SetPanel(cutscenePopup, false);
+
+        // 컷신 보고 돌아온 참이면 타이틀 안 거치고 바로 시작
+        if (startAfterCutscene == true)
+        {
+            startAfterCutscene = false;
+            GameManager.instance.GameStart();
+        }
     }
 
     // 저장 데이터가 있을 때만 이어하기를 누를 수 있게 함
@@ -96,9 +109,30 @@ public class UiRoot : MonoBehaviour
 
     // ---- 아래는 버튼 OnClick 에 연결해서 씀 ----
 
-    // 타이틀: 새 게임
+    // 타이틀: 새 게임 - 바로 시작하지 않고 컷신을 볼지 먼저 물어봄
     public void OnClickStart()
     {
+        if (cutscenePopup == null)
+        {
+            GameManager.instance.GameStart(); // 창을 아직 안 만들어뒀으면 예전처럼 바로 시작
+            return;
+        }
+
+        SetPanel(cutscenePopup, true);
+    }
+
+    // 컷신 창: 본다 -> 스토리 씬으로
+    public void OnClickCutsceneYes()
+    {
+        SetPanel(cutscenePopup, false);
+        startAfterCutscene = true; // 컷신 끝나고 돌아오면 바로 1일차부터
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Story");
+    }
+
+    // 컷신 창: 안 본다 -> 그냥 시작
+    public void OnClickCutsceneNo()
+    {
+        SetPanel(cutscenePopup, false);
         GameManager.instance.GameStart();
     }
 
