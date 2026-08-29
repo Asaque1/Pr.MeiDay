@@ -31,7 +31,7 @@ MonoBehaviour:
   - speakerFace: {fileID: 533347179103727038, guid: 90c5cc9267e526a418d62b40bd6f2a96, type: 3}
     speakerName: "\uD5EC\uB80C"
     text: "\uADF8\uB798 \uAE30\uC5B5\uB0AC\uB2E4! \uC804\uC5D0 \uBE4C\uB824\uB454
-      '\uC678\uACC4 \uC0AC\uD22C\uB9AC \uC0AC\uC804 -v.243.1.23'\uC774 \uC788\uC5C8\uB124."
+      '\uC678\uACC4 \uC0AC\uD22C\uB9AC \uC0AC\uC804 v.24.1.23'\uC774 \uC788\uC5C8\uB124."
     choices:
     - choiceText: "\uC0AC\uD22C\uB9AC \uC0AC\uC804\uC774\uC694?"
       nextLineIndex: 3

@@ -54,7 +54,7 @@ MonoBehaviour:
   - speakerFace: {fileID: -9174565791234594843, guid: 8bad1c3663043b24f80cd497b6d32068, type: 3}
     speakerName: "\uB178\uBA5C\uB77C"
     text: "'\uD5EC\uB80C \uBA38\uD540'\uC774\uB77C\uB294 \uBD84\uC774\uC5D0\uC694.
-      \uACE7 \uD68C\uC6D0 \uB4F1\uAE09\uC774 \uB0B4\uB824\uAC08 \uC218\uC900\uC774\uB77C..
+      \uACE7 \uD68C\uC6D0 \uB4F1\uAE09\uC774 \uB0B4\uB824\uAC08 \uC608\uC815\uC774\uB77C..
       \uAF2D \uC804\uB2EC\uD574\uC8FC\uC138\uC694!"
     choices:
     - choiceText: "\uB124 \uC54C\uACA0\uC2B5\uB2C8\uB2E4."

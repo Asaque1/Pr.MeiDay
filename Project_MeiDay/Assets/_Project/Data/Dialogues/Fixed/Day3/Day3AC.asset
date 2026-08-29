@@ -16,7 +16,7 @@ MonoBehaviour:
   - speakerFace: {fileID: 0}
     speakerName: "\uC8FC\uC778\uACF5"
     text: "(\uC5B4\uB518\uAC00\uC5D0\uC11C \uBD88\uCF8C\uD55C \uC2DC\uC120\uC774
-      \uB290\uAEF4\uC838.. \uB204\uAC00 \uB0A0 \uC758\uC2EC\uD558\uB098?)"
+      \uB290\uAEF4\uC838..)"
     choices: []
     nextLineIndex: 1
   - speakerFace: {fileID: 5396913674957190600, guid: a5de98c3e4888ed4ab620b07e9ea75be, type: 3}

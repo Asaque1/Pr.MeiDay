@@ -28,33 +28,40 @@ MonoBehaviour:
     text: "\uC544\uBB34\uB798\uB3C4 \uB3C4\uB9DD\uCE5C \uBC00\uC785\uAD6D\uC790 \uC2E0\uBD84\uC774\uC9C0\uB9CC.."
     choices: []
     nextLineIndex: 3
-  - speakerFace: {fileID: 533347179103727038, guid: 90c5cc9267e526a418d62b40bd6f2a96, type: 3}
-    speakerName: "\uC120\uBC30..?"
-    text: "\uAC70\uAE30 \uB108!"
+  - speakerFace: {fileID: 0}
+    speakerName: "\uC8FC\uC778\uACF5"
+    text: "\uADF8\uB798\uB3C4, \uC6B4\uC774 \uC88B\uC558\uC5B4! \uAC11\uC790\uAE30
+      \uACF5\uBB34\uC6D0 \uACF5\uACE0\uAC00 \uC0DD\uAE38 \uC904\uC740 \uB204\uAC00
+      \uC54C\uC558\uACA0\uC5B4?"
     choices: []
     nextLineIndex: 4
   - speakerFace: {fileID: 533347179103727038, guid: 90c5cc9267e526a418d62b40bd6f2a96, type: 3}
     speakerName: "\uC120\uBC30..?"
-    text: "\uB108\uAC00 \uC774\uBC88\uC5D0 \uC628\uB2E4\uB358 \uC2E0\uC785\uC774\uAD6C\uB098?"
+    text: "\uAC70\uAE30 \uB108!"
     choices: []
     nextLineIndex: 5
+  - speakerFace: {fileID: 533347179103727038, guid: 90c5cc9267e526a418d62b40bd6f2a96, type: 3}
+    speakerName: "\uC120\uBC30..?"
+    text: "\uB108\uAC00 \uC774\uBC88\uC5D0 \uC628\uB2E4\uB358 \uC2E0\uC785\uC774\uAD6C\uB098?"
+    choices: []
+    nextLineIndex: 6
   - speakerFace: {fileID: 533347179103727038, guid: 90c5cc9267e526a418d62b40bd6f2a96, type: 3}
     speakerName: "\uD5EC\uB80C"
     text: "\uADF8\uB798. \uB098\uB294 \uD5EC\uB80C\uC774\uB77C\uACE0 \uD574. \uD5EC\uB80C
       \uBA38\uD540 2\uC138."
     choices: []
-    nextLineIndex: 6
+    nextLineIndex: 7
   - speakerFace: {fileID: 533347179103727038, guid: 90c5cc9267e526a418d62b40bd6f2a96, type: 3}
     speakerName: "\uD5EC\uB80C"
     text: "\uB124 \uC120\uBC30\uB2C8\uAE4C \uC798 \uD574. \uB108\uC640 \uB2EC\uB9AC
       \uB09C \uB2F9\uB2F9\uD558\uAC8C \uC785\uC0AC\uD588\uC73C\uB2C8\uAE4C."
     choices:
     - choiceText: "\uB135! \uC798 \uBD80\uD0C1\uB4DC\uB9BD\uB2C8\uB2E4."
-      nextLineIndex: 7
+      nextLineIndex: 8
       eventId: 0
       eventValue: 0
     - choiceText: "\uC544.. \uB124."
-      nextLineIndex: 7
+      nextLineIndex: 8
       eventId: 0
       eventValue: 0
     nextLineIndex: -1
@@ -63,17 +70,17 @@ MonoBehaviour:
     text: "\uD5EC\uB80C\uC740 \uC778\uC0AC\uB97C \uBC1B\uC9C0 \uC54A\uACE0 \uB4A4\uB3CC\uC544
       \uC0AC\uB77C\uC84C\uB2E4."
     choices: []
-    nextLineIndex: 8
+    nextLineIndex: 9
   - speakerFace: {fileID: 0}
     speakerName: "\uD5EC\uB80C"
     text: "\uCBE7. \uC544\uBB34\uB9AC \uC778\uB825\uB09C\uC774\uB77C\uB3C4 \uADF8\uB807\uC9C0."
     choices: []
-    nextLineIndex: 9
+    nextLineIndex: 10
   - speakerFace: {fileID: 0}
     speakerName: "\uC8FC\uC778\uACF5"
     text: ...
     choices: []
-    nextLineIndex: 10
+    nextLineIndex: 11
   - speakerFace: {fileID: 0}
     speakerName: "\uC8FC\uC778\uACF5"
     text: "\uADF8\uB798\uB3C4 \uCCAB\uB0A0\uC774\uB2C8\uAE4C..! \uC0DD\uD65C\uD558\uB2E4\uBCF4\uBA74

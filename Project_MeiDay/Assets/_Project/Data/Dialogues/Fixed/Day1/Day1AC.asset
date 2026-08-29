@@ -21,7 +21,7 @@ MonoBehaviour:
   - speakerFace: {fileID: 0}
     speakerName: "\uC8FC\uC778\uACF5"
     text: "(\uC5B4, \uB0B4\uAC00 \uBAA8\uB974\uB294 \uB2E8\uC5B4\uC778\uAC00..? \uC774\uC0C1\uD558\uB2E4,
-      \uBAA8\uB974\uB294 \uB2E8\uC5B4\uB294 \uC774\uC81C \uC5C6\uC744\uD150\uB370.)"
+      \uBAA8\uB974\uB294 \uB2E8\uC5B4\uB294 \uC774\uC81C \uC5C6\uC744\uD150\uB370?)"
     choices: []
     nextLineIndex: 2
   - speakerFace: {fileID: 533347179103727038, guid: 90c5cc9267e526a418d62b40bd6f2a96, type: 3}
@@ -54,6 +54,11 @@ MonoBehaviour:
   - speakerFace: {fileID: 533347179103727038, guid: 90c5cc9267e526a418d62b40bd6f2a96, type: 3}
     speakerName: "\uD5EC\uB80C"
     text: "\uC544, \uADF8\uB9AC\uACE0 \uB2E4\uB4E4 \uBC14\uC058\uB2C8\uAE4C 3\uBC88
-      \uC815\uB3C4 \uD2C0\uB9AC\uBA74 \uD654\uB098\uC11C \uB098\uAC08\uAC70\uC57C."
-    choices: []
+      \uC815\uB3C4 \uD2C0\uB9AC\uBA74 \uD654\uB098\uC11C \uB098\uAC08\uAC70\uC57C.
+      \uBB3C\uB860 \uADF8\uB807\uAC8C \uB418\uBA74 \uB3C8 \uBABB \uBC1B\uB294\uB2E4?"
+    choices:
+    - choiceText: "\uC54C\uACA0\uC2B5\uB2C8\uB2E4!"
+      nextLineIndex: -1
+      eventId: 0
+      eventValue: 0
     nextLineIndex: -1
