@@ -11,14 +11,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cb6d72b7c7b3014ca1ab66772d3686a, type: 3}
   m_Name: Item_Spaceship
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: item_spaceship
-  itemName: 우주선 탑승권
+  itemName: "\uC6B0\uC8FC\uC120 \uD0D1\uC2B9\uAD8C"
   shopType: 3
   kind: 1
   effect: 0
-  description: 지구로 돌아가는 배의 자리 하나. 브로커는 웃으며 값을 부른다.
-  icon: {fileID: 0}
+  description: "\uC9C0\uAD6C\uB85C \uB3CC\uC544\uAC00\uB294 \uBC30\uC758 \uC790\uB9AC
+    \uD558\uB098. \uBE0C\uB85C\uCEE4\uB294 \uC6C3\uC73C\uBA70 \uAC12\uC744 \uBD80\uB978\uB2E4."
+  icon: {fileID: 7691294901476699688, guid: 0b78e224ff17ca3489c90594912d90aa, type: 3}
   levelIcons: []
   levelDescriptions: []
   price: 3000
