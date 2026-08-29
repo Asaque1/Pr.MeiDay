@@ -1,10 +1,11 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 // 극단 알바 화면 - 조명을 좌우로 움직여서 무대 위 배우를 계속 비춤
 // 좌/우 버튼에는 SpotlightHoldButton 을 붙여둠 (누르고 있는 동안 계속 움직이게)
-// 이 프로젝트는 새 Input System 이라 키보드 Input.GetKey 는 못 씀
+// 키보드 방향키/AD 로도 됨 (새 Input System 이라 Keyboard.current 로 읽음)
 public class SpotlightView : MonoBehaviour
 {
     [Header("무대")]
@@ -25,14 +26,18 @@ public class SpotlightView : MonoBehaviour
     [SerializeField] Color beamOn = new Color(1f, 0.88f, 0.48f, 0.42f);
     [SerializeField] Color beamOff = new Color(1f, 0.96f, 0.86f, 0.14f);
 
+    [SerializeField] float swapFlashTime = 0.35f; // 배우 바뀐 티를 내는 시간
+
     ArbeitView _owner;
-    int _holdDir = 0; // -1 왼쪽, 0 가만히, 1 오른쪽
+    int _holdDir = 0;      // -1 왼쪽, 0 가만히, 1 오른쪽
+    float _swapFlash = 0f; // 배우 교체 연출 남은 시간
 
     // 알바 화면이 불러줌
     public void Play(ArbeitView owner)
     {
         _owner = owner;
         _holdDir = 0;
+        _swapFlash = 0f;
         gameObject.SetActive(true);
 
         SpotlightGame game = GetGame();
@@ -65,13 +70,39 @@ public class SpotlightView : MonoBehaviour
             return;
         }
 
-        game.Tick(Time.deltaTime, _holdDir);
+        game.Tick(Time.deltaTime, ReadDir());
         Refresh(game);
 
         if (game.IsDone() == true)
         {
             Finish(game);
         }
+    }
+
+    // 버튼을 잡고 있거나 키를 누르고 있으면 그쪽으로
+    int ReadDir()
+    {
+        int keyDir = 0;
+        Keyboard keys = Keyboard.current;
+        if (keys != null)
+        {
+            bool left = keys.leftArrowKey.isPressed || keys.aKey.isPressed;
+            bool right = keys.rightArrowKey.isPressed || keys.dKey.isPressed;
+            if (left == true && right == false)
+            {
+                keyDir = -1;
+            }
+            else if (right == true && left == false)
+            {
+                keyDir = 1;
+            }
+        }
+
+        if (keyDir != 0)
+        {
+            return keyDir;
+        }
+        return _holdDir;
     }
 
     // 배우랑 조명 자리 옮기고 글자 갱신
@@ -86,7 +117,27 @@ public class SpotlightView : MonoBehaviour
         PlaceOnTrack(actorMark, game.actorPos, width);
         PlaceOnTrack(lightMark, game.lightPos, width);
 
-        bool onTarget = Mathf.Abs(game.actorPos - game.lightPos) <= game.hitRange;
+        bool onTarget = game.OnTarget();
+
+        // 배우가 바뀐 순간엔 잠깐 크게 부풀려서 "딴 사람이다" 를 알림
+        if (game.justSwapped == true)
+        {
+            _swapFlash = swapFlashTime;
+        }
+        if (_swapFlash > 0f)
+        {
+            _swapFlash -= Time.deltaTime;
+        }
+
+        if (actorMark != null)
+        {
+            float pop = 1f;
+            if (_swapFlash > 0f && swapFlashTime > 0f)
+            {
+                pop = 1f + 0.35f * (_swapFlash / swapFlashTime);
+            }
+            actorMark.localScale = new Vector3(pop, pop, 1f);
+        }
 
         if (actorBody != null)
         {
@@ -104,7 +155,16 @@ public class SpotlightView : MonoBehaviour
 
         if (stateText != null)
         {
-            string state = onTarget ? "비추는 중……" : "놓치는 중……";
+            string state;
+            if (_swapFlash > 0f)
+            {
+                state = "배우 교체!";
+            }
+            else
+            {
+                state = onTarget ? "비추는 중……" : "놓치는 중……";
+            }
+
             if (game.actorGolden == true)
             {
                 state += "   [황금 배우]";

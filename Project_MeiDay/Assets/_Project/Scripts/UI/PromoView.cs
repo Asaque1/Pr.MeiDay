@@ -1,55 +1,41 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// 파티용품점 알바 화면 - 지나가는 행인이 구간에 들어왔을 때 전단지를 던짐
-// 행인 표시는 track 의 자식으로 만들어짐 (personPrefab 을 인스펙터에 넣을 것)
-public class PromoView : MonoBehaviour
+// 파티용품점 알바 화면 - 길을 돌아다니는 행인을 겨눠서 전단지를 던짐
+// 길 아무 데나 누르면 그 자리로 전단지가 날아감. 날아가는 동안 행인도 걸으니까 갈 자리를 노려야 함
+public class PromoView : MonoBehaviour, IPointerDownHandler
 {
     [Header("길")]
-    [SerializeField] RectTransform track;        // 길 (이 폭 안에서 행인이 걸어감)
-    [SerializeField] RectTransform personPrefab; // 행인 표시 하나
-    [SerializeField] Image zoneMark;             // 던지면 닿는 구간 표시 (없어도 됨)
+    [SerializeField] RectTransform field;         // 행인이 돌아다니는 판 (여기 안을 눌러야 던져짐)
+    [SerializeField] RectTransform personPrefab;  // 행인 표시 하나 (꺼둔 채로 두면 됨)
+    [SerializeField] RectTransform flyerPrefab;   // 날아가는 전단지 표시 (꺼둔 채로 두면 됨)
+    [SerializeField] RectTransform flyerBox;      // 전단지 상자 (여기서 날아감. 없어도 됨)
 
     [Header("위/아래 줄")]
     [SerializeField] Image timerFill;       // 남은 시간 막대 (Filled 이미지)
     [SerializeField] TMP_Text limitText;    // "제한 시간: N초"
     [SerializeField] TMP_Text progressText; // "0/6"
     [SerializeField] TMP_Text countText;    // 황금/헛던짐 (안 꽂아둬도 됨)
+    [SerializeField] TMP_Text guideText;    // 처음에만 나오는 안내 (안 꽂아둬도 됨)
 
     [Header("모양")]
-    [SerializeField] float goldenScale = 1.35f; // 황금 행인은 좀 크게 그림
+    [SerializeField] float goldenScale = 1.3f;
     [SerializeField] Color personColor = new Color(0.78f, 0.82f, 0.92f);
     [SerializeField] Color goldenColor = new Color(0.98f, 0.80f, 0.28f);
-
-    // 구간 표시는 처음 몇 초만 보여주고 지움 (계속 켜두면 눈으로만 찍게 됨)
-    [SerializeField] float zoneShowTime = 3f;
-    [SerializeField] float zoneFadeTime = 1f;
+    [SerializeField] float guideShowTime = 2.5f; // 안내를 보여주는 시간
 
     ArbeitView _owner;
-    List<RectTransform> _marks = new List<RectTransform>(); // 지금 화면에 있는 행인 표시들
     float _elapsed = 0f;
-    Color _zoneColor;
-    bool _zoneColorRead = false;
 
-    // 구간 색은 딱 한 번만 기억해둠
-    // 판이 끝날 때 투명해지니까, 시작할 때 읽으면 두 번째 판부터 안 보임
-    void Awake()
-    {
-        ReadZoneColor();
-    }
-
-    void ReadZoneColor()
-    {
-        if (_zoneColorRead == true || zoneMark == null)
-        {
-            return;
-        }
-
-        _zoneColor = zoneMark.color;
-        _zoneColorRead = true;
-    }
+    // 행인/전단지마다 표시를 따로 물려둠
+    // 예전엔 번호로 짝지어서, 가운데 행인이 사라지면 뒤 행인이 순간이동했음
+    Dictionary<PromoPerson, RectTransform> _personMarks = new Dictionary<PromoPerson, RectTransform>();
+    Dictionary<PromoFlyer, RectTransform> _flyerMarks = new Dictionary<PromoFlyer, RectTransform>();
+    List<PromoPerson> _gonePeople = new List<PromoPerson>();
+    List<PromoFlyer> _goneFlyers = new List<PromoFlyer>();
 
     // 알바 화면이 불러줌
     public void Play(ArbeitView owner)
@@ -58,19 +44,35 @@ public class PromoView : MonoBehaviour
         _elapsed = 0f;
         gameObject.SetActive(true);
 
-        if (personPrefab == null || track == null)
+        if (field == null || personPrefab == null)
         {
-            Debug.LogWarning("판촉 화면에 행인 프리팹이나 길이 연결 안 됨 - 글자만 나옴");
+            Debug.LogWarning("판촉 화면에 길이나 행인 표시가 연결 안 됨 - 글자만 나옴");
         }
 
-        ReadZoneColor();
         ClearMarks();
-        PlaceZone();
 
         PromoGame game = GetGame();
-        if (game != null && limitText != null)
+        if (game != null)
         {
-            limitText.text = "제한 시간: " + Mathf.RoundToInt(game.duration) + "초";
+            // 판이 가로로 길어서, 맞았는지 잴 때 화면 비율을 알려줘야 동그랗게 맞음
+            if (field != null && field.rect.height > 0f)
+            {
+                game.aspect = field.rect.width / field.rect.height;
+            }
+
+            // 전단지가 날아오는 자리를 상자 위치에 맞춰줌
+            game.throwFrom = BoxSpot();
+
+            if (limitText != null)
+            {
+                limitText.text = "제한 시간: " + Mathf.RoundToInt(game.duration) + "초";
+            }
+        }
+
+        if (guideText != null)
+        {
+            guideText.text = "행인을 눌러 전단지를 던지세요";
+            guideText.gameObject.SetActive(true);
         }
     }
 
@@ -89,8 +91,13 @@ public class PromoView : MonoBehaviour
 
         _elapsed += Time.deltaTime;
         game.Tick(Time.deltaTime);
-        Refresh(game);
-        FadeZone();
+
+        RefreshPeople(game);
+        RefreshFlyers(game);
+        RefreshTexts(game);
+        FadeGuide();
+
+        game.ClearLandedFlyers(); // 화면에 한 번 보여줬으니 이제 치워도 됨
 
         if (game.IsDone() == true)
         {
@@ -98,54 +105,184 @@ public class PromoView : MonoBehaviour
         }
     }
 
-    // 행인 표시 수를 맞추고 자리 옮기기
-    void Refresh(PromoGame game)
+    // 길 안 눌렀을 때 그 자리로 던지기
+    void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
     {
-        // 늘어난 만큼 새로 만들고 (행인 프리팹 안 꽂아뒀으면 그림만 없이 진행)
-        while (personPrefab != null && track != null && _marks.Count < game.peoplePos.Count)
+        PromoGame game = GetGame();
+        if (game == null || _owner == null || field == null)
         {
-            RectTransform mark = Instantiate(personPrefab, track);
+            return;
+        }
+
+        if (game.CanThrow() == false)
+        {
+            return; // 아직 쉬는 중
+        }
+
+        Vector2 local;
+        bool inside = RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            field, eventData.position, eventData.pressEventCamera, out local);
+        if (inside == false)
+        {
+            return;
+        }
+
+        // 길 밖을 눌렀으면 던지지 않음
+        Rect r = field.rect;
+        if (r.Contains(local) == false)
+        {
+            return;
+        }
+
+        Vector2 aim = new Vector2(
+            (local.x - r.xMin) / r.width,
+            (local.y - r.yMin) / r.height);
+
+        game.Throw(aim);
+
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySfx(SoundManager.instance.cardPick);
+        }
+    }
+
+    // 행인 표시 만들고 옮기기
+    void RefreshPeople(PromoGame game)
+    {
+        if (field == null || personPrefab == null)
+        {
+            return;
+        }
+
+        // 새로 나온 행인은 표시를 만들어줌
+        for (int i = 0; i < game.people.Count; i++)
+        {
+            PromoPerson p = game.people[i];
+            if (_personMarks.ContainsKey(p) == true)
+            {
+                continue;
+            }
+
+            RectTransform mark = Instantiate(personPrefab, field);
             mark.gameObject.SetActive(true);
-            _marks.Add(mark);
+            _personMarks.Add(p, mark);
+
+            // 황금 행인은 크고 노랗게
+            float scale = p.golden ? goldenScale : 1f;
+            mark.localScale = new Vector3(scale, scale, 1f);
+            Image[] parts = mark.GetComponentsInChildren<Image>(true);
+            for (int j = 0; j < parts.Length; j++)
+            {
+                parts[j].color = p.golden ? goldenColor : personColor;
+            }
         }
 
-        // 줄어든 만큼 지움
-        while (_marks.Count > game.peoplePos.Count)
+        // 지나갔거나 전단지를 받은 행인은 표시를 치움
+        _gonePeople.Clear();
+        foreach (KeyValuePair<PromoPerson, RectTransform> pair in _personMarks)
         {
-            int last = _marks.Count - 1;
-            RemoveMark(last);
+            if (game.people.Contains(pair.Key) == false)
+            {
+                _gonePeople.Add(pair.Key);
+            }
+        }
+        for (int i = 0; i < _gonePeople.Count; i++)
+        {
+            RectTransform mark = _personMarks[_gonePeople[i]];
+            _personMarks.Remove(_gonePeople[i]);
+            if (mark != null)
+            {
+                Destroy(mark.gameObject);
+            }
         }
 
-        float width = 0f;
-        if (track != null)
+        // 남은 행인은 제자리로
+        foreach (KeyValuePair<PromoPerson, RectTransform> pair in _personMarks)
         {
-            width = track.rect.width;
+            if (pair.Value != null)
+            {
+                pair.Value.anchoredPosition = FieldSpot(pair.Key.pos);
+            }
+        }
+    }
+
+    // 날아가는 전단지 표시
+    void RefreshFlyers(PromoGame game)
+    {
+        if (field == null || flyerPrefab == null)
+        {
+            return;
         }
 
-        for (int i = 0; i < _marks.Count && i < game.peoplePos.Count; i++)
+        for (int i = 0; i < game.flyers.Count; i++)
         {
-            RectTransform mark = _marks[i];
+            PromoFlyer f = game.flyers[i];
+            if (_flyerMarks.ContainsKey(f) == true)
+            {
+                continue;
+            }
+
+            RectTransform mark = Instantiate(flyerPrefab, field);
+            mark.gameObject.SetActive(true);
+            _flyerMarks.Add(f, mark);
+        }
+
+        _goneFlyers.Clear();
+        foreach (KeyValuePair<PromoFlyer, RectTransform> pair in _flyerMarks)
+        {
+            PromoFlyer f = pair.Key;
+            RectTransform mark = pair.Value;
+
+            if (game.flyers.Contains(f) == false)
+            {
+                _goneFlyers.Add(f);
+                continue;
+            }
+
             if (mark == null)
             {
                 continue;
             }
 
-            Vector2 p = mark.anchoredPosition;
-            p.x = (game.peoplePos[i] - 0.5f) * width;
-            mark.anchoredPosition = p;
-
-            // 황금 행인은 크고 노랗게 해서 눈에 띄게
-            bool golden = game.peopleGolden[i];
-            float scale = golden ? goldenScale : 1f;
-            mark.localScale = new Vector3(scale, scale, 1f);
-
-            Image[] parts = mark.GetComponentsInChildren<Image>(true);
-            for (int j = 0; j < parts.Length; j++)
+            // 던진 자리에서 노린 자리로 곧게 날아감
+            float t = 1f;
+            if (f.flyTime > 0f)
             {
-                parts[j].color = golden ? goldenColor : personColor;
+                t = Mathf.Clamp01(f.flown / f.flyTime);
+            }
+            Vector2 at = Vector2.Lerp(f.from, f.to, t);
+            mark.anchoredPosition = FieldSpot(at);
+
+            // 닿았으면 맞았는지에 따라 잠깐 표시가 달라짐
+            if (f.done == true)
+            {
+                mark.localScale = new Vector3(1.4f, 1.4f, 1f);
+                Image[] parts = mark.GetComponentsInChildren<Image>(true);
+                for (int j = 0; j < parts.Length; j++)
+                {
+                    parts[j].color = f.hit ? goldenColor : new Color(1f, 1f, 1f, 0.35f);
+                }
+
+                if (f.hit == true && SoundManager.instance != null)
+                {
+                    SoundManager.instance.PlaySfx(SoundManager.instance.docAccept);
+                }
             }
         }
 
+        for (int i = 0; i < _goneFlyers.Count; i++)
+        {
+            RectTransform mark = _flyerMarks[_goneFlyers[i]];
+            _flyerMarks.Remove(_goneFlyers[i]);
+            if (mark != null)
+            {
+                Destroy(mark.gameObject);
+            }
+        }
+    }
+
+    void RefreshTexts(PromoGame game)
+    {
         if (timerFill != null && game.duration > 0f)
         {
             timerFill.fillAmount = Mathf.Clamp01(game.timeLeft / game.duration);
@@ -160,75 +297,71 @@ public class PromoView : MonoBehaviour
         }
     }
 
-    // 구간 표시를 서서히 지움
-    void FadeZone()
+    // 안내 글은 잠깐만 보여줌
+    void FadeGuide()
     {
-        if (zoneMark == null || zoneFadeTime <= 0f)
+        if (guideText == null)
         {
             return;
         }
 
-        float over = _elapsed - zoneShowTime;
-        if (over <= 0f)
+        if (_elapsed >= guideShowTime && guideText.gameObject.activeSelf == true)
         {
-            return;
+            guideText.gameObject.SetActive(false);
         }
-
-        float left = 1f - over / zoneFadeTime;
-        if (left < 0f)
-        {
-            left = 0f;
-        }
-
-        Color c = _zoneColor;
-        c.a = _zoneColor.a * left;
-        zoneMark.color = c;
     }
 
-    // 던지면 닿는 구간을 길 위에 표시해둠 (한 번만)
-    void PlaceZone()
+    // 0~1 자리를 판 위 좌표로
+    Vector2 FieldSpot(Vector2 normal)
     {
-        PromoGame game = GetGame();
-        if (zoneMark == null || track == null || game == null)
+        if (field == null)
         {
-            return;
+            return Vector2.zero;
         }
 
-        RectTransform zone = zoneMark.rectTransform;
-        float width = track.rect.width;
-        float center = (game.throwMin + game.throwMax) / 2f;
-
-        Vector2 p = zone.anchoredPosition;
-        p.x = (center - 0.5f) * width;
-        zone.anchoredPosition = p;
-
-        Vector2 size = zone.sizeDelta;
-        size.x = (game.throwMax - game.throwMin) * width;
-        zone.sizeDelta = size;
-
-        zoneMark.color = _zoneColor;
+        Rect r = field.rect;
+        return new Vector2(r.xMin + normal.x * r.width, r.yMin + normal.y * r.height);
     }
 
-    // 행인 표시 하나 치우기 (같은 프레임에 또 세지 않게 먼저 끔)
-    void RemoveMark(int index)
+    // 전단지 상자가 판 기준으로 어디쯤인지 (0~1)
+    Vector2 BoxSpot()
     {
-        RectTransform mark = _marks[index];
-        _marks.RemoveAt(index);
-
-        if (mark != null)
+        if (field == null || flyerBox == null)
         {
-            mark.gameObject.SetActive(false);
-            Destroy(mark.gameObject);
+            return new Vector2(0.5f, -0.15f);
         }
+
+        Vector3 world = flyerBox.TransformPoint(Vector3.zero);
+        Vector3 local = field.InverseTransformPoint(world);
+        Rect r = field.rect;
+        if (r.width <= 0f || r.height <= 0f)
+        {
+            return new Vector2(0.5f, -0.15f);
+        }
+
+        return new Vector2((local.x - r.xMin) / r.width, (local.y - r.yMin) / r.height);
     }
 
-    // 행인 표시 전부 치우기
+    // 표시 전부 치우기
     void ClearMarks()
     {
-        for (int i = _marks.Count - 1; i >= 0; i--)
+        foreach (KeyValuePair<PromoPerson, RectTransform> pair in _personMarks)
         {
-            RemoveMark(i);
+            if (pair.Value != null)
+            {
+                Destroy(pair.Value.gameObject);
+            }
         }
+        _personMarks.Clear();
+
+        foreach (KeyValuePair<PromoFlyer, RectTransform> pair in _flyerMarks)
+        {
+            if (pair.Value != null)
+            {
+                Destroy(pair.Value.gameObject);
+            }
+        }
+        _flyerMarks.Clear();
     }
 
     // 시간 다 됐으면 수행률 넘기고 화면 닫기
@@ -274,17 +407,5 @@ public class PromoView : MonoBehaviour
         {
             owner.ShowList();
         }
-    }
-
-    // 전단지 버튼 OnClick 에 연결
-    public void OnClickThrow()
-    {
-        PromoGame game = GetGame();
-        if (game == null || game.IsDone() == true)
-        {
-            return;
-        }
-
-        game.Throw();
     }
 }

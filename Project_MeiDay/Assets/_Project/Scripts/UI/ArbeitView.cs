@@ -15,6 +15,7 @@ public class ArbeitView : MonoBehaviour
     [SerializeField] TMP_Text resultText;     // 결과 문구 (한 줄로 쓸 때. 아래 둘을 쓰면 안 꽂아도 됨)
     [SerializeField] TMP_Text rateText;       // 수행률
     [SerializeField] TMP_Text payText;        // 받은 크레딧
+    [SerializeField] TMP_Text levelUpText;    // 상점 레벨이 올랐을 때만 나오는 줄
 
     // 미니게임 화면들 (안 넣어두면 그 종목은 못 함)
     [SerializeField] BookSortView bookSortView;
@@ -189,9 +190,35 @@ public class ArbeitView : MonoBehaviour
     public void OnGameFinished(float rate)
     {
         // 보수를 얼마 받았는지 보려고 전후 크레딧을 비교함
+        // 상점 레벨도 같이 재둠 (알바로 올랐으면 결과 화면에서 알려줘야 함)
+        ShopType shopType = ShopType.Bookstore;
+        MinigameDefinition doing = GameManager.instance.arbeit.currentArbeit;
+        if (doing != null)
+        {
+            shopType = doing.shopType;
+        }
+
         int before = GameManager.instance.economy.credits;
+        int levelBefore = GameManager.instance.shop.GetShopLevel(shopType);
+
         GameManager.instance.arbeit.FinishArbeit(rate);
+
         int earned = GameManager.instance.economy.credits - before;
+        int levelAfter = GameManager.instance.shop.GetShopLevel(shopType);
+
+        if (levelUpText != null)
+        {
+            bool up = (levelAfter > levelBefore);
+            levelUpText.gameObject.SetActive(up);
+            if (up == true)
+            {
+                levelUpText.text = ShopName(shopType) + " 레벨 " + levelAfter + " 달성!";
+                if (SoundManager.instance != null)
+                {
+                    SoundManager.instance.PlaySfx(SoundManager.instance.achieveGet);
+                }
+            }
+        }
 
         HideAllGames();
 
@@ -210,11 +237,20 @@ public class ArbeitView : MonoBehaviour
         }
         if (rateText != null)
         {
-            rateText.text = Mathf.RoundToInt(rate * 100) + "%";
+            // 수행률만 보여주면 왜 이만큼 받았는지 모름 - 어느 구간인지 같이 적어줌
+            rateText.text = Mathf.RoundToInt(rate * 100) + "%  (" + ArbeitManager.TierName(rate) + ")";
         }
         if (payText != null)
         {
             payText.text = earned + " cr";
+        }
+
+        // 실패는 소리로도 알려줌 (0원 받고 조용히 넘어가면 버그처럼 보임)
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySfx(rate >= 0.4f
+                ? SoundManager.instance.docAccept
+                : SoundManager.instance.wrongAnswer);
         }
     }
 
@@ -233,6 +269,24 @@ public class ArbeitView : MonoBehaviour
         {
             promoView.gameObject.SetActive(false);
         }
+    }
+
+    // 상점 이름 (결과 화면에 "극단 레벨 2 달성!" 식으로 씀)
+    string ShopName(ShopType type)
+    {
+        if (type == ShopType.Bookstore)
+        {
+            return "서점";
+        }
+        if (type == ShopType.Theater)
+        {
+            return "극단";
+        }
+        if (type == ShopType.PartyShop)
+        {
+            return "파티용품점";
+        }
+        return "상점";
     }
 
     // 결과 화면의 확인 버튼 OnClick 에 연결
