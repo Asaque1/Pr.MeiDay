@@ -33,6 +33,9 @@ public class DialogueSystem : MonoBehaviour
     [SerializeField] private GameObject hideOnChoiceTarget;
 
     private DialogueData currentDialogueData;
+
+    // 지금 대화가 떠 있는지 (선택창 같은 게 겹쳐 뜨지 않게 물어봄)
+    public bool IsPlaying { get { return currentDialogueData != null; } }
     private int currentLineIndex;
     private bool isTyping;
     private bool isWaitingForChoice;

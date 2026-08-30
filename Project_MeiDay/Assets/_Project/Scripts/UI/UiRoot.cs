@@ -31,6 +31,8 @@ public class UiRoot : MonoBehaviour
             GameManager.instance.events.OnDialogueUpdated += RefreshHardChoice;
         }
 
+        GameManager.instance.OnBrokerStateChanged += RefreshHardChoice;
+
         ShowPanelFor(GameManager.instance.phase); // 시작할 때 한 번 맞춰줌
         RefreshContinueButton();
         SetPanel(cutscenePopup, false);
@@ -57,6 +59,7 @@ public class UiRoot : MonoBehaviour
         if (GameManager.instance != null)
         {
             GameManager.instance.OnPhaseChanged -= ShowPanelFor;
+            GameManager.instance.OnBrokerStateChanged -= RefreshHardChoice;
 
             if (GameManager.instance.events != null)
             {
@@ -109,10 +112,13 @@ public class UiRoot : MonoBehaviour
         GameManager gm = GameManager.instance;
         bool inDialogue = (gm.events != null && gm.events.currentEvent != null);
 
-        SetPanel(hardChoicePanel, gm.phase == GamePhase.DayWork
-            && gm.hardMode == true
+        // 브로커 첫 대사를 다 보고, 아직 답을 안 했고, 다른 대사가 안 떠 있을 때만
+        SetPanel(hardChoicePanel, gm.hardMode == true
+            && gm.brokerOfferDone == true
             && gm.brokerChoice == BrokerChoice.None
-            && inDialogue == false);
+            && inDialogue == false
+            && DialogueSystem.Instance != null
+            && DialogueSystem.Instance.IsPlaying == false);
     }
 
     // ---- 아래는 버튼 OnClick 에 연결해서 씀 ----

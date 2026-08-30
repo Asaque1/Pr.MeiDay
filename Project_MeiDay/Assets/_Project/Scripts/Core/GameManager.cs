@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,6 +39,15 @@ public class GameManager : MonoBehaviour
     public bool hardMode = false;                             // 하드모드 중인지
     public int hardModeDay = 0;                               // 하드모드 며칠째인지
     public BrokerChoice brokerChoice = BrokerChoice.None;     // 브로커한테 뭐라고 답했는지 (엔딩 분기)
+
+    // 브로커 첫 대사를 다 봤는지 (다 봐야 선택창이 뜸)
+    public bool brokerOfferDone = false;
+
+    bool _nextDayStoryDone = false;   // 우주선 산 다음날 대사를 이미 봤는지
+    EndingType _pendingEnding;        // 엔딩 대사 끝나고 갈 엔딩
+
+    // 브로커 상태가 바뀌면 알려줌 (선택창이 듣고 켜고 끔)
+    public event System.Action OnBrokerStateChanged;
 
     // 파티용품점 버프 (밤에 사면 다음 날 하루 적용)
     public int pendingPayoutBuff = 0;      // 내일 성과금 몇 % 더 받을지
@@ -108,6 +117,8 @@ public class GameManager : MonoBehaviour
         hardMode = false;
         hardModeDay = 0;
         brokerChoice = BrokerChoice.None;
+        brokerOfferDone = false;
+        _nextDayStoryDone = false;
         lastEnding = EndingType.None;
 
         calendar.day = 1;
@@ -167,6 +178,29 @@ public class GameManager : MonoBehaviour
 
         ChangePhase(GamePhase.DayWork);
 
+        // 우주선 산 다음날 아침엔 브로커 뒷이야기부터 (하루에 한 번만)
+        if (hardMode == true
+            && hardModeDay == 1
+            && _nextDayStoryDone == false
+            && content.brokerNextDayDialogue != null
+            && DialogueSystem.Instance != null)
+        {
+            _nextDayStoryDone = true;
+
+            // 어제 민원 숫자가 상단바에 남아있지 않게 비워둠
+            complaint.todayComplaints.Clear();
+            complaint.currentIndex = 0;
+
+            DialogueSystem.Instance.StartDialogue(content.brokerNextDayDialogue, ContinueDayStart);
+            return;
+        }
+
+        ContinueDayStart();
+    }
+
+    // 아침 대사가 끝난 뒤부터의 하루 시작
+    void ContinueDayStart()
+    {
         // 아침 이벤트 있으면 대사부터 (끝나면 EventManager 가 OnMorningEventDone 불러줌)
         EventDefinition todayEvent = events.PickTodayEvent();
         if (todayEvent != null)
@@ -319,14 +353,8 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // 우주선 샀는데 아직 하드모드 아니면 지금부터 하드모드 시작 (브로커 만남)
-        if (hasSpaceship == true && hardMode == false)
-        {
-            hardMode = true;
-            hardModeDay = 0;
-            brokerChoice = BrokerChoice.None;
-            // 브로커 등장 대사는 이벤트 데이터로 넣음 (timing=Trigger, condition=HasSpaceship)
-        }
+        // 하드모드는 우주선을 산 그 자리에서 시작함 (OnSpaceshipBought)
+        // 예전엔 다음 날 아침에 켰는데, 브로커가 하루 뒤에 찾아오는 게 어색해서 옮김
 
         save.Save(); // 아침마다 자동 저장
 
@@ -361,7 +389,7 @@ public class GameManager : MonoBehaviour
         return null;
     }
 
-    // 브로커한테 답하기 (하드모드 첫 아침에 UI 가 불러줌)
+    // 브로커한테 답하기 (선택창 버튼이 불러줌)
     public void ChooseBroker(BrokerChoice choice)
     {
         brokerChoice = choice;
@@ -371,6 +399,72 @@ public class GameManager : MonoBehaviour
         {
             int taken = Mathf.RoundToInt(economy.credits * config.brokerTakeRate);
             economy.credits -= taken;
+        }
+
+        NotifyBrokerChanged(); // 선택창부터 닫고
+
+        // 고른 대로 다른 대사
+        if (choice == BrokerChoice.DatabaseAccess)
+        {
+            PlayBrokerDialogue(content.brokerDatabaseDialogue);
+        }
+        else
+        {
+            PlayBrokerDialogue(content.brokerReportDialogue);
+        }
+    }
+
+    // 우주선을 산 그 순간 (상점이 불러줌)
+    // 브로커가 바로 찾아와서 대사를 하고, 그게 끝나면 선택창이 뜸
+    public void OnSpaceshipBought()
+    {
+        if (hardMode == true)
+        {
+            return; // 이미 시작함
+        }
+
+        hardMode = true;
+        hardModeDay = 0;
+        brokerChoice = BrokerChoice.None;
+        brokerOfferDone = false;
+
+        NotifyBrokerChanged();
+
+        // 대사를 안 꽂아뒀으면 바로 선택창으로 넘어감 (데이터 없다고 멈추면 안 됨)
+        if (content.brokerOfferDialogue == null || DialogueSystem.Instance == null)
+        {
+            brokerOfferDone = true;
+            NotifyBrokerChanged();
+            return;
+        }
+
+        DialogueSystem.Instance.StartDialogue(content.brokerOfferDialogue, OnBrokerOfferDone);
+    }
+
+    // 브로커 첫 대사가 끝났을 때 - 이제 선택창을 띄워도 됨
+    void OnBrokerOfferDone()
+    {
+        brokerOfferDone = true;
+        NotifyBrokerChanged();
+    }
+
+    // 브로커 대사 틀기 (없으면 그냥 넘어감)
+    void PlayBrokerDialogue(DialogueData dialogue)
+    {
+        if (dialogue == null || DialogueSystem.Instance == null)
+        {
+            return;
+        }
+
+        DialogueSystem.Instance.StartDialogue(dialogue);
+    }
+
+    // 브로커 관련 상태가 바뀌었다고 알려줌 (선택창이 듣고 켜고 끔)
+    void NotifyBrokerChanged()
+    {
+        if (OnBrokerStateChanged != null)
+        {
+            OnBrokerStateChanged();
         }
     }
 
@@ -390,11 +484,11 @@ public class GameManager : MonoBehaviour
         {
             if (brokerChoice == BrokerChoice.DatabaseAccess)
             {
-                Ending(EndingType.DatabaseAccess);
+                PlayEndingDialogue(content.databaseEndingDialogue, EndingType.DatabaseAccess);
             }
             else
             {
-                Ending(EndingType.ReportBroker);
+                PlayEndingDialogue(content.reportEndingDialogue, EndingType.ReportBroker);
             }
             return;
         }
@@ -407,6 +501,26 @@ public class GameManager : MonoBehaviour
         {
             suspicion.AddSuspicion(config.reportSuspicionPerDay);
         }
+    }
+
+    // 엔딩 대사부터 틀고 끝냄 (대사가 없으면 바로 엔딩)
+    void PlayEndingDialogue(DialogueData dialogue, EndingType type)
+    {
+        _pendingEnding = type;
+
+        if (dialogue == null || DialogueSystem.Instance == null)
+        {
+            Ending(type);
+            return;
+        }
+
+        DialogueSystem.Instance.StartDialogue(dialogue, OnEndingDialogueDone);
+    }
+
+    // 엔딩 대사가 끝났을 때
+    void OnEndingDialogueDone()
+    {
+        Ending(_pendingEnding);
     }
 
     // 게임 오버

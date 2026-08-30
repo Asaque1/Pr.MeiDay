@@ -127,7 +127,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2959475e8e73503c96255f049a4a7c11, type: 2}
   events:
   - {fileID: 11400000, guid: 787e3e8648565ba8b5efcbfe422e3ebd, type: 2}
-  - {fileID: 11400000, guid: b2fe03e3b82d5726b6e42cb02fc83427, type: 2}
   - {fileID: 11400000, guid: 001b836e3bdd82c41a0035a2588179f7, type: 2}
   - {fileID: 11400000, guid: 0f4f2adbe61c1374bad66245eb244aa8, type: 2}
   - {fileID: 11400000, guid: bfddbef9903332848aa6a35f7a070c9c, type: 2}
@@ -147,6 +146,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2a1ec189dcd504042af4c868c18662d8, type: 2}
   - {fileID: 11400000, guid: 32ff13cfaa3f9ab4a965fc5546b02a03, type: 2}
   eventSchedule: {fileID: 11400000, guid: 9b8f9338a67f9034d97f7f350c4b5c71, type: 2}
+  brokerOfferDialogue: {fileID: 11400000, guid: 236186d910fc43a49b5f01195c1387b8, type: 2}
+  brokerDatabaseDialogue: {fileID: 11400000, guid: 6b0c41944f569e04dbaa23c3a01f05a6, type: 2}
+  brokerReportDialogue: {fileID: 11400000, guid: 216cec2f849e01b418f2cca83ee7efa9, type: 2}
+  brokerNextDayDialogue: {fileID: 11400000, guid: ff47d8a464b711e4db520f9dd1d12b06, type: 2}
+  databaseEndingDialogue: {fileID: 11400000, guid: 7e691150d48a1374d80b0bf176791dd6, type: 2}
+  reportEndingDialogue: {fileID: 11400000, guid: 120cedcb8a8f5b7448d146005894e2a9, type: 2}
   achievements:
   - {fileID: 11400000, guid: f85358aed38d50f9bbc2130567e83722, type: 2}
   - {fileID: 11400000, guid: 9354cc0b189657c7b854be6c04b98a64, type: 2}

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 // 상점 매니저 (아이템 사기 + 해금 확인 + 상점 레벨)
@@ -46,6 +46,9 @@ public class ShopManager : MonoBehaviour
             {
                 GameManager.instance.achievements.Check(); // 우주선 구매 업적
             }
+
+            // 브로커가 그 자리에서 바로 찾아옴 (대사 -> 선택창 -> 고른 대로 대사)
+            GameManager.instance.OnSpaceshipBought();
 
             return true;
         }
