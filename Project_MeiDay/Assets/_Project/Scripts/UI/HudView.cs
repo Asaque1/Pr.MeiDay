@@ -20,8 +20,11 @@ public class HudView : MonoBehaviour
             return;
         }
 
-        // 타이틀에선 게임 정보가 아직 의미가 없어서 통째로 숨김
-        bool show = (gm.phase != GamePhase.Intro);
+        // 게임이 실제로 도는 동안에만 띄움
+        // 타이틀은 아직 의미가 없고, 엔딩·게임오버 화면에선 위에 겹쳐 떠서 지저분했음
+        bool show = (gm.phase == GamePhase.DayWork
+            || gm.phase == GamePhase.DayResult
+            || gm.phase == GamePhase.NightShop);
         for (int i = 0; i < transform.childCount; i++)
         {
             Transform child = transform.GetChild(i);

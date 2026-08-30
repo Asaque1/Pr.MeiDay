@@ -274,7 +274,9 @@ public class BookSortView : MonoBehaviour
         }
         if (progressText != null)
         {
-            progressText.text = game.DoneCount() + "/" + game.totalBooks;
+            // 황금 책을 틀린 칸에 넣으면 세는 수가 최대치를 넘어서 "23/22" 처럼 떴음
+            int done = Mathf.Min(game.DoneCount(), game.totalBooks);
+            progressText.text = done + "/" + game.totalBooks;
         }
         if (countText != null)
         {

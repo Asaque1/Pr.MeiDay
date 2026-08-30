@@ -36,7 +36,9 @@ public class DayBar : MonoBehaviour
         int day = GameManager.instance.calendar.day;
 
         // 막대: 월세까지 남은 날 (다 차 있으면 아직 여유, 비면 오늘이 내는 날)
-        if (fillImage != null && config.rentEveryDays > 0)
+        // 나누는 값은 '이번 청구까지의 주기'라야 함 - 늘 6일로 나누면 막대가 영영 안 참
+        // 첫 월세는 3일째고(그래서 첫 주기는 3일), 밀려서 독촉 중이면 3일 주기로 돌아옴
+        if (fillImage != null)
         {
             int left = economy.nextRentDay - day;
             if (left < 0)
@@ -44,7 +46,20 @@ public class DayBar : MonoBehaviour
                 left = 0;
             }
 
-            fillImage.fillAmount = Mathf.Clamp01((float)left / config.rentEveryDays);
+            int span = config.rentEveryDays;
+            if (economy.rentMissCount > 0)
+            {
+                span = config.rentDunEveryDays; // 독촉 중
+            }
+            else if (economy.nextRentDay <= config.firstRentDay)
+            {
+                span = config.firstRentDay;     // 아직 첫 월세 전
+            }
+
+            if (span > 0)
+            {
+                fillImage.fillAmount = Mathf.Clamp01((float)left / span);
+            }
         }
 
         // X 표시: 밀린 횟수만큼 켬
