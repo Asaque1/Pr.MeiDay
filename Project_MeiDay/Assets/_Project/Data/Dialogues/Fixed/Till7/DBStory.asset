@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 567fa180cbeff0043a09c0e520bf426e, type: 3}
   m_Name: DBStory
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
-  dialogueLines: []
+  dialogueLines:
+  - speakerFace: {fileID: 0}
+    speakerName: "\uC8FC\uC778\uACF5"
+    text: "(\uC544\uBB34\uB798\uB3C4, \uB0B4 \uC548\uC804\uC774 \uC911\uC694\uD574.)"
+    choices: []
+    nextLineIndex: 0
