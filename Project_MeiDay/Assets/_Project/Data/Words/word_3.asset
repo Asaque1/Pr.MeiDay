@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: word_3
   category: 1
-  meaning: 3개
-  dialectText: 무리, 균형, 갈림길
-  hint: 삼각형
+  meaning: 3
+  dialectText: "\uBB34\uB9AC, \uADE0\uD615, \uAC08\uB9BC\uAE38"
+  hint: "\uC0BC\uAC01\uD615"

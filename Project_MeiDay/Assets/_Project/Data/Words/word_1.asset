@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: word_1
   category: 1
-  meaning: 1개
-  dialectText: 유일, 존재, 참
-  hint: 오직, 유일
+  meaning: 1
+  dialectText: "\uC720\uC77C, \uC874\uC7AC, \uCC38"
+  hint: "\uC624\uC9C1, \uC720\uC77C"

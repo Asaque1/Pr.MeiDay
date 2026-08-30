@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: word_2
   category: 1
-  meaning: 2개
-  dialectText: 짝, 같이, 함께
-  hint: 선, 쌍둥이
+  meaning: 2
+  dialectText: "\uC9DD, \uAC19\uC774, \uD568\uAED8"
+  hint: "\uC120, \uC30D\uB465\uC774"
