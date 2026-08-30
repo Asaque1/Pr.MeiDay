@@ -15,6 +15,12 @@ public class Cutscene : MonoBehaviour, IPointerClickHandler
     [SerializeField] float autoDelay = 3f;      // 자동재생일 때 컷 하나를 보여주는 시간
     [SerializeField] bool autoAtStart = true;   // 처음부터 자동재생으로 시작할지
 
+    // 컷을 자식 순서 거꾸로 보여줌
+    // 마지막 컷이 앞 컷 위로 삐져나오게 그려진 장이 있는데, 유니티는 자식 순서대로 겹쳐 그려서
+    // 그냥 두면 마지막 컷이 앞 컷들을 덮어버림
+    // 자식을 거꾸로 넣어두고 이걸 켜면, 보여주는 순서는 그대로면서 마지막 컷이 맨 뒤에 깔림
+    [SerializeField] bool reverseOrder = false;
+
     // 다 보고 나서 갈 씬 (비워두면 씬은 안 옮기고 이 오브젝트만 끔)
     [SerializeField] string nextSceneName = "Ingame_base";
 
@@ -70,7 +76,7 @@ public class Cutscene : MonoBehaviour, IPointerClickHandler
             return;
         }
 
-        cutParent.GetChild(_cut).gameObject.SetActive(true);
+        CutAt(_cut).gameObject.SetActive(true);
         _autoLeft = autoDelay;
         ShowPageLabel();
     }
@@ -103,6 +109,17 @@ public class Cutscene : MonoBehaviour, IPointerClickHandler
         _auto = (_auto == false);
         _autoLeft = autoDelay; // 켠 직후에 바로 넘어가버리면 놀람
         ShowAutoLabel();
+    }
+
+    // 몇 번째로 보여줄 컷인지 (거꾸로면 뒤에서부터)
+    Transform CutAt(int index)
+    {
+        if (reverseOrder == true)
+        {
+            return cutParent.GetChild(cutParent.childCount - 1 - index);
+        }
+
+        return cutParent.GetChild(index);
     }
 
     // 컷 전부 끄기
