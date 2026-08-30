@@ -226,6 +226,19 @@ public class EventManager : MonoBehaviour
     }
 
     // 이벤트 끝 - 본 걸로 기록하고 게임한테 알려줌
+    // 대사 통째로 건너뛰기 (대사창의 건너뛰기 버튼이 부름)
+    // ev.lines 에는 선택지가 없어서 끝까지 밀어도 놓치는 게 없음
+    public void SkipLines()
+    {
+        if (currentEvent == null)
+        {
+            return;
+        }
+
+        lineIndex = currentEvent.lines.Count;
+        FinishEvent();
+    }
+
     void FinishEvent()
     {
         EventDefinition done = currentEvent;

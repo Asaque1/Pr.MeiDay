@@ -221,6 +221,20 @@ public class DialogueSystem : MonoBehaviour
         }
     }
 
+    // 대사 통째로 건너뛰기 (대사창 오른쪽 위 버튼)
+    // 한 줄씩 넘기는 게 아니라 이 대화를 그냥 닫음
+    //
+    // 선택지가 떠 있어도 닫음 - 지금 대화의 선택지는 전부 효과가 없어서 놓치는 게 없음
+    // (상점 해금 같은 건 선택지가 아니라 이벤트 쪽에 붙어있음)
+    // 나중에 효과 있는 선택지를 넣으면 여기서 막아줘야 함
+    public void OnClickSkip()
+    {
+        if (currentDialogueData == null)
+            return;
+
+        EndDialogue();
+    }
+
     private void AdvanceDialogue()
     {
         if (currentDialogueData == null)
