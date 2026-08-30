@@ -127,6 +127,16 @@ public class ShopManager : MonoBehaviour
             return ShopName(item.requiredShopType) + " 레벨 " + item.requiredShopLevel + " 필요";
         }
 
+        // 알바를 잘 해내야 풀리는 물건 (위조 신분증)
+        if (item.requiredArbeitGood > 0)
+        {
+            int good = GameManager.instance.arbeit.arbeitGoodCount;
+            if (good < item.requiredArbeitGood)
+            {
+                return "알바 잘함 " + good + " / " + item.requiredArbeitGood;
+            }
+        }
+
         // 다른 물건을 끝까지 사야 풀리는 물건
         if (item.requiresMaxed != null)
         {
@@ -145,6 +155,12 @@ public class ShopManager : MonoBehaviour
     {
         if (item.requiredShopLevel > 0
             && GetShopLevel(item.requiredShopType) < item.requiredShopLevel)
+        {
+            return false;
+        }
+        // 알바를 잘 해낸 횟수 조건 (위조 신분증)
+        if (item.requiredArbeitGood > 0
+            && GameManager.instance.arbeit.arbeitGoodCount < item.requiredArbeitGood)
         {
             return false;
         }

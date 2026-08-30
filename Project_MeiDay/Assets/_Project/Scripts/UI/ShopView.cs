@@ -45,6 +45,13 @@ public class ShopView : MonoBehaviour
     [SerializeField] Sprite partyNpc;
     [SerializeField] Sprite brokerNpc;
 
+    [Header("상점 배경 그림")]
+    [SerializeField] Image shopBackground;   // 탭마다 바뀌는 배경 (안 꽂아두면 그냥 안 바뀌)
+    [SerializeField] Sprite bookstoreBack;
+    [SerializeField] Sprite theaterBack;
+    [SerializeField] Sprite partyBack;
+    [SerializeField] Sprite brokerBack;
+
     [Header("주인 그림 높이 맞추기 - 그림은 원본 크기 그대로 두고 위아래로만 옮김")]
     [SerializeField] float bookstoreNpcDrop = 0f;
     [SerializeField] float theaterNpcDrop = 0f;
@@ -162,6 +169,14 @@ public class ShopView : MonoBehaviour
                 shopNameText.text = "상점 LV: " + level + "   " + have + " / " + need;
             }
         }
+        // 탭에 맞는 배경으로
+        if (shopBackground != null)
+        {
+            Sprite back = BackOf(currentShop);
+            shopBackground.sprite = back;
+            shopBackground.enabled = (back != null);
+        }
+
         if (npcImage != null)
         {
             Sprite npc = NpcOf(currentShop);
@@ -220,10 +235,8 @@ public class ShopView : MonoBehaviour
             {
                 continue; // 우주선은 아래 따로 큰 칸으로 보여줌
             }
-            if (shop.IsUnlocked(items[i]) == false)
-            {
-                continue; // 아직 해금 안 된 물건은 안 보여줌
-            }
+            // 아직 못 사는 물건도 자리는 보여줌 (어둡게 덮이고 조건이 값 자리에 뜸)
+            // 안 보여주면 뭘 하면 풀리는지 알 길이 없어서 목표가 안 생김 - 우주선 칸이랑 같은 방식
 
             // 먼저 목록에 넣어둬야 Set 에서 뭐가 잘못돼도 고아 오브젝트가 안 남음
             ShopItemUI itemUi = Instantiate(itemPrefab, itemParent);
@@ -263,8 +276,18 @@ public class ShopView : MonoBehaviour
         SetOn(bottomRow, show == false);
         if (arbeitLeftText != null && GameManager.instance.arbeit != null)
         {
-            arbeitLeftText.text = "남은 횟수  " + GameManager.instance.arbeit.arbeitLeftToday
-                + "/" + GameManager.instance.arbeit.MaxToday();
+            // 알바가 아직 안 열렸으면 횟수 대신 뭘 사야 하는지 알려줌
+            // "0/0" 만 뜨면 오늘 다 쓴 건지 원래 못 하는 건지 구분이 안 됨
+            bool opened = GameManager.instance.inventory.GetEffectPower(ItemEffect.ArbeitUnlock) > 0f;
+            if (opened == false)
+            {
+                arbeitLeftText.text = "이력서 템플릿 필요";
+            }
+            else
+            {
+                arbeitLeftText.text = "남은 횟수  " + GameManager.instance.arbeit.arbeitLeftToday
+                    + "/" + GameManager.instance.arbeit.MaxToday();
+            }
         }
 
         if (show == false)
@@ -350,6 +373,25 @@ public class ShopView : MonoBehaviour
         }
 
         return brokerNpcZoom;
+    }
+
+    // 상점별 배경 그림
+    Sprite BackOf(ShopType type)
+    {
+        if (type == ShopType.Bookstore)
+        {
+            return bookstoreBack;
+        }
+        if (type == ShopType.Theater)
+        {
+            return theaterBack;
+        }
+        if (type == ShopType.PartyShop)
+        {
+            return partyBack;
+        }
+
+        return brokerBack;
     }
 
     // 상점별 주인 그림

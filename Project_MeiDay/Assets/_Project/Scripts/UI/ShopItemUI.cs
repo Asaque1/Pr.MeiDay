@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class ShopItemUI : MonoBehaviour
 {
     [SerializeField] Image iconImage;        // 아이템 그림
+    [SerializeField] TMP_Text nameText;      // 그림이 아직 없는 물건에만 뜨는 이름
     [SerializeField] TMP_Text priceText;     // 값 (또는 왜 못 사는지)
     [SerializeField] GameObject priceLabel;  // 값이 붙는 딱지
     [SerializeField] GameObject dim;         // 못 사는 물건을 덮는 어두운 판
@@ -35,6 +36,13 @@ public class ShopItemUI : MonoBehaviour
             Sprite icon = item.IconFor(level);
             iconImage.sprite = icon;
             iconImage.enabled = (icon != null);
+
+            // 그림을 아직 안 그린 물건은 빈 칸이랑 구분이 안 됨 - 이름이라도 띄워줌
+            if (nameText != null)
+            {
+                nameText.text = item.itemName;
+                nameText.gameObject.SetActive(icon == null);
+            }
         }
 
         string reason = GameManager.instance.shop.BuyBlockReason(item);
@@ -73,6 +81,7 @@ public class ShopItemUI : MonoBehaviour
         {
             iconImage.enabled = false;
         }
+        SetOn(nameText != null ? nameText.gameObject : null, false);
         SetOn(priceLabel, false);
         SetOn(soldOutMark, false);
         SetOn(dim, false);

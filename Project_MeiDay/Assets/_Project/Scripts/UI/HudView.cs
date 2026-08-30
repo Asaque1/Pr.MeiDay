@@ -43,7 +43,7 @@ public class HudView : MonoBehaviour
         creditsText.text = gm.economy.credits + " cr";
         // 기획서상 의심도는 0~100 정수라서 소수점은 안 보여줌
         suspicionText.text = "의심도 " + Mathf.RoundToInt(gm.suspicion.current)
-            + " / " + Mathf.RoundToInt(gm.config.maxSuspicion);
+            + " / " + Mathf.RoundToInt(gm.suspicion.MaxSuspicion());
 
         // 지금 몇 번째 민원인지 (1/3 -> 2/3 식). 아직 안 꽂아뒀으면 그냥 건너뜀
         if (complaintText != null)

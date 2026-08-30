@@ -64,6 +64,13 @@ public class AngerGauge : MonoBehaviour
             return false; // 낮 업무 중이 아니면 볼 일 없음
         }
 
+        // 정해둔 일차 전에는 게이지 자체가 없음
+        // 처음 며칠은 조작을 익히는 기간이라 시간에 쫓기게 하지 않음 (시계도 같이 멈춰있음)
+        if (gm.calendar.day < gm.config.angerStartDay)
+        {
+            return false;
+        }
+
         ComplaintManager cm = gm.complaint;
 
         // 민원 내용이 다 뜨기 전엔 가득 찬 채로 멈춰 있음

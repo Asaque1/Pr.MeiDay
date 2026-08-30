@@ -28,12 +28,20 @@ public class ItemDefinition : ScriptableObject
     public float power = 1;  // 효과 세기 (영구템은 레벨당 이만큼씩 세짐)
     public float sidePower = 0; // 밀수템의 부작용 세기 (보수 깎는 %, 매일 오르는 의심도 등)
 
+    // 알바 한 번 끝낼 때마다 더 받는 크레딧 (레벨당)
+    // 이력서 템플릿이랑 위조 신분증이 쓰는 값
+    public int arbeitPayBonus = 0;
+
     // 랜덤박스일 때 보상 범위
     public int boxRewardMin = 0;
     public int boxRewardMax = 0;
 
     // 이 영구템을 끝까지 사야 풀리는 물건 (브로커 해금용. 없으면 비워둠)
     public ItemDefinition requiresMaxed;
+    // 알바를 이 횟수만큼 잘해야 팔아주는 물건 (0 이면 조건 없음)
+    // '잘함' 기준은 알바 결과가 '괜찮음' 이상인 판
+    public int requiredArbeitGood = 0;
+
     // 상점 레벨이 얼마 이상이어야 팔아주는 물건 (0 이면 조건 없음)
     // 어느 상점 레벨을 보는지 따로 적어둠 - 브로커 물건이 "서점 5레벨" 같은 조건을 걸 수 있어야 해서
     public ShopType requiredShopType;

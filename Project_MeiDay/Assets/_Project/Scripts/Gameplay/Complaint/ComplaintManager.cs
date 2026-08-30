@@ -299,9 +299,9 @@ public class ComplaintManager : MonoBehaviour
                 pay += pay * GameManager.instance.payoutBuffToday / 100;
             }
 
-            // 밀수템 부작용: 위조 신분증/번역서 쓰면 보수가 깎임
-            int payCut = (int)GameManager.instance.inventory.GetSidePower(ItemEffect.ArbeitCountUp)
-                + (int)GameManager.instance.inventory.GetSidePower(ItemEffect.FreeAnswerWord);
+            // 밀수템 부작용: 번역서 쓰면 보수가 깎임
+            // (위조 신분증은 낮 보수 대신 알바할 때마다 의심도가 오르는 쪽으로 바뀜)
+            int payCut = (int)GameManager.instance.inventory.GetSidePower(ItemEffect.FreeAnswerWord);
             if (payCut > 0)
             {
                 pay -= pay * payCut / 100;
@@ -389,6 +389,13 @@ public class ComplaintManager : MonoBehaviour
             {
                 return; // 설정에서 시간 제한을 꺼둔 경우
             }
+        }
+
+        // 정해둔 일차 전에는 시계를 안 돌림 (게이지는 꽉 찬 채로 둠)
+        if (GameManager.instance.calendar.day < GameManager.instance.config.angerStartDay)
+        {
+            angerTimeLeft = angerTimeMax;
+            return;
         }
 
         angerTimeLeft -= Time.deltaTime;

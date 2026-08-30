@@ -105,4 +105,27 @@ public class InventorySystem : MonoBehaviour
 
         return total;
     }
+    // 가진 영구템들이 올려주는 알바 보수 합 (레벨 x arbeitPayBonus)
+    public int GetArbeitPayBonus()
+    {
+        int total = 0;
+        List<ItemDefinition> items = GameManager.instance.content.items;
+
+        for (int i = 0; i < items.Count; i++)
+        {
+            ItemDefinition item = items[i];
+            if (item.kind != ItemKind.Permanent || item.arbeitPayBonus == 0)
+            {
+                continue;
+            }
+
+            int level = GetItemLevel(item.id);
+            if (level > 0)
+            {
+                total += level * item.arbeitPayBonus;
+            }
+        }
+
+        return total;
+    }
 }

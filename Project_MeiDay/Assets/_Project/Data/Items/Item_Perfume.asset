@@ -15,20 +15,21 @@ MonoBehaviour:
   id: item_perfume
   itemName: "\uC548\uB4DC\uB85C\uBA54\uB2E4\uD5A5 \uD5A5\uC218"
   shopType: 1
-  kind: 1
-  effect: 5
-  description: "\uBFCC\uB9AC\uBA74 \uADF8 \uC790\uB9AC\uC5D0\uC11C \uC758\uC2EC\uC774
-    \uAC00\uB77C\uC549\uB294\uB2E4."
+  kind: 0
+  effect: 10
+  description: "\uBFCC\uB9B4\uC218\uB85D \uC758\uC2EC\uC744 \uB35C \uBC1B\uB294 \uBAB8\uC774 \uB41C\uB2E4. \uC758\uC2EC\uB3C4 \uCD5C\uB300\uCE58\uAC00 10 \uC624\uB978\uB2E4."
   icon: {fileID: 3270823110461714825, guid: d454034c6064bca4c9f9fc417b3b9953, type: 3}
   levelIcons: []
   levelDescriptions: []
   price: 420
   isSpaceshipTicket: 0
-  maxLevel: 1
-  power: 15
+  maxLevel: 3
+  power: 10
   sidePower: 0
+  arbeitPayBonus: 0
   boxRewardMin: 0
   boxRewardMax: 0
   requiresMaxed: {fileID: 0}
+  requiredArbeitGood: 0
   requiredShopType: 0
   requiredShopLevel: 0
