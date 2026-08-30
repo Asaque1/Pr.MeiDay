@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 // 화면(패널) 전환을 담당하는 UI 대장
@@ -11,6 +11,7 @@ public class UiRoot : MonoBehaviour
     [SerializeField] GameObject nightPanel;  // 밤 (상점 + 알바)
     [SerializeField] GameObject shopPanel;   // 밤 안에서 상점 쪽
     [SerializeField] GameObject arbeitPanel; // 밤 안에서 알바 쪽
+    [SerializeField] GameObject shopTabButton; // 알바 쪽에서 상점으로 돌아가는 버튼
     [SerializeField] GameObject endingPanel; // 엔딩 / 게임오버
     [SerializeField] GameObject hardChoicePanel; // 하드모드 첫 아침에 뜨는 브로커 선택창
     [SerializeField] Button continueButton; // 저장 없으면 못 누르는 이어하기 버튼
@@ -170,27 +171,23 @@ public class UiRoot : MonoBehaviour
     // 밤 탭: 알바 보기
     public void OnClickArbeitTab()
     {
-        if (shopPanel != null)
-        {
-            shopPanel.SetActive(false);
-        }
-        if (arbeitPanel != null)
-        {
-            arbeitPanel.SetActive(true);
-        }
+        ShowNightSide(false);
     }
 
     // 밤 화면에서 상점 쪽만 켜기
     void ShowShop()
     {
-        if (shopPanel != null)
-        {
-            shopPanel.SetActive(true);
-        }
-        if (arbeitPanel != null)
-        {
-            arbeitPanel.SetActive(false);
-        }
+        ShowNightSide(true);
+    }
+
+    // 밤 화면은 상점과 알바 둘 중 하나만 켬
+    // "상점" 버튼은 알바 쪽을 보고 있을 때만 필요함
+    // 상점을 보는 중에도 떠 있어서, 눌러도 아무 일이 안 나는 버튼이 하나 있었음
+    void ShowNightSide(bool shop)
+    {
+        SetPanel(shopPanel, shop);
+        SetPanel(arbeitPanel, shop == false);
+        SetPanel(shopTabButton, shop == false);
     }
 
     // 브로커 선택: DB 접근시키기 (돈 뜯기고 편한 엔딩 루트)
