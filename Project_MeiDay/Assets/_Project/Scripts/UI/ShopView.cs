@@ -3,9 +3,29 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 정해둔 날 밤에 그 상점을 열면 나오는 대사 한 줄짜리 설정
+// (예: 7일차 밤에 브로커 상점을 누르면 Day7AtBrokerStore 재생)
+[System.Serializable]
+public class ShopDialogue
+{
+    public ShopType shop;          // 어느 상점을 눌렀을 때
+    public int day = 7;            // 며칠째 밤에
+    public DialogueData dialogue;  // 틀어줄 대사
+
+    // 본 기록에 쓸 이름 (이벤트 기록을 같이 써서 저장·복원이 따라옴)
+    public string SeenId()
+    {
+        return "shopdlg_" + shop + "_d" + day;
+    }
+}
+
 // 밤 상점 화면 - 상점 네 곳을 골라가며 아이템 사게 해줌
 public class ShopView : MonoBehaviour
 {
+    [Header("상점 대사")]
+    [SerializeField] ShopDialogue[] shopDialogues; // 정해둔 날 그 상점을 열면 뜨는 대사
+
+
     [Header("아이템 목록")]
     [SerializeField] Transform itemParent;  // 아이템 칸들 놓이는 자리
     [SerializeField] ShopItemUI itemPrefab; // 아이템 칸 프리팹
@@ -443,5 +463,54 @@ public class ShopView : MonoBehaviour
         SetInfo("");
         ClosePopup();
         Rebuild();
+
+        TryShopDialogue(type);
+    }
+
+    // 정해둔 날 밤에 그 상점을 열면 대사를 한 번 틀어줌
+    // 대사창(DialogueSystem)은 게임 화면과 다른 캔버스라, 뒤에 상점 배경이 그대로 깔림
+    void TryShopDialogue(ShopType type)
+    {
+        GameManager gm = GameManager.instance;
+        if (gm == null || shopDialogues == null)
+        {
+            return;
+        }
+
+        // 밤에만 (낮에 상점 화면이 열릴 일은 없지만 안전하게)
+        if (gm.phase != GamePhase.NightShop)
+        {
+            return;
+        }
+
+        for (int i = 0; i < shopDialogues.Length; i++)
+        {
+            ShopDialogue sd = shopDialogues[i];
+            if (sd == null || sd.dialogue == null || sd.shop != type)
+            {
+                continue;
+            }
+            if (sd.day != gm.calendar.day)
+            {
+                continue;
+            }
+
+            // 한 번 본 건 다시 안 띄움 (이벤트랑 같은 기록을 써서 저장까지 따라감)
+            string seenId = sd.SeenId();
+            if (gm.events == null || gm.events.HasSeen(seenId) == true)
+            {
+                return;
+            }
+
+            if (DialogueSystem.Instance == null)
+            {
+                Debug.LogWarning("씬에 DialogueSystem 이 없어서 상점 대사를 못 띄움: " + seenId);
+                return;
+            }
+
+            gm.events.MarkSeen(seenId);
+            DialogueSystem.Instance.StartDialogue(sd.dialogue);
+            return;
+        }
     }
 }

@@ -165,11 +165,15 @@ public class TranslationView : MonoBehaviour
 
         if (cm.stage == ComplaintStage.Translate)
         {
+            SetObject(wrongText, true);
             wrongText.text = "해석 실수: " + cm.translation.wrongCount + " / " + GameManager.instance.config.maxWrongTries;
         }
         else
         {
-            wrongText.text = "처리 실수: " + cm.resolutionWrongCount + " / " + GameManager.instance.config.maxResolutionWrongTries;
+            // 지금은 처리가 '서류 발급' 한 가지뿐이라 이 숫자가 절대 안 오름
+            // 안 변하는 카운터가 화면에 남아 있으면 고장난 것처럼 보여서 처리 단계에선 아예 감춤
+            // 처리를 여러 갈래로 되살리면 위 해석 쪽처럼 다시 켜면 됨
+            SetObject(wrongText, false);
         }
 
         // 말하는 중이면 한 글자씩 찍고, 그동안은 카드도 처리도 못 만짐
@@ -192,9 +196,11 @@ public class TranslationView : MonoBehaviour
         // 말 끝남 - 대사는 전부 보이게
         StopTyping();
         complaintLineText.maxVisibleCharacters = int.MaxValue;
-        SetObject(wrongText, true);
 
         bool translating = (cm.stage == ComplaintStage.Translate);
+
+        // 실수 표시는 해석 단계에만 (처리는 갈래가 하나라 숫자가 안 움직임)
+        SetObject(wrongText, translating);
 
         // 손패는 해석 단계에만
         // 빈칸은 처리 단계에도 남겨둠 - 무슨 민원이었는지 보면서 처리를 골라야 하니까

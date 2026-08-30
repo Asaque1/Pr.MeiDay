@@ -187,18 +187,19 @@ public class ArbeitManager : MonoBehaviour
         GameManager.instance.shop.AddShopExp(currentArbeit.shopType, exp);
 
         // 업적용 누적 기록
+        // 업적은 게임 저장과 따로 관리하니까 여기서 같이 적어둠
+        // (안 그러면 껐다 켤 때 밤에 한 알바 횟수가 되돌아감)
         if (GameManager.instance.achievements != null)
         {
             GameManager.instance.achievements.AddArbeit();
             GameManager.instance.achievements.Check();
+            GameManager.instance.achievements.Save();
         }
 
-        // 밤에 한 알바는 다음 아침 저장까지 안 남아서, 여기서 바로 저장해둠
-        // (밤에 끄고 이어하면 그날 밤 알바가 통째로 사라졌음)
-        if (GameManager.instance.save != null)
-        {
-            GameManager.instance.save.Save();
-        }
+        // 여기서 게임을 저장하면 안 됨
+        // 저장은 '다음 날 아침' 상태만 담게 돼 있는데(취침 때 한 번),
+        // 밤에 저장해버리면 오늘 아침으로 되돌아가는 파일이 만들어져서
+        // 이어하기 하면 오늘 낮을 통째로 다시 하게 됨 (수입도 다시 들어옴)
 
         currentArbeit = null;
         bookSort = null;

@@ -170,6 +170,14 @@ public class Cutscene : MonoBehaviour, IPointerClickHandler
             return;
         }
 
+        // 씬이 실제로 바뀌는 건 이 프레임 끝이라, 그동안 컷신 화면이 한 번 더 그려짐
+        // 컷이 없는 씬을 지나갈 때 빈 배경에 남은 페이지 숫자만 번쩍여서 먼저 접어둠
+        Canvas canvas = GetComponentInParent<Canvas>();
+        if (canvas != null)
+        {
+            canvas.gameObject.SetActive(false);
+        }
+
         // 돌아가서 타이틀을 또 보여주면 컷신 본 보람이 없음 - 바로 1일차부터 시작
         UiRoot.startAfterCutscene = true;
         SceneManager.LoadScene(nextSceneName);

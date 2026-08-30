@@ -79,6 +79,13 @@ public class UiRoot : MonoBehaviour
         }
         SetPanel(endingPanel, phase == GamePhase.Ending || phase == GamePhase.GameOver);
 
+        // 컷신 물어보는 창은 타이틀에서만 뜸
+        // 창 뒤의 이어하기가 눌려서 게임이 시작돼도 창만 덩그러니 남아 있었음
+        if (phase != GamePhase.Intro)
+        {
+            SetPanel(cutscenePopup, false);
+        }
+
         RefreshHardChoice();
     }
 

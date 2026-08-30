@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 54fc82f47a838d74281652bb19c146cd, type: 3}
   m_Name: GameConfig
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   startingCredits: 350
   foodCost: 20
   rentTutorialCost: 100
@@ -30,7 +30,7 @@ MonoBehaviour:
   maxSuspicion: 100
   suspicionWrongTranslation: 5
   suspicionWrongResolution: 12
-  suspicionPerfectClear: 3
+  suspicionPerfectClear: 2
   complaintsPerDay: 3
   complaintsGrowEvery: 5
   complaintsMax: 6
@@ -46,4 +46,13 @@ MonoBehaviour:
   shopExpFirstLevel: 30
   shopExpGrowRate: 1.25
   shopExpGrowAdd: 2.5
+  itemPriceBase: 200
+  itemPriceStep: 20
+  itemPricePerLevel: 15
+  itemPriceCarryDiv: 5
+  consumablePriceStep: 0
+  consumablePricePerBuy: 3
+  consumablePricePerDay: 10
+  consumableBuyDecayPerDay: 5
+  randomBoxMaxRate: 1.8
   eventsInOrder: 0

@@ -283,6 +283,18 @@ public class EventManager : MonoBehaviour
         return false;
     }
 
+    // 본 걸로 적어두기 (이벤트 말고 상점 대사 같은 것도 이 기록을 같이 씀)
+    // 저장은 SaveManager 가 seenEventIds 를 통째로 들고 다녀서 따로 할 게 없음
+    public void MarkSeen(string id)
+    {
+        if (string.IsNullOrEmpty(id) == true || HasSeen(id) == true)
+        {
+            return;
+        }
+
+        seenEventIds.Add(id);
+    }
+
     // 구독한 UI 한테 알려주기
     void NotifyUpdated()
     {
