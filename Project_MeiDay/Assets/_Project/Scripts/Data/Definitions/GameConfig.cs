@@ -52,6 +52,10 @@ public class GameConfig : ScriptableObject
     public float angerTimeLastDay = 15f;
     public int angerTimeFullDay = 40;
 
+    // 이 일차부터 인내심을 잼 - 그 전에는 게이지가 꽉 찬 채로 안 줄어듦
+    // 처음 며칠은 조작을 익히는 기간이라 시간에 쫓기면 배우기 전에 실수부터 쌓임
+    public int angerStartDay = 3;
+
     [Header("아르바이트")]
     public int arbeitStart = 0;     // 상점 해금 전 알바 횟수 (해금되면 여기에 +1)
     public int arbeitMax = 3;       // 기본 횟수 상한 (위조 신분증 보너스랑 이월분은 이 위로 더 붙음)
