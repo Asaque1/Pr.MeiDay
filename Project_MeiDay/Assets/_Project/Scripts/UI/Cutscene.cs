@@ -72,12 +72,6 @@ public class Cutscene : MonoBehaviour, IPointerClickHandler
 
         cutParent.GetChild(_cut).gameObject.SetActive(true);
         _autoLeft = autoDelay;
-
-        if (SoundManager.instance != null)
-        {
-            SoundManager.instance.PlaySfx(SoundManager.instance.pageTurn);
-        }
-
         ShowPageLabel();
     }
 

@@ -119,6 +119,19 @@ public class DialogueView : MonoBehaviour
     }
 
     // 대사창 클릭 (버튼 OnClick 에 연결)
+    // 대사창의 건너뛰기 버튼 (버튼 OnClick 에 연결)
+    // 한 줄씩 넘기는 게 아니라 이번 이벤트 대사를 통째로 닫음
+    public void OnClickSkip()
+    {
+        if (GameManager.instance == null)
+        {
+            return;
+        }
+
+        StopTyping();
+        GameManager.instance.events.SkipLines();
+    }
+
     public void OnClickDialogue()
     {
         // 타이핑 중이면 일단 전부 보여주기

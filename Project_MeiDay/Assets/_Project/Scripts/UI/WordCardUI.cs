@@ -35,6 +35,10 @@ public class WordCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     Vector3 _homePos;        // 드래그 시작 전 원래 자리
     float _maxFontSize = 0f; // 프리팹에 적어둔 글자 크기 상한 (이보다 커지진 않음)
 
+    // 프리팩에 잡아둔 글자 칸 (카드 가운데 꽉 차는 자리)
+    bool _textRestSaved = false;
+    Vector2 _textAnchorMin, _textAnchorMax, _textPivot, _textSize, _textPos;
+
     // 손 올렸을 때 되돌릴 원래 모습 (LayoutCards 가 잡아준 자리)
     bool _hover = false;
     bool _poseSaved = false;
@@ -49,6 +53,8 @@ public class WordCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         {
             _maxFontSize = wordText.fontSizeMax;
         }
+
+        SaveTextRest();
     }
 
     // 만들어질 때 view 가 채워줌
@@ -114,8 +120,31 @@ public class WordCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         return word;
     }
 
-    // 카드끼리 겹칠 때 안 가려지는 폭 안에만 글자를 두기
-    // 손패는 뒤 카드가 앞 카드의 오른쪽을 덮으니, 글자가 그 밑으로 들어가면 잘려 보임
+    // 프리팩에 잡혀 있는 글자 칸을 한 번 기억해둔다
+    void SaveTextRest()
+    {
+        if (_textRestSaved == true || wordText == null)
+        {
+            return;
+        }
+
+        RectTransform rt = wordText.rectTransform;
+        _textAnchorMin = rt.anchorMin;
+        _textAnchorMax = rt.anchorMax;
+        _textPivot = rt.pivot;
+        _textSize = rt.sizeDelta;
+        _textPos = rt.anchoredPosition;
+        _textRestSaved = true;
+    }
+
+    // 카드 글자는 언제나 카드 한가운데
+    //
+    // 손패는 뒤 카드가 앞 카드의 오른쪽을 덮어서 글자가 좀 가려짐
+    // 예전엔 그걸 피하려고 글자를 왼쪽으로 몰아됐는데,
+    // 그러면 카드마다 글자 자리가 달라져서 줄이 안 맞음
+    // 가려서 좀 잘려도 가운데가 보기 낫기로 함
+    //
+    // visibleWidth: 안 가려지는 폭. 이젠 자리를 정하는 데엔 안 씁
     public void FitTextWidth(float visibleWidth)
     {
         if (wordText == null)
@@ -123,21 +152,22 @@ public class WordCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             return;
         }
 
-        RectTransform self = GetComponent<RectTransform>();
-        RectTransform rt = wordText.rectTransform;
+        SaveTextRest();
 
-        float w = visibleWidth - textPadding * 2f;
+        RectTransform rt = wordText.rectTransform;
+        rt.anchorMin = _textAnchorMin;
+        rt.anchorMax = _textAnchorMax;
+        rt.pivot = _textPivot;
+        rt.sizeDelta = _textSize;
+        rt.anchoredPosition = _textPos;
+
+        // 방금 넣은 값이라 rect 가 아직 안 바뀜을 수 있어서 카드 폭으로 직접 계산함
+        RectTransform self = GetComponent<RectTransform>();
+        float w = self.rect.width * (_textAnchorMax.x - _textAnchorMin.x) + _textSize.x;
         if (w < 10f)
         {
-            w = 10f; // 너무 좁으면 글자가 아예 안 보임
+            w = 10f;
         }
-
-        // 세로 카드라 높이는 넉넉함 - 폭만 안 가려지는 만큼으로 잡고 여러 줄로 쌓게 둠
-        rt.anchorMin = new Vector2(0f, 0.5f);
-        rt.anchorMax = new Vector2(0f, 0.5f);
-        rt.pivot = new Vector2(0f, 0.5f);
-        rt.sizeDelta = new Vector2(w, self.rect.height - textPadding * 3f);
-        rt.anchoredPosition = new Vector2(textPadding, 0f);
 
         FitFontToWidest(w);
     }

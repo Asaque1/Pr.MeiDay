@@ -9,6 +9,12 @@ public class TranslationView : MonoBehaviour
     [SerializeField] TMP_Text complaintLineText; // 민원인 대사
     [SerializeField] TMP_Text quotaText;         // 오늘 몇 번째 민원인지 (n/n)
     [SerializeField] TMP_Text wrongText;         // 틀린 횟수
+
+    // 틀린 횟수를 동그라미로 보여주는 자리 (안 꽂아두면 예전처럼 글씨로 나옴)
+    // 자식 하나가 동그라미 하나 (빈 라디오 그림을 색만 바꿔서 씀)
+    [SerializeField] Transform wrongMarkParent;
+    [SerializeField] Color wrongMarkOn = new Color(0.9f, 0.13f, 0.13f);  // 틀린 칸
+    [SerializeField] Color wrongMarkOff = new Color(1f, 1f, 1f);         // 아직 안 틀린 칸
     [SerializeField] Transform slotParent;       // 상자들 놓이는 자리
     [SerializeField] Transform cardParent;       // 카드들 놓이는 자리
     [SerializeField] WordSlotUI slotPrefab;      // 상자 프리팹
@@ -135,8 +141,12 @@ public class TranslationView : MonoBehaviour
         // 자리를 먼저 켜야 함. ShowComplainant 가 전용 그림/파츠 중 안 쓰는 쪽을 다시 꺼줌
         ShowComplainantSeat(true);
         ShowComplainant(c);
-        SetObject(quotaText, true);
-        quotaText.text = (cm.currentIndex + 1) + " / " + cm.todayComplaints.Count;
+        // 몇 번째 민원인지는 위 상단바에도 있어서 안 꽂아둘 수 있음
+        if (quotaText != null)
+        {
+            SetObject(quotaText, true);
+            quotaText.text = (cm.currentIndex + 1) + " / " + cm.todayComplaints.Count;
+        }
 
         // 앉기만 하고 아직 말은 안 하는 동안 (대사창은 비워둠)
         if (cm.entry == ComplaintEntry.Arrived)
@@ -150,7 +160,7 @@ public class TranslationView : MonoBehaviour
             // 앞 민원의 빈칸이 정답이 적힌 채로 빈 대사창 위에 잠깐 떠 있음
             ClearSlotUis();
 
-            SetObject(wrongText, false);
+            ShowWrong(false);
             SetObject(slotParent, false);
             SetObject(cardParent, false);
             SetPart(translatePart, false);
@@ -165,21 +175,22 @@ public class TranslationView : MonoBehaviour
 
         if (cm.stage == ComplaintStage.Translate)
         {
-            SetObject(wrongText, true);
-            wrongText.text = "해석 실수: " + cm.translation.wrongCount + " / " + GameManager.instance.config.maxWrongTries;
+            ShowWrong(true);
+            wrongText.text = "분노: " + cm.translation.wrongCount + " / " + GameManager.instance.config.maxWrongTries;
+            ShowWrongMarks(GameManager.instance.config.maxWrongTries, cm.translation.wrongCount);
         }
         else
         {
             // 지금은 처리가 '서류 발급' 한 가지뿐이라 이 숫자가 절대 안 오름
             // 안 변하는 카운터가 화면에 남아 있으면 고장난 것처럼 보여서 처리 단계에선 아예 감춤
             // 처리를 여러 갈래로 되살리면 위 해석 쪽처럼 다시 켜면 됨
-            SetObject(wrongText, false);
+            ShowWrong(false);
         }
 
         // 말하는 중이면 한 글자씩 찍고, 그동안은 카드도 처리도 못 만짐
         if (cm.entry == ComplaintEntry.Speaking)
         {
-            SetObject(wrongText, false);
+            ShowWrong(false);
             SetObject(slotParent, false);
             SetObject(cardParent, false);
             SetPart(translatePart, false);
@@ -200,7 +211,7 @@ public class TranslationView : MonoBehaviour
         bool translating = (cm.stage == ComplaintStage.Translate);
 
         // 실수 표시는 해석 단계에만 (처리는 갈래가 하나라 숫자가 안 움직임)
-        SetObject(wrongText, translating);
+        ShowWrong(translating);
 
         // 손패는 해석 단계에만
         // 빈칸은 처리 단계에도 남겨둠 - 무슨 민원이었는지 보면서 처리를 골라야 하니까
@@ -405,6 +416,72 @@ public class TranslationView : MonoBehaviour
         image.pivot = new Vector2(0.5f, 1f); // 머리 꼭대기가 기준점
         image.sizeDelta = new Vector2(artWidth * scale, drawn);
         image.anchoredPosition = new Vector2(0f, -(complainantPadding + gap));
+    }
+
+    // 실수 표시 켜고 끄기
+    // 동그라미를 꽂아뒀으면 글씨는 접어둠 (같은 걸 두 번 보여줄 이유가 없음)
+    void ShowWrong(bool on)
+    {
+        bool useMarks = (wrongMarkParent != null);
+
+        SetObject(wrongText, on == true && useMarks == false);
+        SetObject(wrongMarkParent, on);
+    }
+
+    // 틀린 횟수를 동그라미로 칠하기
+    // 단계마다 한도가 다를 수 있어서 남는 동그라미는 아예 숨김
+    void ShowWrongMarks(int max, int count)
+    {
+        if (wrongMarkParent == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < wrongMarkParent.childCount; i++)
+        {
+            Transform mark = wrongMarkParent.GetChild(i);
+
+            bool use = (i < max);
+            if (mark.gameObject.activeSelf != use)
+            {
+                mark.gameObject.SetActive(use);
+            }
+            if (use == false)
+            {
+                continue;
+            }
+
+            // 테두리는 그대로 두고 안쪽 점을 켜고 꺼서 채움
+            if (mark.childCount > 0)
+            {
+                UnityEngine.UI.Image dot = mark.GetChild(0).GetComponent<UnityEngine.UI.Image>();
+                if (dot != null)
+                {
+                    dot.color = wrongMarkOn;
+                    if (dot.enabled != (i < count))
+                    {
+                        dot.enabled = (i < count);
+                    }
+                }
+                continue;
+            }
+
+            // 안쪽 점을 안 만들어둔 구조면 테두리 색으로라도 표시
+            UnityEngine.UI.Image ring = mark.GetComponent<UnityEngine.UI.Image>();
+            if (ring == null)
+            {
+                continue;
+            }
+
+            if (i < count)
+            {
+                ring.color = wrongMarkOn;
+            }
+            else
+            {
+                ring.color = wrongMarkOff;
+            }
+        }
     }
 
     // 민원인이 하는 말 만들기

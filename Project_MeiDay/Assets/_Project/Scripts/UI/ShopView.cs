@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -44,6 +44,29 @@ public class ShopView : MonoBehaviour
     [SerializeField] Sprite theaterNpc;
     [SerializeField] Sprite partyNpc;
     [SerializeField] Sprite brokerNpc;
+
+    [Header("주인 그림 높이 맞추기 - 그림은 원본 크기 그대로 두고 위아래로만 옮김")]
+    [SerializeField] float bookstoreNpcDrop = 0f;
+    [SerializeField] float theaterNpcDrop = 0f;
+    [SerializeField] float partyNpcDrop = 0f;
+    [SerializeField] float brokerNpcDrop = 0f;
+
+    [Header("주인 그림 배율 보정 - 1이면 손 안 댈")]
+    // 주인 그림이 다 같은 1920x1080 판에 그려져 있지만 그린 크기가 서로 다름
+    // 파티용품점 주인처럼 작게 그려온 애는 칸이 텔려서 여기서 받션음
+    [SerializeField] float bookstoreNpcZoom = 1f;
+    [SerializeField] float theaterNpcZoom = 1f;
+    [SerializeField] float partyNpcZoom = 1f;
+    [SerializeField] float brokerNpcZoom = 1f;
+
+    float _npcBaseY = 0f;       // 씬에 잡아둔 주인 그림의 원래 높이
+    bool _npcBaseYSaved = false;
+
+    // 상점 주인 그림은 셋 다 같은 1920x1080 판에서 잘라온 거라 조각 크기가 제각각임
+    // 조각을 칸에 맞춰 늘리면 몸집 작은 애가 큰 애랑 똑같이 커져서 덩치 차이가 사라짐
+    // 그래서 판 높이를 칸 높이에 맞춰두고, 조각은 그 비율 그대로 그림
+    [SerializeField] float npcSheetHeight = 1080f;
+
 
     [Header("아래 줄")]
     [SerializeField] GameObject bottomRow;    // 아르바이트 버튼 줄 (우주선 칸이 뜨면 자리를 비켜줌)
@@ -144,6 +167,32 @@ public class ShopView : MonoBehaviour
             Sprite npc = NpcOf(currentShop);
             npcImage.sprite = npc;
             npcImage.enabled = (npc != null);
+
+            RectTransform npcRect = (RectTransform)npcImage.transform;
+            if (_npcBaseYSaved == false)
+            {
+                _npcBaseY = npcRect.anchoredPosition.y; // 씬에 잡아둔 원래 높이를 기억
+                _npcBaseYSaved = true;
+            }
+
+            // 판 높이를 칸 높이에 맞춘 배율로 그림 - 몸집 작은 주인은 작게 나옴
+            RectTransform npcFrame = npcRect.parent as RectTransform;
+            if (npc != null && npcFrame != null && npcSheetHeight > 0f)
+            {
+                float npcScale = npcFrame.rect.height / npcSheetHeight * NpcZoomOf(currentShop);
+
+                // 브로커처럼 가로로 넓게 그려온 주인은 이 배율로는 액자를 뚫고 나감
+                // 그런 애만 칸 가로에 닿게 더 줄임 - 안 넘치는 주인들은 그대로라 덩치 차이가 살아있음
+                // (잘라내면 팔이 날아가서 줄이는 쪽으로 함)
+                if (npc.rect.width > 0f)
+                {
+                    npcScale = Mathf.Min(npcScale, npcFrame.rect.width / npc.rect.width);
+                }
+                npcRect.sizeDelta = new Vector2(npc.rect.width * npcScale, npc.rect.height * npcScale);
+            }
+
+            npcRect.localScale = Vector3.one;
+            npcRect.anchoredPosition = new Vector2(npcRect.anchoredPosition.x, _npcBaseY - NpcDropOf(currentShop));
         }
 
         RebuildSpaceship();
@@ -262,6 +311,45 @@ public class ShopView : MonoBehaviour
         }
 
         return null;
+    }
+
+    // 상점별 주인 그림을 얼마나 내릴지
+    // 그림은 원본 크기 그대로 씀 - 칸을 넘거나 글자를 가리면 줄이지 말고 아래로 내림
+    float NpcDropOf(ShopType type)
+    {
+        if (type == ShopType.Bookstore)
+        {
+            return bookstoreNpcDrop;
+        }
+        if (type == ShopType.Theater)
+        {
+            return theaterNpcDrop;
+        }
+        if (type == ShopType.PartyShop)
+        {
+            return partyNpcDrop;
+        }
+
+        return brokerNpcDrop;
+    }
+
+    // 상점별 주인 그림 배율 보정 (원본이 너무 작게 그려진 애만 키움)
+    float NpcZoomOf(ShopType type)
+    {
+        if (type == ShopType.Bookstore)
+        {
+            return bookstoreNpcZoom;
+        }
+        if (type == ShopType.Theater)
+        {
+            return theaterNpcZoom;
+        }
+        if (type == ShopType.PartyShop)
+        {
+            return partyNpcZoom;
+        }
+
+        return brokerNpcZoom;
     }
 
     // 상점별 주인 그림
