@@ -48,6 +48,12 @@ public class ManualView : MonoBehaviour
         }
         _page--;
         ShowPage();
+
+        // 뒤로 넘길 때도 앞으로 넘길 때랑 같은 소리를 냄 (한쪽만 조용하면 고장난 것처럼 들림)
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySfx(SoundManager.instance.pageTurn);
+        }
     }
 
     // 다음 쪽 버튼 OnClick 에 연결

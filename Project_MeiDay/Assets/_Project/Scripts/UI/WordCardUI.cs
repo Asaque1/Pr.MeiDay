@@ -28,6 +28,7 @@ public class WordCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     // "이거 집어서 끌 수 있겠는데" 싶게, 카드를 집으려고 살짝 뽑아든 모양으로 만듦
     [SerializeField] float hoverRise = 14f;   // 위로 얼마나 뜨는지
     [SerializeField] float hoverGrow = 0.07f; // 얼마나 커지는지 (1 = 두 배)
+    [SerializeField] float dragShrink = 0.6f; // 드는 동안 줄일 비율 (커서 밑이 가려지지 않게)
     [SerializeField] float hoverSpeed = 12f;  // 얼마나 빨리 뜨고 가라앉는지
 
     bool _canDrag = true;    // 이미 상자에 놓은 카드는 못 끎
@@ -371,6 +372,10 @@ public class WordCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         // 순서가 바뀌면 오른쪽 카드들이 왼쪽으로 당겨지고, 떼면서 옛 자리로 되돌리니 그 자리에 겹쳤음
         // 카드 묶음이 상자 묶음보다 아래(나중)에 있어서 순서를 안 바꿔도 상자 위에 그려짐
         canvasGroup.blocksRaycasts = false; // 내가 막고 있으면 상자가 드롭을 못 받음
+
+        // 드는 동안엔 카드를 줄여둠
+        // 원래 크기로 들면 커서 밑에 놓을 자리가 가려져서 어디에 넣는지 안 보였음
+        ((RectTransform)transform).localScale = _restScale * dragShrink;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -391,6 +396,7 @@ public class WordCardUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         }
 
         canvasGroup.blocksRaycasts = true;
+        ((RectTransform)transform).localScale = _restScale; // 줄여뒀던 크기 되돌리기
         transform.position = _homePos; // 일단 제자리로 (넣기 성공했으면 view 가 새로 그려줌)
     }
 }
