@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,6 +23,11 @@ public class ComplaintManager : MonoBehaviour
     public ComplaintEntry entry = ComplaintEntry.Waiting;
 
     Coroutine _enterRoutine; // 손님 들이는 연출
+
+    // 지금 민원인이 참아주는 남은 시간 (화면이 게이지로 보여주라고 열어둠)
+    // 0 밑으로 떨어지면 화내고 실수 한 번이 쌓임
+    public float angerTimeLeft = 0f;
+    public float angerTimeMax = 0f;
 
     public List<ComplaintDefinition> todayComplaints = new List<ComplaintDefinition>(); // 오늘 민원들
     public int currentIndex = 0; // 지금 몇 번째 민원인지
@@ -115,6 +120,8 @@ public class ComplaintManager : MonoBehaviour
 
         stage = ComplaintStage.Translate;
         resolutionWrongCount = 0;
+        angerTimeLeft = 0f;
+        angerTimeMax = 0f;
         translation.StartComplaint(todayComplaints[currentIndex]);
 
         // 문제는 미리 만들어두고, 손님은 텀을 두고 들어옴
@@ -156,6 +163,7 @@ public class ComplaintManager : MonoBehaviour
         }
 
         entry = ComplaintEntry.Ready;
+        ResetAngerTimer(); // 말 다 했으니 이제부터 잼
         NotifyUpdated();
     }
 
@@ -214,6 +222,7 @@ public class ComplaintManager : MonoBehaviour
         if (translation.CheckAnswer() == true)
         {
             stage = ComplaintStage.Resolve;
+            ResetAngerTimer(); // 처리 단계는 처음부터 다시 셈 (해석하느라 쓴 시간까지 물리면 억울함)
             NotifyUpdated();
             return;
         }
@@ -315,37 +324,102 @@ public class ComplaintManager : MonoBehaviour
         }
         else
         {
-            // 틀리게 처리 -> 의심받고 같은 민원을 다시 처리함
-            resolutionWrongCount++;
-            mistakeCount++;
-
-            // 틀린 소리
-            if (SoundManager.instance != null)
-            {
-                SoundManager.instance.PlaySfx(SoundManager.instance.wrongAnswer);
-            }
-            NotifyAngry(); // 화면 흔들기 연출
-
-            GameManager.instance.suspicion.AddSuspicion(GameManager.instance.config.suspicionWrongResolution);
-
-            if (GameManager.instance.phase == GamePhase.GameOver)
-            {
-                return;
-            }
-
-            // 처리도 너무 많이 틀리면 민원인이 나감 (해석이랑 제한이 다름)
-            if (resolutionWrongCount >= GameManager.instance.config.maxResolutionWrongTries)
-            {
-                failCount++;
-                NextComplaint();
-                return;
-            }
-
-            NotifyUpdated();
+            AddResolutionMistake();
             return;
         }
 
         NextComplaint();
+    }
+
+    // 처리를 틀렸을 때 벌어지는 일 (시간 초과도 여기로 옴)
+    public void AddResolutionMistake()
+    {
+        // 틀리게 처리 -> 의심받고 같은 민원을 다시 처리함
+        resolutionWrongCount++;
+        mistakeCount++;
+
+        // 틀린 소리
+        if (SoundManager.instance != null)
+        {
+            SoundManager.instance.PlaySfx(SoundManager.instance.wrongAnswer);
+        }
+        NotifyAngry(); // 화면 흔들기 연출
+
+        GameManager.instance.suspicion.AddSuspicion(GameManager.instance.config.suspicionWrongResolution);
+
+        if (GameManager.instance.phase == GamePhase.GameOver)
+        {
+            return;
+        }
+
+        // 처리도 너무 많이 틀리면 민원인이 나감 (해석이랑 제한이 다름)
+        if (resolutionWrongCount >= GameManager.instance.config.maxResolutionWrongTries)
+        {
+            failCount++;
+            NextComplaint();
+            return;
+        }
+
+        NotifyUpdated();
+    }
+
+    // 민원인 인내심 시계
+    // 말 다 하고 나서부터 재고, 다 되면 화내면서 실수 한 번이 쌓임
+    void Update()
+    {
+        if (GameManager.instance == null || GameManager.instance.phase != GamePhase.DayWork)
+        {
+            angerTimeLeft = 0f;
+            return;
+        }
+
+        // 아직 말하는 중이거나 손님이 없으면 안 셈
+        if (entry != ComplaintEntry.Ready)
+        {
+            return;
+        }
+
+        // 말 끝났다는 신호를 놓쳤어도 여기서 챙겨서 시작함
+        // (OnLineFinished 를 못 받으면 시계가 영영 안 돌아서 게이지가 멈춰 보임)
+        if (angerTimeMax <= 0f)
+        {
+            ResetAngerTimer();
+
+            if (angerTimeMax <= 0f)
+            {
+                return; // 설정에서 시간 제한을 꺼둔 경우
+            }
+        }
+
+        angerTimeLeft -= Time.deltaTime;
+        if (angerTimeLeft > 0f)
+        {
+            return;
+        }
+
+        // 시간 초과 - 지금 단계에 맞는 실수를 하나 얹음
+        ResetAngerTimer();
+
+        if (stage == ComplaintStage.Translate)
+        {
+            AddTranslationMistake();
+        }
+        else
+        {
+            AddResolutionMistake();
+        }
+    }
+
+    // 인내심 시계 다시 채우기 (일차가 갈수록 짧아짐)
+    void ResetAngerTimer()
+    {
+        if (GameManager.instance == null)
+        {
+            return;
+        }
+
+        angerTimeMax = GameManager.instance.config.AngerTimeForDay(GameManager.instance.calendar.day);
+        angerTimeLeft = angerTimeMax;
     }
 
     // 다음 민원으로
