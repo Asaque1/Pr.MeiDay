@@ -21,5 +21,40 @@ MonoBehaviour:
   - speakerFace: {fileID: 5396913674957190600, guid: a5de98c3e4888ed4ab620b07e9ea75be, type: 3}
     speakerName: ???
     text: "\uC654\uAD70."
-    choices: []
+    choices:
+    - choiceText: "\uC5EC\uAE34 \uC5B4\uB514\uC8E0?"
+      nextLineIndex: 2
+      eventId: 0
+      eventValue: 0
     nextLineIndex: 2
+  - speakerFace: {fileID: 5396913674957190600, guid: a5de98c3e4888ed4ab620b07e9ea75be, type: 3}
+    speakerName: ???
+    text: "\uC11C\uB958\uC0C1\uC73C\uB85C\uB294 \uAC74\uC124 \uC911\uC778 \uAC74\uBB3C\uC774\uC9C0.
+      \uC55E\uC73C\uB85C \uC870\uC6A9\uD788 \uC790\uC8FC \uC640\uC57C \uD560 \uAC70\uC57C."
+    choices: []
+    nextLineIndex: 3
+  - speakerFace: {fileID: 5396913674957190600, guid: a5de98c3e4888ed4ab620b07e9ea75be, type: 3}
+    speakerName: ???
+    text: "\uBCF8\uB860\uC73C\uB85C \uB118\uC5B4\uAC00\uC9C0. \uB108\uAC00 \uC9D1\uC5D0
+      \uAC08 \uBC29\uBC95\uC774 \uC0DD\uACBC\uC5B4. \uD3D0\uAE30\uB41C \uC791\uC740
+      \uC6B0\uC8FC\uC120\uC774 \uC788\uB294\uB370, \uC544\uC9C1 \uC4F8\uB9CC\uD558\uB2E4\uB294
+      \uAC70\uC57C."
+    choices: []
+    nextLineIndex: 4
+  - speakerFace: {fileID: 5396913674957190600, guid: a5de98c3e4888ed4ab620b07e9ea75be, type: 3}
+    speakerName: ???
+    text: "\uBCF8\uB860\uC73C\uB85C \uB118\uC5B4\uAC00\uC9C0. \uB108\uAC00 \uC9D1\uC5D0
+      \uAC08 \uBC29\uBC95\uC774 \uC0DD\uACBC\uC5B4. \uD3D0\uAE30\uB41C \uC791\uC740
+      \uC6B0\uC8FC\uC120\uC774 \uC788\uB294\uB370, \uC544\uC9C1 \uC4F8\uB9CC\uD558\uB2E4\uB294
+      \uAC70\uC57C."
+    choices: []
+    nextLineIndex: 4
+  - speakerFace: {fileID: 5396913674957190600, guid: a5de98c3e4888ed4ab620b07e9ea75be, type: 3}
+    speakerName: ???
+    text: "\uC544\uC544\uC544\uC544\uC544\uC544\uC544\uC544\uC544\uC544"
+    choices:
+    - choiceText: "\uD06C\uC544\uC545"
+      nextLineIndex: -1
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: 0
