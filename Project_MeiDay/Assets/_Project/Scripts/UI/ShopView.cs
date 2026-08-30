@@ -495,6 +495,13 @@ public class ShopView : MonoBehaviour
                 continue;
             }
 
+            // 대사 파일만 만들어두고 안이 아직 빈 경우가 있음
+            // 그냥 두면 아무것도 안 보여준 채 '봤다'고 적혀서, 나중에 내용이 채워져도 안 나옴
+            if (sd.dialogue.dialogueLines == null || sd.dialogue.dialogueLines.Length == 0)
+            {
+                return;
+            }
+
             // 한 번 본 건 다시 안 띄움 (이벤트랑 같은 기록을 써서 저장까지 따라감)
             string seenId = sd.SeenId();
             if (gm.events == null || gm.events.HasSeen(seenId) == true)
