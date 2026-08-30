@@ -119,10 +119,10 @@ TextureImporter:
       name: Store_npc_3_0
       rect:
         serializedVersion: 2
-        x: 716
-        y: 138
-        width: 424
-        height: 320
+        x: 718
+        y: 0
+        width: 421
+        height: 457
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
