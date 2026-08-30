@@ -11,14 +11,16 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cb6d72b7c7b3014ca1ab66772d3686a, type: 3}
   m_Name: Item_Coffee
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: item_coffee
-  itemName: 커피
+  itemName: "\uCEE4\uD53C"
   shopType: 0
   kind: 0
   effect: 9
-  description: 각성 상태로 상자 하나를 미리 풀어준다. 대신 그날 보수가 조금 깎인다.
-  icon: {fileID: 0}
+  description: "\uAC01\uC131 \uC0C1\uD0DC\uB85C \uC0C1\uC790 \uD558\uB098\uB97C \uBBF8\uB9AC
+    \uD480\uC5B4\uC900\uB2E4. \uB300\uC2E0 \uBCF4\uC218\uAC00 \uACC4\uC18D \uC870\uAE08
+    \uAE4E\uC778\uB2E4."
+  icon: {fileID: -4968135247814163924, guid: 30472868a9faf9b4d84b41bb4a9ff1a2, type: 3}
   levelIcons: []
   levelDescriptions: []
   price: 600

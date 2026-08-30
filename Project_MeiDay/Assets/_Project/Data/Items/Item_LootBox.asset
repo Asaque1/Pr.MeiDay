@@ -11,14 +11,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cb6d72b7c7b3014ca1ab66772d3686a, type: 3}
   m_Name: Item_LootBox
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: item_loot_box
-  itemName: 잠긴 장물 상자
+  itemName: "\uC7A0\uAE34 \uC7A5\uBB3C \uC0C1\uC790"
   shopType: 3
   kind: 2
   effect: 0
-  description: 안에 뭐가 들었는지는 열어봐야 안다. 꽝일 수도 있다.
-  icon: {fileID: 0}
+  description: "\uC548\uC5D0 \uBB50\uAC00 \uB4E4\uC5C8\uB294\uC9C0\uB294 \uC5F4\uC5B4\uBD10\uC57C
+    \uC548\uB2E4. \uAF5D\uC77C \uC218\uB3C4 \uC788\uB2E4."
+  icon: {fileID: 7867220957510817951, guid: 30e76eeabcfa8a74695ed127fbc9b7f6, type: 3}
   levelIcons: []
   levelDescriptions: []
   price: 420
