@@ -23,7 +23,7 @@ public class SuspicionManager : MonoBehaviour
 
         current += amount;
 
-        float max = GameManager.instance.config.maxSuspicion;
+        float max = MaxSuspicion();
         if (current > max)
         {
             current = max;
@@ -39,6 +39,19 @@ public class SuspicionManager : MonoBehaviour
     }
 
     // 의심도 내리기 (변장 용품 같은 거 썼을 때)
+    // 지금 의심도 최대치
+    // 설정값에 향수 같은 아이템이 올려준 만큼 더함 - 화면이랑 게임오버 판정이 같은 값을 써야 해서 여기서만 계산함
+    public float MaxSuspicion()
+    {
+        float bonus = 0f;
+        if (GameManager.instance.inventory != null)
+        {
+            bonus = GameManager.instance.inventory.GetEffectPower(ItemEffect.MaxSuspicionUp);
+        }
+
+        return GameManager.instance.config.maxSuspicion + bonus;
+    }
+
     public void ReduceSuspicion(float amount)
     {
         current -= amount;

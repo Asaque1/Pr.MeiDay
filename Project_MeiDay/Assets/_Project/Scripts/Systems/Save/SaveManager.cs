@@ -104,6 +104,9 @@ public class SaveManager : MonoBehaviour
         PlayerPrefs.SetInt("arbeitLeft", gm.arbeit.arbeitLeftToday);
         PlayerPrefs.SetInt("arbeitMax", gm.arbeit.arbeitMaxToday);
 
+        // 알바를 잘 해낸 누적 횟수 (위조 신분증 해금 조건이라 남겨둬야 함)
+        PlayerPrefs.SetInt("arbeitGood", gm.arbeit.arbeitGoodCount);
+
         // 상점별 경험치
         for (int i = 0; i < gm.shop.shopExp.Count; i++)
         {
@@ -190,6 +193,7 @@ public class SaveManager : MonoBehaviour
 
         // 안 쓰고 남긴 알바 횟수
         gm.arbeit.arbeitLeftToday = PlayerPrefs.GetInt("arbeitLeft", 0);
+        gm.arbeit.arbeitGoodCount = PlayerPrefs.GetInt("arbeitGood", 0);
         gm.arbeit.arbeitMaxToday = PlayerPrefs.GetInt("arbeitMax", 0);
 
         // 상점별 경험치

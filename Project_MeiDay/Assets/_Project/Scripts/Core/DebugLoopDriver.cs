@@ -119,7 +119,7 @@ public class DebugLoopDriver : MonoBehaviour
         GUILayout.Label("■ " + PhaseName(gm.phase) + "   /   " + gm.calendar.day + "일차");
         GUILayout.Label("크레딧 " + gm.economy.credits
             + "      의심도 " + Mathf.RoundToInt(gm.suspicion.current)
-            + " / " + Mathf.RoundToInt(gm.config.maxSuspicion));
+            + " / " + Mathf.RoundToInt(gm.suspicion.MaxSuspicion()));
         if (gm.shopUnlocked == true)
         {
             GUILayout.Label("남은 알바 " + gm.arbeit.arbeitLeftToday + "회"

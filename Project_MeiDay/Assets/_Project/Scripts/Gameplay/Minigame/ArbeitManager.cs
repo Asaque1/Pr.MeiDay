@@ -15,22 +15,41 @@ public class ArbeitManager : MonoBehaviour
     // 상점별 알바 누적 횟수 (서점, 연극단, 파티, 브로커 순. 통계용)
     public List<int> arbeitDoneCounts = new List<int>() { 0, 0, 0, 0 };
 
-    // 아침마다 횟수 충전 (상점 해금돼야 생기고, 그 뒤론 아이템으로만 늘어남)
+    // 알바를 '괜찮음' 이상으로 끝낸 누적 횟수 (위조 신분증 해금 조건)
+    public int arbeitGoodCount = 0;
+
+    // 아침마다 횟수 충전
+    //
+    // 알바는 처음엔 잠겨있음 - 사무용품점의 이력서 템플릿을 사야 열림
+    // 그 뒤로는 아이템으로만 횟수가 늘어남
     public void ResetDaily()
     {
         GameConfig config = GameManager.instance.config;
-        int count = config.arbeitStart;
-        if (GameManager.instance.shopUnlocked == true)
+        InventorySystem inv = GameManager.instance.inventory;
+
+        currentArbeit = null;
+        bookSort = null;
+        spotlight = null;
+        promo = null;
+
+        // 이력서 템플릿을 아직 안 산 판은 알바 자체가 안 열림
+        float unlock = inv.GetEffectPower(ItemEffect.ArbeitUnlock);
+        if (unlock <= 0f)
         {
-            count += 1; // 상점 해금 보너스
+            arbeitLeftToday = 0;
+            arbeitMaxToday = 0;
+            return;
         }
+
+        // 열린 뒤의 기본 횟수 (템플릿 레벨만큼)
+        int count = config.arbeitStart + (int)unlock;
         if (count > config.arbeitMax)
         {
             count = config.arbeitMax;
         }
 
         // 위조 신분증: 레벨만큼 알바 횟수 추가 (상한이랑 별개)
-        int idBonus = (int)GameManager.instance.inventory.GetEffectPower(ItemEffect.ArbeitCountUp);
+        int idBonus = (int)inv.GetEffectPower(ItemEffect.ArbeitCountUp);
         count += idBonus;
 
         // 어제 안 쓴 횟수는 조금만 이월됨 (위조 신분증이 이월량도 늘려줌)
@@ -43,10 +62,6 @@ public class ArbeitManager : MonoBehaviour
 
         arbeitLeftToday = count + carried;
         arbeitMaxToday = arbeitLeftToday; // 오늘 몫은 여기까지
-        currentArbeit = null;
-        bookSort = null;
-        spotlight = null;
-        promo = null;
     }
 
     // 화면에 보여줄 오늘 총 횟수
@@ -181,6 +196,26 @@ public class ArbeitManager : MonoBehaviour
 
         int pay = Mathf.RoundToInt(currentArbeit.basePay * tier);
         int exp = Mathf.RoundToInt(currentArbeit.expReward * tier);
+
+        // 이력서 템플릿 / 위조 신분증은 알바 보수를 고정으로 올려줌
+        // 실패한 판에는 안 붙임 - 0원 받을 판에 보너스만 들어오면 이상함
+        if (tier > 0f)
+        {
+            pay += GameManager.instance.inventory.GetArbeitPayBonus();
+        }
+
+        // 위조 신분증 부작용: 알바를 한 번 할 때마다 의심받음
+        float perRun = GameManager.instance.inventory.GetSidePower(ItemEffect.ArbeitCountUp);
+        if (perRun > 0f)
+        {
+            GameManager.instance.suspicion.AddSuspicion(perRun);
+        }
+
+        // 잘한 판은 따로 세어둠 (위조 신분증 해금 조건)
+        if (tier >= 0.75f)
+        {
+            arbeitGoodCount++;
+        }
 
         arbeitDoneCounts[(int)currentArbeit.shopType]++; // 이 상점에서 일한 횟수 +1
         GameManager.instance.economy.AddCredits(pay);

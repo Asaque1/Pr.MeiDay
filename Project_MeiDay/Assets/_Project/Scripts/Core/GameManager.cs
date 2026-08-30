@@ -129,6 +129,7 @@ public class GameManager : MonoBehaviour
         extraComplaintsToday = 0;
         arbeit.currentArbeit = null;
         arbeit.arbeitLeftToday = 0;
+        arbeit.arbeitGoodCount = 0;
 
         for(int i = 0; i < arbeit.arbeitDoneCounts.Count; i++)
         {

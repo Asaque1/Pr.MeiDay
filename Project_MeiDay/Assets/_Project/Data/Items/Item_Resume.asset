@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cb6d72b7c7b3014ca1ab66772d3686a, type: 3}
+  m_Name: Item_Resume
+  m_EditorClassIdentifier: 
+  id: item_resume
+  itemName: "\uC774\uB825\uC11C \uD15C\uD50C\uB9BF"
+  shopType: 2
+  kind: 0
+  effect: 11
+  description: "\uBC24\uC5D0 \uC54C\uBC14\uB97C \uD560 \uC218 \uC788\uAC8C \uB41C\uB2E4.
+    \uC54C\uBC14 \uBCF4\uC218\uB3C4 \uC870\uAE08 \uB354 \uBC1B\uB294\uB2E4."
+  icon: {fileID: -6450244300066960991, guid: 0e64962d3db5d1747bdfdc1251031f1d, type: 3}
+  levelIcons: []
+  levelDescriptions: []
+  price: 300
+  isSpaceshipTicket: 0
+  maxLevel: 2
+  power: 1
+  sidePower: 0
+  arbeitPayBonus: 20
+  boxRewardMin: 0
+  boxRewardMax: 0
+  requiresMaxed: {fileID: 0}
+  requiredArbeitGood: 0
+  requiredShopType: 0
+  requiredShopLevel: 0

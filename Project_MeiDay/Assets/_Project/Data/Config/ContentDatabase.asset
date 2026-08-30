@@ -119,6 +119,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8042e652065355caaec1d56f8f0ca01d, type: 2}
   - {fileID: 11400000, guid: 52aef5692e1351afbc8501521b0bf252, type: 2}
   - {fileID: 11400000, guid: 9a1eac65a76552c497a6b3fd747a9ce6, type: 2}
+  - {fileID: 11400000, guid: 80057a9733ff5bcd9c57a4a9228ee1b4, type: 2}
+  - {fileID: 11400000, guid: be393e558a655ba4a6f106c76533bca1, type: 2}
   minigames:
   - {fileID: 11400000, guid: 77740145d6535a8aab2124a48a2064f0, type: 2}
   - {fileID: 11400000, guid: 163c1d4ff3c7591b833d52124cd54e88, type: 2}
