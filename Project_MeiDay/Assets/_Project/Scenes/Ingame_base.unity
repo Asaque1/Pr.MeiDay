@@ -31550,8 +31550,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -250, y: 60}
-  m_SizeDelta: {x: 240, y: 276}
+  m_AnchoredPosition: {x: -246, y: 31}
+  m_SizeDelta: {x: 292, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1477287730
 MonoBehaviour:
@@ -35293,7 +35293,7 @@ MonoBehaviour:
   complainantImage: {fileID: 129133750}
   complainantParts: {fileID: 1997004469}
   complainantPadding: 8
-  complainantShowRatio: 0.75
+  complainantShowRatio: 1
   pdaButton: {fileID: 1029906456}
   pdaPanel: {fileID: 2021343877}
   declareButton: {fileID: 1236829396}
