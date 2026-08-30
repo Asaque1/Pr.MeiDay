@@ -41,7 +41,8 @@ MonoBehaviour:
   - speakerFace: {fileID: 533347179103727038, guid: 90c5cc9267e526a418d62b40bd6f2a96, type: 3}
     speakerName: "\uD5EC\uB80C"
     text: "\uB410\uC5B4. \uC0AC\uD22C\uB9AC\uB77C \uADF8\uB798. \uACE7 \uC788\uC73C\uBA74
-      \uC120\uAC70\uAC70\uB4E0."
+      \uC120\uAC70\uAC70\uB4E0. \uC6D0\uB798 \uC774 \uAE30\uAC04 \uB418\uBA74 \uC2DC\uACE8\uC5D0\uC11C
+      \uBAB0\uB824\uC640."
     choices: []
     nextLineIndex: 4
   - speakerFace: {fileID: 533347179103727038, guid: 90c5cc9267e526a418d62b40bd6f2a96, type: 3}
