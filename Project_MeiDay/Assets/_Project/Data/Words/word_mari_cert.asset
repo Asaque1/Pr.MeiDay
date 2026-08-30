@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: word_mari_cert
   category: 0
-  meaning: 혼인증명서
-  dialectText: 합체, 엮다, 교차점
-  hint: 두 개체의 혼인을 증명하다
+  meaning: "\uD63C\uC778\uC99D\uBA85\uC11C"
+  dialectText: "\uD569\uCCB4, \uC5EE\uB2E4, \uAD50\uCC28\uC810"
+  hint: "\uB450 \uAC1C\uCCB4\uC758 \uD63C\uC778"

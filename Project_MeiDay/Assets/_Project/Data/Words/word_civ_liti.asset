@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: word_civ_liti
   category: 0
-  meaning: 민사 소송 접수증
-  dialectText: 싸움 중재 종이, 보상 절차 증명서, 손해 정하기
-  hint: 분쟁의 중재의 준비하는 문서
+  meaning: "\uBBFC\uC0AC \uC18C\uC1A1 \uC811\uC218\uC99D"
+  dialectText: "\uC2F8\uC6C0 \uC911\uC7AC \uC885\uC774, \uBCF4\uC0C1 \uC808\uCC28,
+    \uC190\uD574 \uC815\uD558\uAE30"
+  hint: "\uBD84\uC7C1\uC758 \uC911\uC7AC"

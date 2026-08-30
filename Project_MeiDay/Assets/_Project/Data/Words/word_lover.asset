@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: word_lover
   category: 1
-  meaning: 애인
-  dialectText: 반려, 완전 내편,
-  hint: 결혼 이전 최고로 신뢰할 수 있는 사람
+  meaning: "\uC560\uC778"
+  dialectText: "\uBC18\uB824, \uC644\uC804 \uB0B4\uD3B8, \uC9DD"
+  hint: "\uCD5C\uACE0 \uC2E0\uB8B0\uC790"

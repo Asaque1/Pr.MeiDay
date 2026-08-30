@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: word_devorce_cert
   category: 0
-  meaning: 이혼증명서
-  dialectText: 분리, 떨어지다, 분열하다
-  hint: 하나의 혼인을 분리하다
+  meaning: "\uC774\uD63C\uC99D\uBA85\uC11C"
+  dialectText: "\uBD84\uB9AC, \uB5A8\uC5B4\uC9C0\uB2E4, \uBD84\uC5F4\uD558\uB2E4"
+  hint: "\uD63C\uC778 \uAD00\uACC4 \uBD84\uC5F4"

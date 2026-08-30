@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: word_5
   category: 1
-  meaning: 5
+  meaning: "5\uAC1C"
   dialectText: "\uB9CE\uC774, \uAC00\uC871, \uC804\uBD80"
   hint: "\uC624\uAC01\uD615"

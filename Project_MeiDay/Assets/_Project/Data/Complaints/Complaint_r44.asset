@@ -11,11 +11,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4300ae952e722344d96918a470db9590, type: 3}
   m_Name: Complaint_r44
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: complaint_r44
   complainant: {fileID: 0}
   eventOnly: 0
-  complaintLine: '[단어1] 드디어 다 큼! [단어1] 우주선 몰 수 있게 [단어2] 빨리 만들어주세요'
+  complaintLine: "[\uB2E8\uC5B41] \uB4DC\uB514\uC5B4 \uB2E4 \uD07C! \uC5B4\uC11C\uC5B4\uC11C
+    [\uB2E8\uC5B42] \uBE68\uB9AC \uB9CC\uB4E4\uC5B4\uC8FC\uC138\uC694"
   slots:
   - category: 1
     correctWord: {fileID: 0}

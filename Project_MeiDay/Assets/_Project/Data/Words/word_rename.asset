@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: word_rename
   category: 0
-  meaning: 개명신청서
-  dialectText: 새 신분 살기, 다시 태어나기, 독립하기
-  hint: 이름을 변경하는 서류
+  meaning: "\uAC1C\uBA85\uC2E0\uCCAD\uC11C"
+  dialectText: "\uC0C8 \uC2E0\uBD84 \uC0B4\uAE30, \uB2E4\uC2DC \uD0DC\uC5B4\uB098\uAE30,
+    \uB3C5\uB9BD\uD558\uAE30"
+  hint: "\uC774\uB984 \uBCC0\uACBD"

@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: word_resi_prf
   category: 0
-  meaning: 거주증명서
-  dialectText: 살다,생활권, 집
-  hint: 거주하였음을 증명하다
+  meaning: "\uAC70\uC8FC\uC99D\uBA85\uC11C"
+  dialectText: "\uC0B4\uB2E4,\uC0DD\uD65C\uAD8C, \uC9D1"
+  hint: "\uAC70\uC8FC \uC8FC\uC7A5"

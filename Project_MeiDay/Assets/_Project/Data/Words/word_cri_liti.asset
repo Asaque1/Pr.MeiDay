@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: word_cri_liti
   category: 0
-  meaning: 형사 소송 접수증
-  dialectText: 싸움 처벌 종이, 처벌 절차 증명서, 잘못 정하기
-  hint: 범죄의 처벌을 준비하는 문서
+  meaning: "\uD615\uC0AC \uC18C\uC1A1 \uC811\uC218\uC99D"
+  dialectText: "\uC2F8\uC6C0 \uCC98\uBC8C \uC885\uC774, \uCC98\uBC8C \uC808\uCC28,
+    \uC798\uBABB \uC815\uD558\uAE30"
+  hint: "\uBC94\uC8C4\uC758 \uCC98\uBC8C"

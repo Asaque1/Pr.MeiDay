@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: word_tribe_id
   category: 0
-  meaning: 종족신분증
-  dialectText: 뿌리 상징, 첫 가지, 몸 종류
-  hint: 자신의 종을 설명하다
+  meaning: "\uC885\uC871\uC2E0\uBD84\uC99D"
+  dialectText: "\uBFCC\uB9AC \uC0C1\uC9D5, \uCCAB \uAC00\uC9C0, \uBAB8 \uC885\uB958"
+  hint: "\uC885\uC871\uACFC \uC2E0\uBD84"

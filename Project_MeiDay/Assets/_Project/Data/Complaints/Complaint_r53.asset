@@ -11,11 +11,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4300ae952e722344d96918a470db9590, type: 3}
   m_Name: Complaint_r53
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: complaint_r53
   complainant: {fileID: 0}
   eventOnly: 0
-  complaintLine: 쯉쯉, 털빙구가 내 민원을 받다니. 됬고, [단어1] 하게 [단어2]장 내놔쯉.
+  complaintLine: "\uC774\uB7F0, \uD138\uBE59\uAD6C\uAC00 \uB0B4 \uBBFC\uC6D0\uC744
+    \uBC1B\uB2E4\uB2C8. \uB410\uACE0, [\uB2E8\uC5B41] \uD558\uAC8C [\uB2E8\uC5B42]\uC7A5
+    \uB0B4\uB194\uB77C."
   slots:
   - category: 0
     correctWord: {fileID: 0}

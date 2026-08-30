@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: word_space_cert
   category: 0
-  meaning: 우주선등록증명서
-  dialectText: 배 소유서, 내 우주선 종이
-  hint: 우주선의 소유를 증명하다
+  meaning: "\uC6B0\uC8FC\uC120\uB4F1\uB85D\uC99D\uBA85\uC11C"
+  dialectText: "\uBC30 \uC99D\uAC70, \uC6B0\uC8FC\uBC30 \uC885\uC774"
+  hint: "\uBC30 \uC8FC\uC778\uC758 \uC99D\uAC70"
