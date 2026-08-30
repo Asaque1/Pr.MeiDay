@@ -30,7 +30,7 @@ MonoBehaviour:
   maxSuspicion: 100
   suspicionWrongTranslation: 5
   suspicionWrongResolution: 12
-  suspicionPerfectClear: 2
+  suspicionPerfectClear: 10
   complaintsPerDay: 3
   complaintsGrowEvery: 5
   complaintsMax: 6

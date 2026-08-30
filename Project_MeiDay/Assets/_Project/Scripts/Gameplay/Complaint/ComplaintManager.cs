@@ -302,10 +302,15 @@ public class ComplaintManager : MonoBehaviour
             successCount++;
             earnedToday += pay;
 
-            // 이 민원을 한 번도 안 틀렸으면 의심도 조금 내려감
+            // 이 민원을 한 번도 안 틀렸으면 의심도가 조금 내려감
+            // 단, 깎이는 양을 그날 할당량으로 나눔
+            // 그냥 민원마다 같은 값을 깎아주면 할당량이 늘수록 하루 할인 총량이 같이 커져서
+            // 후반이 오히려 안전해졌음 (16일차부터 한 번 틀려도 의심도가 내려감)
+            // 나눠주면 하루에 깎을 수 있는 최대치는 늘 같고, 민원이 많아질수록 다 지키기만 어려워짐
             if (translation.wrongCount == 0 && resolutionWrongCount == 0)
             {
-                GameManager.instance.suspicion.ReduceSuspicion(GameManager.instance.config.suspicionPerfectClear);
+                int quota = (todayComplaints != null && todayComplaints.Count > 0) ? todayComplaints.Count : 1;
+                GameManager.instance.suspicion.ReduceSuspicion(GameManager.instance.config.suspicionPerfectClear / quota);
             }
         }
         else
