@@ -18,6 +18,14 @@ public class ComplaintSlot
     // 이번 판에 쓸 정답 하나 고르기
     public WordDefinition PickAnswer()
     {
+        return PickAnswer(null);
+    }
+
+    // taken: 같은 민원의 다른 칸이 이미 가져간 단어들
+    // 한 문장에 같은 단어가 두 칸에 들어가면 방언 힌트까지 똑같이 떠서
+    // 플레이어 눈에는 "왜 같은 게 두 개지?" 로 보임 - 되도록 겹치지 않게 뽑음
+    public WordDefinition PickAnswer(List<WordDefinition> taken)
+    {
         List<WordDefinition> pool = new List<WordDefinition>();
         for (int i = 0; i < candidateWords.Count; i++)
         {
@@ -30,6 +38,25 @@ public class ComplaintSlot
         if (pool.Count == 0)
         {
             return correctWord; // 후보를 안 적었으면 예전처럼 고정 정답
+        }
+
+        // 아직 안 쓴 후보가 있으면 그 중에서
+        if (taken != null)
+        {
+            List<WordDefinition> fresh = new List<WordDefinition>();
+            for (int i = 0; i < pool.Count; i++)
+            {
+                if (taken.Contains(pool[i]) == false)
+                {
+                    fresh.Add(pool[i]);
+                }
+            }
+
+            // 후보가 모자라면 어쩔 수 없이 겹치게 둠 (칸 수보다 후보가 적은 민원)
+            if (fresh.Count > 0)
+            {
+                return fresh[Random.Range(0, fresh.Count)];
+            }
         }
 
         return pool[Random.Range(0, pool.Count)];
