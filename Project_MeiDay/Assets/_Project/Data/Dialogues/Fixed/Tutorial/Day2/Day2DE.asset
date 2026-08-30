@@ -18,7 +18,7 @@ MonoBehaviour:
     text: "\uC5B4 \uC2E0\uC785. \uC77C \uB05D\uB0AC\uC5B4? \uBB50 \uB354 \uD560\uC77C\uC774\uB77C\uB3C4
       \uC788\uB294 \uAC70\uC57C?"
     choices:
-    - choiceText: "(\uB178\uBA5C\uB77C\uC758 \uBD80\uD0C1\uC744 \uC804\uD55C\uB2E4.)"
+    - choiceText: "(\uD5E4\uB974\uB9CC\uC758 \uBD80\uD0C1\uC744 \uC804\uD55C\uB2E4.)"
       nextLineIndex: 1
       eventId: 0
       eventValue: 0
