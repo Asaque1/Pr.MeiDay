@@ -25,7 +25,22 @@ MonoBehaviour:
     choices: []
     nextLineIndex: 2
   - speakerFace: {fileID: 0}
+    speakerName: "\uBBFC\uC6D0\uC778"
+    text: "\uC800\uAE30\uC694? \uC81C \uB9D0 \uB4E3\uACE0 \uACC4\uC2DC\uB098\uC694?"
+    choices:
+    - choiceText: "\uC557 \uC8C4\uC1A1\uD569\uB2C8\uB2E4!"
+      nextLineIndex: 3
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: 3
+  - speakerFace: {fileID: 0}
     speakerName: 
-    text: "\uC5B4\uB290\uC0C8 \uB098\uB97C \uBCF4\uB358 \uC2DC\uC120\uC774 \uC0AC\uB77C\uC84C\uB2E4."
+    text: . . .
+    choices: []
+    nextLineIndex: 4
+  - speakerFace: {fileID: 0}
+    speakerName: 
+    text: "\uB2E4\uC2DC \uADF8 \uC2DC\uC120\uC758 \uC8FC\uC778\uC744 \uCC3E\uC73C\uB824
+      \uD588\uC9C0\uB9CC, \uAC11\uC790\uAE30 \uC0AC\uB77C\uC9C4 \uBAA8\uC591\uC774\uB2E4."
     choices: []
     nextLineIndex: -1

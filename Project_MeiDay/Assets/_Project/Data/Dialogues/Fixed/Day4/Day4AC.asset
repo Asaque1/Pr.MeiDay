@@ -39,6 +39,7 @@ MonoBehaviour:
     nextLineIndex: 3
   - speakerFace: {fileID: 0}
     speakerName: 
-    text: "\uC5B4\uB290\uC21C\uAC04\uBD80\uD130 \uADF8\uAC00 \uC0AC\uB77C\uC84C\uB2E4."
+    text: "\uC774\uBC88\uC5D0\uB294 \uB193\uCE58\uC9C0 \uC54A\uC73C\uB824 \uD588\uC9C0\uB9CC,
+      \uC778\uD30C\uC5D0 \uD729\uC4F8\uB824 \uC0AC\uB77C\uC84C\uB2E4."
     choices: []
     nextLineIndex: -1
