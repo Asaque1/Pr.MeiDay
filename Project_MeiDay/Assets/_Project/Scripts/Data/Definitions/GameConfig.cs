@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 // 게임 숫자 설정 모음 (밸런스 맞출 때 여기서 바꾸면 됨)
 [CreateAssetMenu(fileName = "GameConfig", menuName = "MeiDay/Game Config")]
@@ -38,7 +38,19 @@ public class GameConfig : ScriptableObject
     // 해석이랑 같은 제한을 쓰면 처리 쪽이 사실상 즉사라서 따로 뺌
     public int maxResolutionWrongTries = 2;
     public int perfectDayBonus = 30;    // 하루 다 맞췄을 때 주는 보너스
-    public int wrongCardsPerSlot = 2;   // 상자 하나당 깔리는 오답 카드 수 (정답 1 + 오답 2 = 3장)
+    // 상자 하나당 깔리는 오답 카드 수 (정답 1 + 오답 2 = 3장)
+    // 1일차엔 wrongCardsPerSlot, wrongCardsFullDay 일차가 되면 wrongCardsPerSlotMax 까지 늘어남
+    public int wrongCardsPerSlot = 2;
+    public int wrongCardsPerSlotMax = 4;
+    public int wrongCardsFullDay = 40;
+
+    [Header("민원인 인내심")]
+    // 말 끝난 뒤 이 시간 안에 처리 못하면 민원인이 화냄 (실수 한 번으로 침)
+    // 1일차엔 angerTimeFirstDay 초, angerTimeFullDay 일차엔 angerTimeLastDay 초까지 줄어듦
+    // 0 이하로 두면 시간 제한 없음
+    public float angerTimeFirstDay = 40f;
+    public float angerTimeLastDay = 15f;
+    public int angerTimeFullDay = 40;
 
     [Header("아르바이트")]
     public int arbeitStart = 0;     // 상점 해금 전 알바 횟수 (해금되면 여기에 +1)
@@ -82,4 +94,37 @@ public class GameConfig : ScriptableObject
     public bool eventsInOrder = false; // 켜면 랜덤 이벤트가 확률 없이 목록 순서대로 나옴 (일정 밀릴 때 스위치)
 
 
+
+    // 일차에 맞는 오답 카드 수 (1일차 -> 마지막날까지 고르게 늘어남)
+    public int WrongCardsForDay(int day)
+    {
+        return Mathf.RoundToInt(ByDay(wrongCardsPerSlot, wrongCardsPerSlotMax, wrongCardsFullDay, day));
+    }
+
+    // 일차에 맞는 민원인 인내심 (1일차 -> 마지막날까지 고르게 줄어듦)
+    public float AngerTimeForDay(int day)
+    {
+        return ByDay(angerTimeFirstDay, angerTimeLastDay, angerTimeFullDay, day);
+    }
+
+    // 1일차 값에서 시작해 fullDay 일차에 마지막 값이 되게 섞어줌
+    float ByDay(float first, float last, int fullDay, int day)
+    {
+        if (fullDay <= 1)
+        {
+            return last;
+        }
+
+        float t = (float)(day - 1) / (fullDay - 1);
+        if (t < 0f)
+        {
+            t = 0f;
+        }
+        if (t > 1f)
+        {
+            t = 1f; // 마지막 일차를 넘겨도 더는 안 변함
+        }
+
+        return Mathf.Lerp(first, last, t);
+    }
 }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 // 외계어 해석(단어 상자 맞추기)을 담당하는 매니저
@@ -21,15 +21,24 @@ public class TranslationController : MonoBehaviour
 
         // 상자 만들기 (민원에 정해진 자리들)
         // 후보를 여러 개 적어놨으면 그 중 하나를 뽑아서 이번 판 정답으로 씀
+        // 이미 다른 칸이 가져간 단어는 되도록 안 뽑음
+        // (같은 단어가 두 칸에 들어가면 방언 힌트도 똑같이 떠서 같은 칸이 두 개인 것처럼 보임)
+        List<WordDefinition> taken = new List<WordDefinition>();
+
         for (int i = 0; i < complaint.slots.Count; i++)
         {
             WordSlot slot = new WordSlot();
             slot.category = complaint.slots[i].category;
-            slot.correctWord = complaint.slots[i].PickAnswer();
+            slot.correctWord = complaint.slots[i].PickAnswer(taken);
             slot.placedWord = null;
             slot.hintDialect = PickDialect(slot.correctWord);
             slots.Add(slot);
             _slotCardIndex.Add(-1);
+
+            if (slot.correctWord != null)
+            {
+                taken.Add(slot.correctWord);
+            }
         }
 
         // 카드 만들기: 정답 + 오답 모아서 랜덤 순서로 깔아줌
@@ -146,8 +155,9 @@ public class TranslationController : MonoBehaviour
             pool.Add(w);
         }
 
-        // 서점 영구템 레벨만큼 오답 카드가 줄어듬 (사전이 좋아질수록 헷갈릴 게 없음)
-        int perSlot = GameManager.instance.config.wrongCardsPerSlot
+        // 일차가 갈수록 오답 카드가 늘어남 (뒤로 갈수록 헷갈리게)
+        // 거기서 서점 영구템 레벨만큼 다시 줄어듬 (사전이 좋아질수록 헷갈릴 게 없음)
+        int perSlot = GameManager.instance.config.WrongCardsForDay(GameManager.instance.calendar.day)
             - (int)GameManager.instance.inventory.GetEffectPower(ItemEffect.FewerWrongCards);
         if (perSlot < 0)
         {
