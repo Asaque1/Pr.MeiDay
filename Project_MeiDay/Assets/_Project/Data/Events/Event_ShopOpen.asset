@@ -11,14 +11,16 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7884721fa1c44dc3a683fbf04b783afb, type: 3}
   m_Name: Event_ShopOpen
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: event_shop_open
-  timing: 2
-  fixedDay: 1
+  timing: 0
+  slot: 1
+  fixedDay: 2
   randomChance: 0.3
-  condition: 1
+  condition: 0
   conditionValue: 2
   lines: []
+  dialogue: {fileID: 0}
   linkedComplaint: {fileID: 0}
   suspicionChange: 0
   unlocksShop: 1
