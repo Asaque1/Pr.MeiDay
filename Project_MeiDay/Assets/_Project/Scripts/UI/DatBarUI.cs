@@ -58,9 +58,14 @@ public class DayBar : MonoBehaviour
 
             if (span > 0)
             {
+                // 여기는 UiBar(폭 줄이기)를 못 씀
+                // DayBar 오브젝트 자체 폭이 0이고 자식들이 고정 여백으로 자리를 잡고 있어서,
+                // 비율 앵커로 바꾸면 폭이 0이 돼서 막대가 사라짐
                 fillImage.fillAmount = Mathf.Clamp01((float)left / span);
             }
         }
+
+        // 남은 날짜를 숫자로 적진 않음 - 막대로만 보여주기로 함
 
         // X 표시: 밀린 횟수만큼 켬
         if (missMarks == null)
