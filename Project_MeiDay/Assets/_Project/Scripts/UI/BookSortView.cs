@@ -252,9 +252,16 @@ public class BookSortView : MonoBehaviour
         }
     }
 
+    // 칸 라벨이랑 책 표지에 같이 쓰는 이름 (칸 색 순서랑 맞춰둠)
+    static readonly string[] GenreNames = { "규정집", "항성도", "지구학" };
+
     string GenreName(int genre)
     {
-        return "장르 " + (genre + 1);
+        if (genre < 0 || genre >= GenreNames.Length)
+        {
+            return "장르 " + (genre + 1); // 칸 수를 늘리면 이름이 모자라니까
+        }
+        return GenreNames[genre];
     }
 
     Color ColorOfGenre(int genre)
