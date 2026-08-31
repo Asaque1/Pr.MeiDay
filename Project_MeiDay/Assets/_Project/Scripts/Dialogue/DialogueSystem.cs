@@ -58,6 +58,16 @@ public class DialogueSystem : MonoBehaviour
     private void Start()
     {
         // 시작 시 대화창과 선택지 모두 숨김
+        //
+        // 단, 이미 대화가 돌고 있으면 건드리지 않음
+        // 컷신을 보고 넘어오면 UiRoot 의 Start 안에서 게임이 시작되는데,
+        // 그때 이 Start 가 아직 안 돌았으면 방금 켠 대화창을 여기서 도로 꺼버림
+        // (대사가 안 끝나니 민원도 시작 안 돼서 민원인이 영영 안 나왔음)
+        if (currentDialogueData != null)
+        {
+            return;
+        }
+
         dialoguePanel.SetActive(false);
         ClearChoiceButtons();
     }
