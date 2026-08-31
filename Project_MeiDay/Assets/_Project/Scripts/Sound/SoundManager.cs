@@ -119,7 +119,12 @@ public class SoundManager : MonoBehaviour
         {
             GameManager.instance.OnPhaseChanged += OnPhaseChanged;
             PlayBgmFor(GameManager.instance.phase); // 켜질 때 지금 단계로 한 번 맞춰줌
+            return;
         }
+
+        // 로비랑 프롤로그엔 GameManager 가 없음
+        // 여기서 안 틀어주면 시작부터 프롤로그 끝까지 50초 넘게 무음이었음
+        PlayMain();
     }
 
     void OnDestroy()
