@@ -25,6 +25,9 @@ public class DialogueChoiceData
     //   0 크레딧    eventValue 만큼 주고 뺌 (음수면 뺌)
     //   1 의심도    eventValue 만큼 올리고 내림 (음수면 내림)
     //   2 상점 해금  eventValue 안 씀
+    //   3 구매 잠금  eventValue 번 상점에서 물건을 못 사게 함
+    //   4 구매 해금  eventValue 번 상점을 다시 열어줌
+    //     (상점 번호는 0 서점 / 1 연극단 / 2 사무용품점 / 3 브로커)
     public int eventId = -1;
     public int eventValue = 0;
 }

@@ -155,6 +155,6 @@ MonoBehaviour:
     choices:
     - choiceText: "\uAC10\uC0AC\uD569\uB2C8\uB2E4.."
       nextLineIndex: -1
-      eventId: 0
-      eventValue: 0
+      eventId: 3
+      eventValue: 3
     nextLineIndex: -1

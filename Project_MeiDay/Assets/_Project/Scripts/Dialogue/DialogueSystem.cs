@@ -426,10 +426,27 @@ public class DialogueSystem : MonoBehaviour
             case 2:
                 GameManager.instance.UnlockShop();
                 break;
+            case 3:
+            case 4:
+                // 상점 구매 탭을 잠그고 여는 건 같은 처리라 한 자리에서 봄
+                SetShopBuyLocked(eventValue, eventId == 3);
+                break;
             default:
                 Debug.LogWarning("등록되지 않은 eventId: " + eventId);
                 break;
         }
+    }
+
+    // eventValue 로 받은 번호가 진짜 상점인지 보고 구매 탭을 잠그거나 열어줌
+    private void SetShopBuyLocked(int shopNumber, bool locked)
+    {
+        if (shopNumber < 0 || shopNumber > (int)ShopType.Broker)
+        {
+            Debug.LogWarning("그런 상점 번호가 없음: " + shopNumber);
+            return;
+        }
+
+        GameManager.instance.shop.SetBuyLocked((ShopType)shopNumber, locked);
     }
 
     private void EndDialogue()
