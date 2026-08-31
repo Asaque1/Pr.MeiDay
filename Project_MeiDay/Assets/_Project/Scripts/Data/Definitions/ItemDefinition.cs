@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 // 상점에서 파는 아이템 한 개
 [CreateAssetMenu(fileName = "Item_", menuName = "MeiDay/Item")]

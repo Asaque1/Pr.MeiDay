@@ -203,6 +203,13 @@ public class ShopManager : MonoBehaviour
         {
             return false;
         }
+        // 알바를 잘 해내야 열리는 물건 (위조 신분증처럼) - 조건 전엔 목록에 아예 안 나옴
+        if (item.requiredArbeitGood > 0
+            && GameManager.instance.arbeit.arbeitGoodCount < item.requiredArbeitGood)
+        {
+            return false;
+        }
+
         if (item.requiresMaxed == null)
         {
             return true; // 조건 없는 물건
