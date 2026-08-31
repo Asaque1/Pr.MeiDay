@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 567fa180cbeff0043a09c0e520bf426e, type: 3}
   m_Name: Day-7DS
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
-  dialogueLines: []
+  dialogueLines:
+  - speakerFace: {fileID: 0}
+    speakerName: "\uB514-\uC2A4\uCF54"
+    text: 
+    choices: []
+    nextLineIndex: 0

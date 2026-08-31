@@ -43,32 +43,24 @@ MonoBehaviour:
     nextLineIndex: 4
   - speakerFace: {fileID: 5396913674957190600, guid: a5de98c3e4888ed4ab620b07e9ea75be, type: 3}
     speakerName: ???
-    text: "\uBCF8\uB860\uC73C\uB85C \uB118\uC5B4\uAC00\uC9C0. \uB108\uAC00 \uC9D1\uC5D0
-      \uAC08 \uBC29\uBC95\uC774 \uC0DD\uACBC\uC5B4. \uD3D0\uAE30\uB41C \uC791\uC740
-      \uC6B0\uC8FC\uC120\uC774 \uC788\uB294\uB370, \uC544\uC9C1 \uC4F8\uB9CC\uD558\uB2E4\uB294
-      \uAC70\uC57C."
-    choices: []
-    nextLineIndex: 5
-  - speakerFace: {fileID: 5396913674957190600, guid: a5de98c3e4888ed4ab620b07e9ea75be, type: 3}
-    speakerName: ???
     text: "\uADF8\uB798\uC11C \uB9D0\uC774\uC57C. \uC6B0\uB9AC \uC880 \uB3C4\uC640\uC92C\uC73C\uBA74
       \uD574."
     choices:
     - choiceText: "\uBB58 \uD558\uBA74 \uB418\uB294 \uAC70\uC8E0?"
-      nextLineIndex: 6
+      nextLineIndex: 5
       eventId: 0
       eventValue: 0
-    nextLineIndex: 6
+    nextLineIndex: 5
   - speakerFace: {fileID: 5396913674957190600, guid: a5de98c3e4888ed4ab620b07e9ea75be, type: 3}
     speakerName: ???
     text: "\uB2E8\uC21C\uD558\uAC8C \uBCF4\uC790\uBA74, \uC6B0\uB9AC\uAC00 \uD30C\uB294
       \uBB3C\uAC74 \uBA87 \uAC1C \uC0AC\uC11C \uB2E4\uC2DC \uD314\uBA74 \uB3FC."
     choices:
     - choiceText: "\uADF8\uAC70 \uAD1C\uCC2E\uC740 \uAC74\uAC00\uC694?"
-      nextLineIndex: 7
+      nextLineIndex: 6
       eventId: 0
       eventValue: 0
-    nextLineIndex: 7
+    nextLineIndex: 6
   - speakerFace: {fileID: 5396913674957190600, guid: a5de98c3e4888ed4ab620b07e9ea75be, type: 3}
     speakerName: ???
     text: "\uB108\uB294 \uADF8\uB0E5 \uC0C1\uC790\uB97C \uC0AC\uACE0, \uADF8\uAC78
@@ -76,26 +68,26 @@ MonoBehaviour:
       \uC5C6\uC9C0."
     choices:
     - choiceText: "\uC54C\uACA0\uC5B4\uC694.."
-      nextLineIndex: 8
+      nextLineIndex: 7
       eventId: 0
       eventValue: 0
-    nextLineIndex: 0
+    nextLineIndex: 7
   - speakerFace: {fileID: 5396913674957190600, guid: a5de98c3e4888ed4ab620b07e9ea75be, type: 3}
     speakerName: ???
     text: "\uADF8\uB798. \uADF8\uB7FC \uC55E\uC73C\uB85C \uC798 \uBD80\uD0C1\uD574."
     choices:
     - choiceText: "\uC7A0\uAE50, \uADF8\uB798\uB3C4 \uC774\uB984\uC740 \uC54C\uB824\uC8FC\uC138\uC694!"
-      nextLineIndex: 9
+      nextLineIndex: 8
       eventId: 0
       eventValue: 0
-    nextLineIndex: 9
+    nextLineIndex: 8
   - speakerFace: {fileID: 5396913674957190600, guid: a5de98c3e4888ed4ab620b07e9ea75be, type: 3}
     speakerName: ???
     text: "\uADC0\uCC2E\uAC8C \uD558\uB294\uAD70. \uC544\uBB34\uAC70\uB098 \uC0C1\uAD00
       \uC5C6\uC5B4. \uC5B4\uCC28\uD53C \uB2E4\uB978 \uC0AC\uB78C\uD55C\uD14C \uB9D0\uD560
       \uAC83\uB3C4 \uC544\uB2C8\uC796\uC544?"
     choices: []
-    nextLineIndex: 10
+    nextLineIndex: 9
   - speakerFace: {fileID: 5396913674957190600, guid: a5de98c3e4888ed4ab620b07e9ea75be, type: 3}
     speakerName: "\uBE0C\uB85C\uCEE4"
     text: "\uC815 \uADF8\uB7EC\uBA74, \uBE0C\uB85C\uCEE4\uB77C\uACE0 \uBD88\uB7EC.

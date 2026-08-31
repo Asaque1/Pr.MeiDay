@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7884721fa1c44dc3a683fbf04b783afb, type: 3}
   m_Name: Event_Store_Broker_Lock
   m_EditorClassIdentifier: Assembly-CSharp::EventDefinition
-  id: Store_Theatre_Open
+  id: Store_Broker_Lock
   timing: 2
   slot: 2
   fixedDay: 0
