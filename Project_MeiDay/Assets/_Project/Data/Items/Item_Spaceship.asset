@@ -19,7 +19,7 @@ MonoBehaviour:
   effect: 0
   description: "\uC9C0\uAD6C\uB85C \uB3CC\uC544\uAC00\uB294 \uBC30\uC758 \uC790\uB9AC
     \uD558\uB098. \uBE0C\uB85C\uCEE4\uB294 \uC6C3\uC73C\uBA70 \uAC12\uC744 \uBD80\uB978\uB2E4."
-  icon: {fileID: 7691294901476699688, guid: 0b78e224ff17ca3489c90594912d90aa, type: 3}
+  icon: {fileID: 21300000, guid: 0b78e224ff17ca3489c90594912d90aa, type: 3}
   levelIcons: []
   levelDescriptions: []
   price: 3000
@@ -27,8 +27,10 @@ MonoBehaviour:
   maxLevel: 1
   power: 0
   sidePower: 0
+  arbeitPayBonus: 0
   boxRewardMin: 0
   boxRewardMax: 0
   requiresMaxed: {fileID: 0}
+  requiredArbeitGood: 0
   requiredShopType: 0
   requiredShopLevel: 0
