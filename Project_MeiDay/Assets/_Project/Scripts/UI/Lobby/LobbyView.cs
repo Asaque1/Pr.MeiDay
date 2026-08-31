@@ -8,13 +8,28 @@ public class LobbyView : MonoBehaviour
     [SerializeField] string storySceneName = "Story";      // 프롤로그 첫 씬
     [SerializeField] string gameSceneName = "Ingame_base"; // 프롤로그 건너뛸 때 갈 곳
     [SerializeField] GameObject settingsWindow;            // 설정창 (없으면 그냥 안 뜸)
+    [SerializeField] GameObject prologuePopup;             // 시작 누르면 뜨는 "프롤로그 볼래?" 창
 
-    // 시작 버튼
+    // 시작 버튼 - 프롤로그를 볼지 먼저 물어봄
     public void OnClickStart()
     {
         Click();
 
-        // 프롤로그를 다 보고 나면 Cutscene 이 알아서 게임 씬으로 넘겨줌
+        if (prologuePopup == null)
+        {
+            OnClickPrologueYes(); // 창을 아직 안 만들어뒀으면 예전처럼 프롤로그부터
+            return;
+        }
+
+        prologuePopup.SetActive(true);
+    }
+
+    // "본다" - 프롤로그부터
+    // 다 보고 나면 Cutscene 이 알아서 게임 씬으로 넘겨줌
+    public void OnClickPrologueYes()
+    {
+        Click();
+
         string next = storySceneName;
         if (string.IsNullOrEmpty(next) == true)
         {
@@ -22,6 +37,16 @@ public class LobbyView : MonoBehaviour
         }
 
         SceneManager.LoadScene(next);
+    }
+
+    // "건너뛰기" - 프롤로그 없이 바로 게임
+    public void OnClickPrologueNo()
+    {
+        Click();
+
+        // 이걸 켜둬야 인게임 타이틀을 안 거치고 바로 1일차부터 시작함
+        UiRoot.startAfterCutscene = true;
+        SceneManager.LoadScene(gameSceneName);
     }
 
     // 설정 버튼
