@@ -10,6 +10,36 @@ public class ShopManager : MonoBehaviour
     // 1회성/랜덤박스를 그동안 몇 번 샀는지 (값이 오르는 기준. 매일 조금씩 깎임)
     public int consumableBuyCount = 0;
 
+    // 구매가 잠긴 상점들 (ShopType 을 숫자로 넣어둠. 이벤트가 열고 잠금. 저장됨)
+    // 잠겨도 상점에 들어가는 것과 알바는 그대로 됨 - 물건만 못 삼
+    public List<int> buyLockedShops = new List<int>();
+
+    // 이 상점에서 지금 물건을 살 수 있는지
+    public bool IsBuyLocked(ShopType type)
+    {
+        return buyLockedShops.Contains((int)type);
+    }
+
+    // 이벤트가 상점 구매를 열거나 잠글 때 부름
+    public void SetBuyLocked(ShopType type, bool locked)
+    {
+        int key = (int)type;
+
+        if (locked == true)
+        {
+            if (buyLockedShops.Contains(key) == false)
+            {
+                buyLockedShops.Add(key);
+            }
+        }
+        else
+        {
+            buyLockedShops.Remove(key);
+        }
+
+        Debug.Log("상점 구매 " + (locked ? "잠금" : "해금") + ": " + ShopName(type));
+    }
+
     // 아이템 사기. 성공하면 true, 돈 없거나 못 사는 물건이면 false
     public bool Buy(ItemDefinition item)
     {
@@ -100,6 +130,12 @@ public class ShopManager : MonoBehaviour
         if (item.isSpaceshipTicket == true && GameManager.instance.hasSpaceship == true)
         {
             return "이미 삼";
+        }
+
+        // 이벤트로 구매가 잠긴 상점
+        if (IsBuyLocked(item.shopType) == true)
+        {
+            return "지금은 안 팜";
         }
 
         // 영구템은 레벨 다 차면 진짜 품절

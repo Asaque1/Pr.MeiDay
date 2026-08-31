@@ -256,6 +256,14 @@ public class EventManager : MonoBehaviour
             GameManager.instance.UnlockShop();
         }
 
+        // 상점 하나의 구매 탭만 열거나 잠그는 이벤트
+        if (done.shopBuyAction != ShopBuyAction.None)
+        {
+            GameManager.instance.shop.SetBuyLocked(
+                done.shopToToggle,
+                done.shopBuyAction == ShopBuyAction.Lock);
+        }
+
         // 이벤트 내용에 따라 의심도가 오르내림
         if (done.suspicionChange > 0)
         {

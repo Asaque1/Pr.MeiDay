@@ -152,6 +152,7 @@ public class GameManager : MonoBehaviour
             shop.shopExp[i] = 0;
         }
         shop.consumableBuyCount = 0;
+        shop.buyLockedShops.Clear(); // 이벤트로 잠가둔 상점 구매도 초기화
 
         events.seenEventIds.Clear();
         events.currentEvent = null;
@@ -403,14 +404,14 @@ public class GameManager : MonoBehaviour
 
         NotifyBrokerChanged(); // 선택창부터 닫고
 
-        // 고른 대로 다른 대사
+        // 고른 대로 다른 대사 - 그게 끝나면 그날은 거기서 끝남
         if (choice == BrokerChoice.DatabaseAccess)
         {
-            PlayBrokerDialogue(content.brokerDatabaseDialogue);
+            PlayBrokerDialogue(content.brokerDatabaseDialogue, EndDayAfterBroker);
         }
         else
         {
-            PlayBrokerDialogue(content.brokerReportDialogue);
+            PlayBrokerDialogue(content.brokerReportDialogue, EndDayAfterBroker);
         }
     }
 
@@ -448,15 +449,31 @@ public class GameManager : MonoBehaviour
         NotifyBrokerChanged();
     }
 
-    // 브로커 대사 틀기 (없으면 그냥 넘어감)
-    void PlayBrokerDialogue(DialogueData dialogue)
+    // 브로커 대사 틀기 (대사가 없으면 끝난 셈 치고 바로 다음으로)
+    void PlayBrokerDialogue(DialogueData dialogue, System.Action onEnd)
     {
         if (dialogue == null || DialogueSystem.Instance == null)
         {
+            if (onEnd != null)
+            {
+                onEnd();
+            }
             return;
         }
 
-        DialogueSystem.Instance.StartDialogue(dialogue);
+        DialogueSystem.Instance.StartDialogue(dialogue, onEnd);
+    }
+
+    // 브로커한테 답한 날은 거기서 하루가 끝남
+    // 우주선은 밤 상점에서 사는 거라, 답하고 나면 그날 밤에 더 할 게 없음
+    void EndDayAfterBroker()
+    {
+        if (phase == GamePhase.Ending || phase == GamePhase.GameOver)
+        {
+            return; // 대사 도중에 끝났으면 하루를 또 넘기지 않음
+        }
+
+        SleepAndAdvance();
     }
 
     // 브로커 관련 상태가 바뀌었다고 알려줌 (선택창이 듣고 켜고 끔)

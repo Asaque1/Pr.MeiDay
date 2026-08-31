@@ -35,4 +35,10 @@ public class EventDefinition : ScriptableObject
     public ComplaintDefinition linkedComplaint; // 대사 끝나고 이어지는 민원 (없으면 대사만 하고 끝)
     public float suspicionChange = 0;           // 이벤트 보고 나면 오르내리는 의심도 (음수면 내려감)
     public bool unlocksShop = false;            // 켜면 이 이벤트 보고 나서 밤 상점이 열림 (해금 이벤트용)
+
+    // 이 이벤트가 끝나면 그 상점의 구매 탭을 열거나 잠금
+    // 상점 화면 전체는 위 unlocksShop 이 열고, 이건 상점 하나의 물건 판매만 건드림
+    // shopBuyAction 이 None 이면 shopToToggle 은 안 봄
+    public ShopType shopToToggle = ShopType.Bookstore;
+    public ShopBuyAction shopBuyAction = ShopBuyAction.None;
 }

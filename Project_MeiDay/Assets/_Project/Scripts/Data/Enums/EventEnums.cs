@@ -15,6 +15,16 @@ public enum EventSlot
     DayEnd,         // 민원 다 처리하고 결산 넘어가기 전
 }
 
+// 이벤트가 끝난 뒤 그 상점의 구매 탭을 어떻게 할지
+// 상점 화면 자체를 여는 건 EventDefinition.unlocksShop 이 따로 함
+// 이건 상점 안에서 물건을 살 수 있냐 없냐만 건드림 (알바는 그대로 됨)
+public enum ShopBuyAction
+{
+    None,   // 안 건드림
+    Unlock, // 이 상점에서 물건을 살 수 있게
+    Lock,   // 이 상점에서 물건을 못 사게
+}
+
 // Trigger 이벤트가 언제 튀어나오는지 정하는 조건
 public enum EventCondition
 {
