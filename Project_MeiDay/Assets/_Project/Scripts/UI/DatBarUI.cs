@@ -13,6 +13,9 @@ public class DayBar : MonoBehaviour
     [Tooltip("밀린 횟수만큼 켜지는 X 표시 (왼쪽부터)")]
     public GameObject[] missMarks;
 
+    [Tooltip("\"다음 월세까지\" 글자. 남은 날짜를 여기에 같이 적어줌")]
+    public TMPro.TMP_Text labelText;
+
     void OnEnable()
     {
         Refresh();
@@ -58,7 +61,31 @@ public class DayBar : MonoBehaviour
 
             if (span > 0)
             {
+                // 여기는 UiBar(폭 줄이기)를 못 씀
+                // DayBar 오브젝트 자체 폭이 0이고 자식들이 고정 여백으로 자리를 잡고 있어서,
+                // 비율 앵커로 바꾸면 폭이 0이 돼서 막대가 사라짐
                 fillImage.fillAmount = Mathf.Clamp01((float)left / span);
+            }
+        }
+
+        // 막대만 있으면 며칠 남았는지를 알 수가 없어서 숫자도 같이 적어줌
+        if (labelText != null)
+        {
+            int left = economy.nextRentDay - day;
+            if (left < 0)
+            {
+                left = 0;
+            }
+
+            // 값까지 붙이면 200 폭 라벨을 넘겨서 두 줄이 되고 막대를 가림
+            // 얼마인지는 결산 종이 쪽에 한 줄로 따로 적어줌
+            if (left <= 0)
+            {
+                labelText.text = "오늘이 월세 내는 날";
+            }
+            else
+            {
+                labelText.text = "다음 월세까지 " + left + "일";
             }
         }
 

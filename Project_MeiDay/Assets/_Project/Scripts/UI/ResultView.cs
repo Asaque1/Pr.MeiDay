@@ -97,6 +97,18 @@ public class ResultView : MonoBehaviour
             }
             sizes.Add(smallSize);
         }
+        else
+        {
+            // 오늘 낸 날이 아니면 언제 얼마가 나가는지 안 보여서 대비를 못 했음
+            int left = economy.nextRentDay - GameManager.instance.calendar.day;
+            if (left < 0)
+            {
+                left = 0;
+            }
+            lines.Add("다음 월세: " + economy.RentFor(economy.nextRentDay) + " cr (" + left + "일 뒤)");
+            goods.Add(false);
+            sizes.Add(smallSize);
+        }
 
         // 오늘 번 것과 남은 것을 한 줄에서 번갈아 보여줌 (자리를 아끼고 눈이 가게)
         _creditLineIndex = lines.Count;
