@@ -24,6 +24,10 @@ public class Cutscene : MonoBehaviour, IPointerClickHandler
     // 다 보고 나서 갈 씬 (비워두면 씬은 안 옮기고 이 오브젝트만 끔)
     [SerializeField] string nextSceneName = "Ingame_base";
 
+    // 스킵 누르면 갈 씬
+    // 프롤로그가 여러 씬으로 쪼개져 있어서, 스킵은 다음 컷신이 아니라 게임으로 바로 보내야 함
+    [SerializeField] string gameSceneName = "Ingame_base";
+
     int _cut = -1;       // 지금 보여주는 컷 번호 (-1 이면 아직 첫 컷도 안 띄움)
     bool _auto = false;  // 자동재생 중인지
     float _autoLeft = 0f;
@@ -82,25 +86,22 @@ public class Cutscene : MonoBehaviour, IPointerClickHandler
     }
 
     // 스킵하기 버튼
-    // 아직 안 채운 칸이 있으면 먼저 전부 채워서 보여주고, 그 다음 누르면 넘어감
-    // (마지막 장까지 다 본 사람이랑 같은 그림을 보고 나가게)
+    // 프롤로그를 통째로 건너뛰고 바로 게임으로 감
+    // 이 씬 하나만 넘기면 다음 프롤로그 씬이 또 나와서, 스킵 누른 사람 입장에선 안 끝나는 것처럼 보임
     public void OnClickSkip()
     {
-        if (cutParent != null && _cut < cutParent.childCount - 1)
-        {
-            for (int i = 0; i < cutParent.childCount; i++)
-            {
-                cutParent.GetChild(i).gameObject.SetActive(true);
-            }
+        Go(GameScene());
+    }
 
-            _cut = cutParent.childCount - 1;
-            _auto = false;
-            ShowAutoLabel();
-            ShowPageLabel();
-            return;
+    // 스킵으로 갈 씬 (인스펙터에 안 채워져 있어도 인게임으로)
+    string GameScene()
+    {
+        if (string.IsNullOrEmpty(gameSceneName) == true)
+        {
+            return "Ingame_base";
         }
 
-        Finish();
+        return gameSceneName;
     }
 
     // 자동재생 버튼 (누를 때마다 켜고 끔)
@@ -165,8 +166,14 @@ public class Cutscene : MonoBehaviour, IPointerClickHandler
         pageLabel.text = (_cut + 1) + " / " + cutParent.childCount;
     }
 
-    // 컷신 끝 - 게임으로 넘어감
+    // 컷신 끝 - 다음 차례로 넘어감 (마지막 프롤로그 씬이면 게임)
     void Finish()
+    {
+        Go(nextSceneName);
+    }
+
+    // 컷신 접고 씬 옮기기
+    void Go(string sceneName)
     {
         if (_done == true)
         {
@@ -175,7 +182,7 @@ public class Cutscene : MonoBehaviour, IPointerClickHandler
 
         _done = true;
 
-        if (string.IsNullOrEmpty(nextSceneName) == true)
+        if (string.IsNullOrEmpty(sceneName) == true)
         {
             gameObject.SetActive(false); // 씬을 안 옮기는 쓰임새면 그냥 접음
             return;
@@ -191,6 +198,6 @@ public class Cutscene : MonoBehaviour, IPointerClickHandler
 
         // 돌아가서 타이틀을 또 보여주면 컷신 본 보람이 없음 - 바로 1일차부터 시작
         UiRoot.startAfterCutscene = true;
-        SceneManager.LoadScene(nextSceneName);
+        SceneManager.LoadScene(sceneName);
     }
 }
