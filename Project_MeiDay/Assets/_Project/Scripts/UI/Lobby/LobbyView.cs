@@ -8,12 +8,39 @@ public class LobbyView : MonoBehaviour
     [SerializeField] string storySceneName = "Story";      // 프롤로그 첫 씬
     [SerializeField] string gameSceneName = "Ingame_base"; // 프롤로그 건너뛸 때 갈 곳
     [SerializeField] GameObject settingsWindow;            // 설정창 (없으면 그냥 안 뜸)
-    [SerializeField] GameObject prologuePopup;             // 시작 누르면 뜨는 "프롤로그 볼래?" 창
+    [SerializeField] GameObject startPopup;                // 시작 누르면 뜨는 "새 게임 / 이어하기" 창
+    [SerializeField] GameObject prologuePopup;             // 새 게임 누르면 뜨는 "프롤로그 볼래?" 창
+    [SerializeField] UnityEngine.UI.Button continueButton; // 저장 없으면 못 누르게 할 이어하기 버튼
 
-    // 시작 버튼 - 프롤로그를 볼지 먼저 물어봄
+    // 시작 버튼 - 새 게임인지 이어하기인지 먼저 물어봄
     public void OnClickStart()
     {
         Click();
+
+        if (startPopup == null)
+        {
+            OnClickNewGame(); // 창을 아직 안 만들어뒀으면 예전처럼 새 게임으로
+            return;
+        }
+
+        // 저장이 없으면 이어하기를 눌러도 할 게 없음
+        if (continueButton != null)
+        {
+            continueButton.interactable = SaveManager.SaveExists();
+        }
+
+        startPopup.SetActive(true);
+    }
+
+    // "새 게임" - 프롤로그를 볼지 이어서 물어봄
+    public void OnClickNewGame()
+    {
+        Click();
+
+        if (startPopup != null)
+        {
+            startPopup.SetActive(false);
+        }
 
         if (prologuePopup == null)
         {
@@ -22,6 +49,25 @@ public class LobbyView : MonoBehaviour
         }
 
         prologuePopup.SetActive(true);
+    }
+
+    // "이어하기" - 저장한 아침부터
+    public void OnClickContinue()
+    {
+        Click();
+
+        if (SaveManager.SaveExists() == false)
+        {
+            return; // 저장이 없으면 아무 일도 안 함
+        }
+
+        if (startPopup != null)
+        {
+            startPopup.SetActive(false);
+        }
+
+        UiRoot.continueOnLoad = true;
+        SceneManager.LoadScene(gameSceneName);
     }
 
     // "본다" - 프롤로그부터

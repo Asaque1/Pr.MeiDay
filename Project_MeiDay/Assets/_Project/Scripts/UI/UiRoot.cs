@@ -21,6 +21,9 @@ public class UiRoot : MonoBehaviour
     // 씬을 갈아끼우고 오면 여기 값들이 다 초기화돼서, 정적으로 들고 있어야 살아남음
     public static bool startAfterCutscene = false;
 
+    // 로비에서 "이어하기" 로 들어왔는지 (타이틀 안 거치고 저장한 데서 바로 시작)
+    public static bool continueOnLoad = false;
+
     void Start()
     {
         GameManager.instance.OnPhaseChanged += ShowPanelFor;
@@ -36,6 +39,14 @@ public class UiRoot : MonoBehaviour
         ShowPanelFor(GameManager.instance.phase); // 시작할 때 한 번 맞춰줌
         RefreshContinueButton();
         SetPanel(cutscenePopup, false);
+
+        // 로비에서 이어하기로 들어온 참이면 저장한 아침부터
+        if (continueOnLoad == true)
+        {
+            continueOnLoad = false;
+            GameManager.instance.ContinueGame();
+            return;
+        }
 
         // 컷신 보고 돌아온 참이면 타이틀 안 거치고 바로 시작
         if (startAfterCutscene == true)

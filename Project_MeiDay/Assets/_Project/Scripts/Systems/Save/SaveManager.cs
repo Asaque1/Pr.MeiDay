@@ -10,6 +10,13 @@ public class SaveManager : MonoBehaviour
     // 이어할 저장 데이터가 있는지
     public bool HasSave()
     {
+        return SaveExists();
+    }
+
+    // 위와 같은 확인인데 GameManager 없이도 물어볼 수 있음
+    // 로비 씬에는 GameManager 가 없어서 이어하기 버튼을 켤지 정하려면 이게 필요함
+    public static bool SaveExists()
+    {
         if (PlayerPrefs.GetInt("saveExists", 0) == 1)
         {
             return true;
@@ -111,6 +118,9 @@ public class SaveManager : MonoBehaviour
         for (int i = 0; i < gm.shop.shopExp.Count; i++)
         {
             PlayerPrefs.SetInt("shopExp" + i, gm.shop.shopExp[i]);
+
+            // 그 상점 구매가 이벤트로 잠겨있는지
+            PlayerPrefs.SetInt("shopBuyLocked" + i, gm.shop.IsBuyLocked((ShopType)i) ? 1 : 0);
         }
 
         // 1회성 물건 값이 얼마나 올라있는지
@@ -197,9 +207,16 @@ public class SaveManager : MonoBehaviour
         gm.arbeit.arbeitMaxToday = PlayerPrefs.GetInt("arbeitMax", 0);
 
         // 상점별 경험치
+        gm.shop.buyLockedShops.Clear();
         for (int i = 0; i < gm.shop.shopExp.Count; i++)
         {
             gm.shop.shopExp[i] = PlayerPrefs.GetInt("shopExp" + i, 0);
+
+            // 그 상점 구매가 이벤트로 잠겨있었는지
+            if (PlayerPrefs.GetInt("shopBuyLocked" + i, 0) == 1)
+            {
+                gm.shop.SetBuyLocked((ShopType)i, true);
+            }
         }
 
         // 1회성 물건 값이 얼마나 올라있는지
