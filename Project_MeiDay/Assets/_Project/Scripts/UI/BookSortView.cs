@@ -53,7 +53,7 @@ public class BookSortView : MonoBehaviour
         BookSortGame game = GetGame();
         if (game != null && limitText != null)
         {
-            limitText.text = "제한 시간: " + Mathf.RoundToInt(game.duration) + "초";
+            limitText.text = "남은 시간: " + Mathf.RoundToInt(game.duration) + "초";
         }
 
         ShowShelfLabels(game);
@@ -279,6 +279,17 @@ public class BookSortView : MonoBehaviour
         {
             UiBar.Set(timerFill, game.timeLeft / game.duration); // 폭을 줄임 - Filled 로 깎으면 둥근 끝이 눌림
         }
+
+        // 숫자도 게이지랑 같이 깎임 (올림이라 시작하자마자 제한 시간 그대로 보이고 0 에서 끝남)
+        if (limitText != null)
+        {
+            int left = Mathf.CeilToInt(game.timeLeft);
+            if (left < 0)
+            {
+                left = 0;
+            }
+            limitText.text = "남은 시간: " + left + "초";
+        }
         if (progressText != null)
         {
             // 황금 책을 틀린 칸에 넣으면 세는 수가 최대치를 넘어서 "23/22" 처럼 떴음
@@ -322,17 +333,10 @@ public class BookSortView : MonoBehaviour
         return GameManager.instance.arbeit.bookSort;
     }
 
-    // 그만두기 버튼 OnClick 에 연결 (알바 횟수는 돌려받음)
+    // 그만두기 버튼 OnClick 에 연결
+    // 그냥 나가지 않고 한 만큼으로 정산함 (아직 못 한 건 전부 틀린 걸로 침)
     public void OnClickQuit()
     {
-        ArbeitView owner = _owner;
-        _owner = null;
-
-        gameObject.SetActive(false);
-
-        if (owner != null)
-        {
-            owner.ShowList();
-        }
+        Finish(GetGame());
     }
 }
