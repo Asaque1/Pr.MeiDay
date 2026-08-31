@@ -284,7 +284,7 @@ public class ArbeitView : MonoBehaviour
         }
         if (type == ShopType.PartyShop)
         {
-            return "파티용품점";
+            return "사무용품점";
         }
         return "상점";
     }
