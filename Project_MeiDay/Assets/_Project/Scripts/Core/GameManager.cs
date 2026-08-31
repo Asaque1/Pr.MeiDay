@@ -581,10 +581,10 @@ public class GameManager : MonoBehaviour
         StartNewDay();
     }
 
-    // 타이틀로 (지금은 그냥 씬 다시 켜서 처리)
+    // 타이틀(로비)로
+    // 죽거나 엔딩 보면 저장은 이미 지워놨으니 로비에서 새로 시작하면 됨
     public void RestartToTitle()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(
-            UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Lobby");
     }
 }
