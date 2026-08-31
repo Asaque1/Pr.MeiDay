@@ -11,11 +11,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4999da927baed2044938ff16b36fae23, type: 3}
   m_Name: Achievement_Perfect5
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: ach_perfect_5
-  title: 실수 없는 하루
-  description: 하루를 한 번도 안 틀리고 끝내기 5일
+  title: "\uC2E4\uC218 \uC5C6\uB294 \uD558\uB8E8"
+  description: "\uD558\uB8E8\uB97C \uD55C \uBC88\uB3C4 \uC548 \uD2C0\uB9AC\uACE0
+    \uB05D\uB0B4\uAE30 5\uC77C"
   condition: 5
   goal: 5
+  requiredItem: {fileID: 0}
   hidden: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: b57048db4546e9544af274cf994bb1e2, type: 3}

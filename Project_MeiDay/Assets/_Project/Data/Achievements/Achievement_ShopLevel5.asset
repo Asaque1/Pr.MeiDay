@@ -11,11 +11,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4999da927baed2044938ff16b36fae23, type: 3}
   m_Name: Achievement_ShopLevel5
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: ach_shop_5
-  title: 단골
-  description: 서점·연극단·파티 상점 레벨 합 5 만들기
+  title: "\uB2E8\uACE8"
+  description: "\uC11C\uC810\xB7\uC5F0\uADF9\uB2E8\xB7\uD30C\uD2F0 \uC0C1\uC810 \uB808\uBCA8
+    \uD569 5 \uB9CC\uB4E4\uAE30"
   condition: 4
   goal: 5
+  requiredItem: {fileID: 0}
   hidden: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: cc3f55b11e040c74ea6f8b1f8c04c44d, type: 3}

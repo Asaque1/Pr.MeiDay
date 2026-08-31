@@ -11,11 +11,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4999da927baed2044938ff16b36fae23, type: 3}
   m_Name: Achievement_GameOver
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: ach_gameover
-  title: 여기서 끝인가
-  description: 한 번 붙잡혀 보기
+  title: "\uC5EC\uAE30\uC11C \uB05D\uC778\uAC00"
+  description: "\uD55C \uBC88 \uBD99\uC7A1\uD600 \uBCF4\uAE30"
   condition: 9
   goal: 1
+  requiredItem: {fileID: 0}
   hidden: 1
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: dceb6c1d79ad6c94e806230b2a4619e7, type: 3}

@@ -11,11 +11,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4999da927baed2044938ff16b36fae23, type: 3}
   m_Name: Achievement_Day10
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: ach_day_10
-  title: 이제 좀 익숙해
-  description: 10일차까지 버티기
+  title: "\uC774\uC81C \uC880 \uC775\uC219\uD574"
+  description: "10\uC77C\uCC28\uAE4C\uC9C0 \uBC84\uD2F0\uAE30"
   condition: 0
   goal: 10
+  requiredItem: {fileID: 0}
   hidden: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: d42b68ed37ac95444b4aff13a5e152c0, type: 3}

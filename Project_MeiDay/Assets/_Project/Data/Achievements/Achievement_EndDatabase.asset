@@ -11,11 +11,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4999da927baed2044938ff16b36fae23, type: 3}
   m_Name: Achievement_EndDatabase
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: ach_end_db
-  title: 거래는 거래
-  description: 브로커에게 데이터베이스를 열어주고 지구로 돌아가기
+  title: "\uAC70\uB798\uB294 \uAC70\uB798"
+  description: "\uBE0C\uB85C\uCEE4\uC5D0\uAC8C \uB370\uC774\uD130\uBCA0\uC774\uC2A4\uB97C
+    \uC5F4\uC5B4\uC8FC\uACE0 \uC9C0\uAD6C\uB85C \uB3CC\uC544\uAC00\uAE30"
   condition: 7
   goal: 1
+  requiredItem: {fileID: 0}
   hidden: 1
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 4f5757015a04ba9499f423c5eda3722c, type: 3}

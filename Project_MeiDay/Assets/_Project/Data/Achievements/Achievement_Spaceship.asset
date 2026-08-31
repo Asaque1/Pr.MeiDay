@@ -11,11 +11,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4999da927baed2044938ff16b36fae23, type: 3}
   m_Name: Achievement_Spaceship
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: ach_spaceship
-  title: 표를 손에 넣다
-  description: 우주선 탑승권 구매하기
+  title: "\uD45C\uB97C \uC190\uC5D0 \uB123\uB2E4"
+  description: "\uC6B0\uC8FC\uC120 \uD0D1\uC2B9\uAD8C \uAD6C\uB9E4\uD558\uAE30"
   condition: 6
   goal: 1
+  requiredItem: {fileID: 0}
   hidden: 0
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 0b78e224ff17ca3489c90594912d90aa, type: 3}

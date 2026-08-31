@@ -11,11 +11,13 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4999da927baed2044938ff16b36fae23, type: 3}
   m_Name: Achievement_EndReport
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   id: ach_end_report
-  title: 양심의 값
-  description: 브로커를 신고하고도 살아남아 지구로 돌아가기
+  title: "\uC591\uC2EC\uC758 \uAC12"
+  description: "\uBE0C\uB85C\uCEE4\uB97C \uC2E0\uACE0\uD558\uACE0\uB3C4 \uC0B4\uC544\uB0A8\uC544
+    \uC9C0\uAD6C\uB85C \uB3CC\uC544\uAC00\uAE30"
   condition: 8
   goal: 1
+  requiredItem: {fileID: 0}
   hidden: 1
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 23691f77481faf547b6c628e3435a1a7, type: 3}
