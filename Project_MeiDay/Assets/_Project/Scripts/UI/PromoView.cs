@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -285,7 +285,7 @@ public class PromoView : MonoBehaviour, IPointerDownHandler
     {
         if (timerFill != null && game.duration > 0f)
         {
-            timerFill.fillAmount = Mathf.Clamp01(game.timeLeft / game.duration);
+            UiBar.Set(timerFill, game.timeLeft / game.duration); // 폭을 줄임 - Filled 로 깎으면 둥근 끝이 눌림
         }
         if (progressText != null)
         {
