@@ -24,3 +24,5 @@ MonoBehaviour:
   linkedComplaint: {fileID: 0}
   suspicionChange: 0
   unlocksShop: 0
+  shopToToggle: 0
+  shopBuyAction: 0

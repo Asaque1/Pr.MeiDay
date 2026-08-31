@@ -86,8 +86,21 @@ public class ShopView : MonoBehaviour
     [SerializeField] TMP_Text spaceshipPriceText;
     [SerializeField] TMP_Text spaceshipButtonText;
 
-    // 브로커 탭 버튼 (우주선 사고 나면 못 누르게 잠금)
+    // 상점 탭 버튼 4개 (잠기면 못 누르고 어둡게 깔림)
+    [SerializeField] UnityEngine.UI.Button bookstoreTabButton;
+    [SerializeField] UnityEngine.UI.Button theaterTabButton;
+    [SerializeField] UnityEngine.UI.Button partyTabButton;
     [SerializeField] UnityEngine.UI.Button brokerTabButton;
+
+    // 잠긴 탭 색 만들기
+    // 원래 색에 검정을 곱하기만 하면 나무 배경이랑 비슷한 갈색이 돼서 흐리멍덩해짐
+    // 회색으로 뺀 다음 어둡게 해야 "꺼진 버튼"처럼 또렷하게 보임
+    [SerializeField, Range(0f, 1f)] float lockedTabDarken = 0.42f;      // 타일
+    [SerializeField, Range(0f, 1f)] float lockedIconDarken = 0.72f;     // 안쪽 아이콘 (타일이랑 같이 죽이면 아이콘이 안 보임)
+
+    // 탭 안의 그림마다 원래 색 (상점별로 노랑/초록/청록/파랑이라 흰색으로 덮으면 안 됨)
+    System.Collections.Generic.Dictionary<UnityEngine.UI.Graphic, Color> _tabBaseColor
+        = new System.Collections.Generic.Dictionary<UnityEngine.UI.Graphic, Color>();
 
     [Header("아이템 상세 창")]
     // 누르자마자 사버리면 실수로 돈이 나감 - 한 번 물어봄
@@ -136,26 +149,97 @@ public class ShopView : MonoBehaviour
         target.SetActive(on);
     }
 
-    // 지금 상점의 아이템 목록 지우고 다시 만들기
-    // 브로커 상점을 아직 쓸 수 있는지
-    // 우주선표를 산 뒤엔 브로커랑 거래가 끝나서 상점을 닫음
-    bool BrokerOpen()
+    // 이 상점에 들어갈 수 있는지
+    // 이벤트로 잠근 상점이거나, 우주선을 산 뒤의 브로커면 못 들어감
+    bool ShopOpen(ShopType type)
     {
-        return GameManager.instance == null || GameManager.instance.hasSpaceship == false;
+        GameManager gm = GameManager.instance;
+        if (gm == null)
+        {
+            return true;
+        }
+
+        // 우주선표를 산 뒤엔 브로커랑 거래가 끝나서 상점을 닫음
+        if (type == ShopType.Broker && gm.hasSpaceship == true)
+        {
+            return false;
+        }
+
+        return gm.shop.IsBuyLocked(type) == false;
     }
 
-    void Rebuild()
+    // 들어갈 수 있는 상점 중 첫 번째 (전부 잠겼으면 서점)
+    ShopType FirstOpenShop()
     {
-        // 우주선 산 뒤에 브로커를 보고 있었으면 다른 상점으로 밀어냄
-        if (currentShop == ShopType.Broker && BrokerOpen() == false)
+        ShopType[] order = { ShopType.Bookstore, ShopType.Theater, ShopType.PartyShop, ShopType.Broker };
+        for (int i = 0; i < order.Length; i++)
         {
-            currentShop = ShopType.Bookstore;
+            if (ShopOpen(order[i]) == true)
+            {
+                return order[i];
+            }
         }
 
-        if (brokerTabButton != null)
+        return ShopType.Bookstore;
+    }
+
+    // 잠긴 탭에 쓸 색 (회색으로 뺀 뒤 어둡게. 투명도는 그대로 둠)
+    Color LockedColor(Color c, float darken)
+    {
+        float gray = c.r * 0.299f + c.g * 0.587f + c.b * 0.114f;
+        gray *= darken;
+        return new Color(gray, gray, gray, c.a);
+    }
+
+    // 탭 하나를 열린/잠긴 모양으로 맞춤
+    void SetTab(UnityEngine.UI.Button tab, ShopType type)
+    {
+        if (tab == null)
         {
-            brokerTabButton.interactable = BrokerOpen();
+            return;
         }
+
+        bool open = ShopOpen(type);
+        tab.interactable = open;
+
+        // 타일만 어둡게 하면 안 어두워진 아이콘만 배경에 떠 보임 - 안쪽 그림까지 같이 낮춤
+        UnityEngine.UI.Graphic[] parts = tab.GetComponentsInChildren<UnityEngine.UI.Graphic>(true);
+        for (int i = 0; i < parts.Length; i++)
+        {
+            UnityEngine.UI.Graphic gfx = parts[i];
+
+            // 처음 볼 때 원래 색을 적어둠 (안 그러면 잠갔다 풀 때 색이 사라짐)
+            if (_tabBaseColor.ContainsKey(gfx) == false)
+            {
+                _tabBaseColor[gfx] = gfx.color;
+            }
+
+            Color baseColor = _tabBaseColor[gfx];
+            if (open == true)
+            {
+                gfx.color = baseColor;
+                continue;
+            }
+
+            // 타일은 진하게, 그 위 아이콘은 덜 죽여야 뭐가 잠겼는지 알아볼 수 있음
+            bool isTile = (gfx.gameObject == tab.gameObject);
+            gfx.color = LockedColor(baseColor, isTile ? lockedTabDarken : lockedIconDarken);
+        }
+    }
+
+    // 지금 상점의 아이템 목록 지우고 다시 만들기
+    void Rebuild()
+    {
+        // 보고 있던 상점이 잠겼으면 들어갈 수 있는 데로 밀어냄
+        if (ShopOpen(currentShop) == false)
+        {
+            currentShop = FirstOpenShop();
+        }
+
+        SetTab(bookstoreTabButton, ShopType.Bookstore);
+        SetTab(theaterTabButton, ShopType.Theater);
+        SetTab(partyTabButton, ShopType.PartyShop);
+        SetTab(brokerTabButton, ShopType.Broker);
 
         for (int i = 0; i < _itemUis.Count; i++)
         {
@@ -595,7 +679,7 @@ public class ShopView : MonoBehaviour
         ChangeShop(ShopType.Theater);
     }
 
-    // 탭: 파티용품점
+    // 탭: 사무용품점
     public void OnClickPartyShop()
     {
         ChangeShop(ShopType.PartyShop);
@@ -604,19 +688,26 @@ public class ShopView : MonoBehaviour
     // 탭: 브로커
     public void OnClickBroker()
     {
-        // 버튼을 꺼놔도 코드로 부를 수 있어서 여기서 한 번 더 막음
-        if (BrokerOpen() == false)
-        {
-            SetInfo("브로커는 이제 볼 일이 없다.");
-            return;
-        }
-
         ChangeShop(ShopType.Broker);
     }
 
     // 다른 상점으로 바꾸기
     void ChangeShop(ShopType type)
     {
+        // 버튼을 꺼놔도 코드로는 부를 수 있어서 여기서 한 번 더 막음
+        if (ShopOpen(type) == false)
+        {
+            if (type == ShopType.Broker && GameManager.instance.hasSpaceship == true)
+            {
+                SetInfo("브로커는 이제 볼 일이 없다.");
+            }
+            else
+            {
+                SetInfo(GameManager.instance.shop.ShopName(type) + "은 지금 닫혀 있다.");
+            }
+            return;
+        }
+
         currentShop = type;
         SetInfo("");
         ClosePopup();
