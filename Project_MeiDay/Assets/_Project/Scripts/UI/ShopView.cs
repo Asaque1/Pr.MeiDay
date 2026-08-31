@@ -86,6 +86,9 @@ public class ShopView : MonoBehaviour
     [SerializeField] TMP_Text spaceshipPriceText;
     [SerializeField] TMP_Text spaceshipButtonText;
 
+    // 브로커 탭 버튼 (우주선 사고 나면 못 누르게 잠금)
+    [SerializeField] UnityEngine.UI.Button brokerTabButton;
+
     [Header("아이템 상세 창")]
     // 누르자마자 사버리면 실수로 돈이 나감 - 한 번 물어봄
     [SerializeField] GameObject popup;
@@ -134,8 +137,26 @@ public class ShopView : MonoBehaviour
     }
 
     // 지금 상점의 아이템 목록 지우고 다시 만들기
+    // 브로커 상점을 아직 쓸 수 있는지
+    // 우주선표를 산 뒤엔 브로커랑 거래가 끝나서 상점을 닫음
+    bool BrokerOpen()
+    {
+        return GameManager.instance == null || GameManager.instance.hasSpaceship == false;
+    }
+
     void Rebuild()
     {
+        // 우주선 산 뒤에 브로커를 보고 있었으면 다른 상점으로 밀어냄
+        if (currentShop == ShopType.Broker && BrokerOpen() == false)
+        {
+            currentShop = ShopType.Bookstore;
+        }
+
+        if (brokerTabButton != null)
+        {
+            brokerTabButton.interactable = BrokerOpen();
+        }
+
         for (int i = 0; i < _itemUis.Count; i++)
         {
             if (_itemUis[i] == null)
@@ -583,6 +604,13 @@ public class ShopView : MonoBehaviour
     // 탭: 브로커
     public void OnClickBroker()
     {
+        // 버튼을 꺼놔도 코드로 부를 수 있어서 여기서 한 번 더 막음
+        if (BrokerOpen() == false)
+        {
+            SetInfo("브로커는 이제 볼 일이 없다.");
+            return;
+        }
+
         ChangeShop(ShopType.Broker);
     }
 

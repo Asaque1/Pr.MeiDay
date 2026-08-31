@@ -376,6 +376,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shopExp: 00000000000000000000000000000000
   consumableBuyCount: 0
+  buyLockedShops: 
 --- !u!114 &200008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15200,6 +15201,7 @@ MonoBehaviour:
   spaceshipIcon: {fileID: 24622727}
   spaceshipPriceText: {fileID: 566130987}
   spaceshipButtonText: {fileID: 1707661530}
+  brokerTabButton: {fileID: 988804566}
   popup: {fileID: 115075390}
   popupIcon: {fileID: 448735744}
   popupNameText: {fileID: 1633782545}
