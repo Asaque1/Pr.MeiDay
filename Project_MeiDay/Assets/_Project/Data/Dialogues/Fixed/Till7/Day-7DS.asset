@@ -13,8 +13,88 @@ MonoBehaviour:
   m_Name: Day-7DS
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   dialogueLines:
-  - speakerFace: {fileID: 6619098858871695494, guid: 8d85d9571c49489449632b83ee86c469, type: 3}
-    speakerName: "\uB514-\uC2A4\uCF54"
-    text: 
+  - speakerFace: {fileID: 0}
+    speakerName: "\uC8FC\uC778\uACF5"
+    text: "\uB2E4\uC74C \uC190-"
     choices: []
     nextLineIndex: 0
+  - speakerFace: {fileID: 6619098858871695494, guid: 8d85d9571c49489449632b83ee86c469, type: 3}
+    speakerName: "\uB514-\uC2A4\uCF54"
+    text: "\uC544\uAC00\uC528!!"
+    choices:
+    - choiceText: "\uC9D1\uC8FC\uC778\uB2D8? \uC5EC\uAE34 \uC5B4\uCA50 \uC77C\uC774\uC138\uC694?"
+      nextLineIndex: 2
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: 2
+  - speakerFace: {fileID: 6619098858871695494, guid: 8d85d9571c49489449632b83ee86c469, type: 3}
+    speakerName: "\uB514-\uC2A4\uCF54"
+    text: "\uAE09\uD55C \uC0AC\uC815\uC774\uC57C. \uC55E\uC73C\uB85C \uC6D4\uC138\uB97C
+      '2\uC77C'\uB9C8\uB2E4 \uBC1B\uC544\uC57C \uACA8\uC6B0 \uD574\uACB0\uB420 \uAC70
+      \uAC19\uC544."
+    choices:
+    - choiceText: "\uB300\uCCB4 \uBB34\uC2A8 \uC77C\uC774\uC8E0?"
+      nextLineIndex: 3
+      eventId: 0
+      eventValue: 0
+    - choiceText: "\uB9CE\uC774 \uC2EC\uAC01\uD55C \uC77C\uC778\uAC00\uC694?"
+      nextLineIndex: 3
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: 3
+  - speakerFace: {fileID: 6619098858871695494, guid: 8d85d9571c49489449632b83ee86c469, type: 3}
+    speakerName: "\uB514-\uC2A4\uCF54"
+    text: "\uC751.. \uB180\uB77C\uC9C0 \uB9D0\uACE0 \uC798 \uB4E4\uC5B4."
+    choices: []
+    nextLineIndex: 4
+  - speakerFace: {fileID: 6619098858871695494, guid: 8d85d9571c49489449632b83ee86c469, type: 3}
+    speakerName: "\uB514-\uC2A4\uCF54"
+    text: "\uC6D4\uC138\uB97C \uC62C\uB824 \uBC1B\uC544\uC57C \uD558\uB294 \uADF8
+      \uC774\uC720\uB294.."
+    choices:
+    - choiceText: "\uAFC0\uAEBD.."
+      nextLineIndex: 5
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: 5
+  - speakerFace: {fileID: 6619098858871695494, guid: 8d85d9571c49489449632b83ee86c469, type: 3}
+    speakerName: "\uB514-\uC2A4\uCF54"
+    text: "\uADF8\uB0E5."
+    choices: []
+    nextLineIndex: 6
+  - speakerFace: {fileID: 6619098858871695494, guid: 8d85d9571c49489449632b83ee86c469, type: 3}
+    speakerName: "\uB514-\uC2A4\uCF54"
+    text: "\uC751. \uADF8\uB807\uB2E4\uACE0."
+    choices:
+    - choiceText: "\uB124?"
+      nextLineIndex: 7
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: 7
+  - speakerFace: {fileID: 6619098858871695494, guid: 8d85d9571c49489449632b83ee86c469, type: 3}
+    speakerName: "\uB514-\uC2A4\uCF54"
+    text: "\uAC08\uAC8C?"
+    choices:
+    - choiceText: "\uC790, \uC7A0\uC2DC\uB9CC\uC694?"
+      nextLineIndex: 8
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: 8
+  - speakerFace: {fileID: 6619098858871695494, guid: 8d85d9571c49489449632b83ee86c469, type: 3}
+    speakerName: "\uB514-\uC2A4\uCF54"
+    text: "\uC65C? \uB098 \uBC14\uBE60!"
+    choices:
+    - choiceText: "(\uC0AC\uC815\uC744 \uC124\uBA85\uD55C\uB2E4.)"
+      nextLineIndex: 9
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: 9
+  - speakerFace: {fileID: 6619098858871695494, guid: 8d85d9571c49489449632b83ee86c469, type: 3}
+    speakerName: "\uB514-\uC2A4\uCF54"
+    text: "\uC74C. \uADF8\uB807\uAD6C\uB098? \uAC08\uAC8C?"
+    choices:
+    - choiceText: "\uC7A0\uC2DC\uB9CC\uC694!!!"
+      nextLineIndex: -1
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: -1
