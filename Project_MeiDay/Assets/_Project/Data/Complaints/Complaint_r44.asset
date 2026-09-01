@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: complaint_r44
   complainant: {fileID: 0}
-  eventOnly: 0
+  eventOnly: 1
   complaintLine: "[\uB2E8\uC5B41] \uB4DC\uB514\uC5B4 \uB2E4 \uD07C! \uC5B4\uC11C\uC5B4\uC11C
     [\uB2E8\uC5B42] \uBE68\uB9AC \uB9CC\uB4E4\uC5B4\uC8FC\uC138\uC694"
   slots:
