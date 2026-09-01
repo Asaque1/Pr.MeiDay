@@ -292,6 +292,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 5ed97f94239fdbc49b253022e7cda150, type: 3}
   gameOverSlides:
   - {fileID: 21300000, guid: 65bd76d9d68c653488e8c99b089c6a41, type: 3}
+  rentOverSlides:
+  - {fileID: 21300000, guid: 5d45b946855339a48951b664be561518, type: 3}
   phase: 0
   hasSpaceship: 0
   shopUnlocked: 0
