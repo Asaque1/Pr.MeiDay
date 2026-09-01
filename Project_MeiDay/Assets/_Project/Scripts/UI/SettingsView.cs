@@ -28,6 +28,11 @@ public class SettingsView : MonoBehaviour
 
     void OnEnable()
     {
+        // 설정창이 떠 있는 동안은 게임을 멈춤
+        // 낮에 이거 열어두면 민원인 인내심 게이지가 그대로 닳아서 애먼 실수가 쌓였음
+        // 슬라이더나 버튼은 시간이 멈춰도 그대로 눌림 (미리듣기만 unscaledTime 을 씀)
+        Time.timeScale = 0f;
+
         // 창을 열 때마다 지금 값으로 맞춰줌
         SoundManager sound = SoundManager.instance;
 
@@ -53,6 +58,13 @@ public class SettingsView : MonoBehaviour
         SetOn(quitButton, true);
 
         _sfxPreviewWaiting = false; // 지난번에 기다리던 미리듣기는 버림
+    }
+
+    // 창이 닫히면 다시 흐르게
+    // 부모가 통째로 꺼지거나 씬이 갈아끼워질 때도 여기가 불려서 멈춘 채로 남지 않음
+    void OnDisable()
+    {
+        Time.timeScale = 1f;
     }
 
     // 배경음 슬라이더 On Value Changed 에 연결
