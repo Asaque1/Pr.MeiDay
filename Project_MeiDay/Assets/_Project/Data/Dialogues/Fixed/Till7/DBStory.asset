@@ -116,13 +116,70 @@ MonoBehaviour:
     speakerName: "\uB808\uC628"
     text: "\uBC18\uAC11\uC2B5\uB2C8\uB2E4. \uC804\uC5D0\uB3C4 \uC790\uC8FC \uBCF4\uC168\uC8E0?"
     choices:
-    - choiceText: "\uB124. \uBD80\uB978 \uC774\uC720\uAC00 \uBB54\uAC00\uC694?"
+    - choiceText: "\uB124. \uADFC\uB370 \uC774\uB807\uAC8C\uAE4C\uC9C0 \uD558\uC2DC\uB294
+        \uC774\uC720\uAC00 \uBB54\uAC00\uC694?"
       nextLineIndex: 14
       eventId: 0
       eventValue: 0
     nextLineIndex: 14
   - speakerFace: {fileID: -9077174886096068995, guid: 66b02e9ee45c827428874ee60a03b86e, type: 3}
     speakerName: "\uB808\uC628"
-    text: "\uCD5C\uADFC\uB530\uB77C \uAC01 \uBBFC\uC6D0\uC778\uB4E4"
+    text: "\uC218\uC0AC\uAC00 \uC9C4\uD589\uB418\uBA74\uC11C \uC774\uC81C \uBC00\uC218\uBC94\uC758
+      \uC724\uACFD\uC774 \uC7A1\uD600\uC11C\uC694. \uADF8 \uACFC\uC815\uC5D0\uC11C
+      \uD604\uAE08 \uD750\uB984\uC744 \uC870\uC0AC\uD558\uB2E4\uAC00, \uB2F9\uC2E0\uC774
+      \uC788\uC5C8\uACE0\uC694."
+    choices:
+    - choiceText: "(\uC5B5\uC6B8\uD558\uB2E4 \uC8FC\uC7A5\uD55C\uB2E4.)"
+      nextLineIndex: 15
+      eventId: 0
+      eventValue: 0
+    nextLineIndex: 15
+  - speakerFace: {fileID: 0}
+    speakerName: 
+    text: "2\uC2DC\uAC04 \uC815\uB3C4\uC758 \uC2EC\uBB38\uC774 \uB05D\uB09C \uB4A4,
+      \uB808\uC628\uACFC \uD568\uAED8 \uC9C0\uC0C1\uC73C\uB85C \uC62C\uB77C\uC628\uB2E4."
     choices: []
-    nextLineIndex: 14
+    nextLineIndex: 16
+  - speakerFace: {fileID: -9077174886096068995, guid: 66b02e9ee45c827428874ee60a03b86e, type: 3}
+    speakerName: "\uB808\uC628"
+    text: "\uD611\uC870 \uAC10\uC0AC\uB4DC\uB9BD\uB2C8\uB2E4. \uC870\uC2EC\uD788
+      \uB4E4\uC5B4\uAC00\uC2ED\uC1FC."
+    choices: []
+    nextLineIndex: 17
+  - speakerFace: {fileID: 0}
+    speakerName: 
+    text: "\uC9D1\uC73C\uB85C \uB3CC\uC544\uAC04\uB2E4. \uAE30\uC05C \uC18C\uC2DD\uC740
+      \uC774\uC81C \uACE7 \uC9D1\uC5D0 \uAC08 \uC218 \uC788\uB2E4\uB294 \uAC83\uC774\uACE0,
+      \uB098\uC05C \uC18C\uC2DD\uC740 \uC544\uC9C1 \uC548\uC804\uD558\uC9C0 \uC54A\uB2E4\uB294
+      \uAC83\uC774\uB2E4. \uD2B9\uD788 \uB208 \uC55E\uC5D0 \uC788\uB294 \uAC83\uCC98\uB7FC."
+    choices: []
+    nextLineIndex: 18
+  - speakerFace: {fileID: -5711646217690350408, guid: d650d39ed8584f442a150b444af4a08b, type: 3}
+    speakerName: ???
+    text: "\uD3B8\uC9C0 \uC804\uD558\uB7EC \uC654\uC5B4! \uC0AC\uD0D5\uB3C4 \uAC19\uC774!"
+    choices: []
+    nextLineIndex: 19
+  - speakerFace: {fileID: 0}
+    speakerName: 
+    text: "\uAE38\uBAA9\uC5D0\uC11C \uAC11\uC790\uAE30 \uB098\uC628 \uC0AC\uB78C\uC740
+      \uC0AC\uD0D5\uACFC \uD3B8\uC9C0\uB97C \uC8FC\uBA70 \uB5A0\uB0AC\uB2E4. \uC8FC\uC704\uC5D0
+      \uBCF4\uC548\uBD80 \uC0AC\uB78C\uC774 \uC5C6\uC5B4 \uCAD3\uC9C0\uB294 \uC54A\uC744
+      \uAC83\uC774\uB2E4."
+    choices: []
+    nextLineIndex: 20
+  - speakerFace: {fileID: 0}
+    speakerName: "\uD3B8\uC9C0"
+    text: "\"\uB108\uAC00 \uC7A1\uD78C \uAC70 \uBD24\uC5B4. \uC55E\uC73C\uB85C \uB9E4\uC77C
+      \uAFB8\uC900\uD788 \uB098\uD55C\uD14C \uB3C8 \uBCF4\uB0B4. \uC6D0\uB798 \uB9CC\uB098\uB294
+      \uACF3\uC740 \uC5BC\uC52C\uB3C4 \uB9D0\uACE0. \uC900\uBE44\uB418\uBA74 \uC88C\uD45C
+      \uC904\uD14C\uB2C8\uAE4C \uADF8\uACF3\uC73C\uB85C \uB098\uC624\uAE30\uB9CC
+      \uD574.\""
+    choices: []
+    nextLineIndex: 21
+  - speakerFace: {fileID: 0}
+    speakerName: 
+    text: "\uC544\uC9C1 \uD76C\uB9DD\uC758 \uBD88\uC740 \uAEBC\uC9C0\uC9C0 \uC54A\uC558\uB2E4.
+      \uC9D1\uC73C\uB85C \uAC00\uB294 \uAE38\uC740 \uBE14\uB799\uBCA0\uB9AC\uC640
+      \uC544\uBAAC\uB4DC\uAC00 \uC11E\uC778 \uB9DB\uC774\uC5C8\uB2E4."
+    choices: []
+    nextLineIndex: -1
