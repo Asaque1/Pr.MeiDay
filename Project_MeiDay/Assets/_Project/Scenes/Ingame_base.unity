@@ -286,9 +286,12 @@ MonoBehaviour:
   achievements: {fileID: 200014}
   slideshow: {fileID: 1706033725}
   introSlides: []
-  databaseEndSlides: []
-  reportEndSlides: []
-  gameOverSlides: []
+  databaseEndSlides:
+  - {fileID: 21300000, guid: 5ed97f94239fdbc49b253022e7cda150, type: 3}
+  reportEndSlides:
+  - {fileID: 21300000, guid: 5ed97f94239fdbc49b253022e7cda150, type: 3}
+  gameOverSlides:
+  - {fileID: 21300000, guid: 65bd76d9d68c653488e8c99b089c6a41, type: 3}
   phase: 0
   hasSpaceship: 0
   shopUnlocked: 0
