@@ -100,12 +100,12 @@ MonoBehaviour:
     choices:
     - choiceText: "\uC815\uAC70\uC7A5\uC758 \uBC00\uC218\uC640 \uBC94\uC8C4\uC870\uC9C1\uC5D0
         \uB300\uD574 \uB9D0\uD560 \uAC8C \uC788\uC5B4\uC694."
-      nextLineIndex: 14
+      nextLineIndex: 15
       eventId: 0
       eventValue: 0
     - choiceText: "\uC815\uAC70\uC7A5\uC758 \uBC00\uC785\uAD6D\uC790\uC640 \uB0B4\uBD80\uC790\uC5D0
         \uB300\uD574 \uC790\uC218\uD560 \uAC8C \uC788\uC5B4\uC694."
-      nextLineIndex: 14
+      nextLineIndex: 15
       eventId: 0
       eventValue: 0
     nextLineIndex: 15
@@ -118,7 +118,7 @@ MonoBehaviour:
     nextLineIndex: 16
   - speakerFace: {fileID: -9077174886096068995, guid: 66b02e9ee45c827428874ee60a03b86e, type: 3}
     speakerName: "\uB808\uC628"
-    text: . . . .
+    text: . . . . .
     choices:
     - choiceText: "\uC8C4\uC1A1\uD574\uC694.. \uC560\uCD08\uC5D0 \uD558\uC9C0 \uB9D0\uC558\uC5B4\uC57C
         \uD588\uB294\uB370.."
