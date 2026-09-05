@@ -28,7 +28,8 @@ public class GameManager : MonoBehaviour
     public Sprite[] introSlides;      // 새 게임 시작할 때 보여줄 그림들 (인스펙터에서 연결)
     public Sprite[] databaseEndSlides; // DB 접근 엔딩 컷신
     public Sprite[] reportEndSlides;   // 신고 엔딩 컷신
-    public Sprite[] gameOverSlides;    // 게임 오버 컷신
+    public Sprite[] gameOverSlides;    // 들킨(의심도) 게임 오버 컷신
+    public Sprite[] rentOverSlides;    // 월세 밀려 쫓겨난 게임 오버 컷신 (안 꽂으면 위 걸로 나감)
 
     // 게임 상태
     public GamePhase phase = GamePhase.Intro; // 지금 어느 단계인지
@@ -553,7 +554,14 @@ public class GameManager : MonoBehaviour
             achievements.Check(); // 죽어야 주는 업적도 있음
         }
 
-        PlayEndCutscene(gameOverSlides);
+        // 들킨 것과 쫓겨난 건 그림이 달라서 이유별로 갈라줌
+        Sprite[] slides = gameOverSlides;
+        if (reason == GameOverReason.RentDefault && rentOverSlides != null && rentOverSlides.Length > 0)
+        {
+            slides = rentOverSlides;
+        }
+
+        PlayEndCutscene(slides);
     }
 
     // 엔딩

@@ -46,6 +46,9 @@ public class SlideshowView : MonoBehaviour
         if (slideImage != null)
         {
             slideImage.sprite = sprite;
+
+            // 자리만 잡아둔 검은색이 남아 있으면 그림이 새까맣게 나옴
+            slideImage.color = Color.white;
         }
     }
 
